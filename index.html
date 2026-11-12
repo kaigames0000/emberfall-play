@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="emberfall-version" content="0.64.36">
+  <meta name="emberfall-release" content="147">
+  <meta name="theme-color" content="#141822">
+  <meta name="description" content="裂界遺火角色選擇與遊戲入口。">
+  <title>裂界遺火</title>
+  <link rel="icon" href="./icons/emberfall-192.png" type="image/png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/emberfall-180.png">
+  <link rel="stylesheet" href="./home.css?v=109">
+  <link rel="stylesheet" href="./appearance-picker.css?v=109">
+</head>
+<body>
+  <img class="title-art" src="./art/title-screen.webp" width="1672" height="941" alt="" fetchpriority="high">
+  <main class="title-screen">
+    <div class="title-shell">
+      <h1>裂界遺火</h1>
+      <section class="title-roster" aria-label="遊戲角色">
+        <div class="realm-switch" role="group" aria-label="遊玩模式" hidden>
+          <button type="button" data-realm="verified" aria-pressed="false">公測</button>
+          <button type="button" data-realm="local" aria-pressed="false">本機</button>
+        </div>
+        <button class="title-primary" type="button" data-home-signin hidden>使用 Google 登入</button>
+        <div class="roster-choice" hidden>
+          <label class="title-field">選擇角色<select data-home-character></select></label>
+          <button class="title-secondary" type="button" data-home-new>新角色</button>
+        </div>
+        <form class="roster-create" autocomplete="off" hidden>
+          <fieldset>
+            <label class="title-field character-name">角色名稱 <small>選填</small>
+              <input name="name" maxlength="24" placeholder="無名旅人">
+            </label>
+            <div data-home-appearance></div>
+            <label class="title-field">起始武器<select name="weaponType"></select></label>
+            <div class="create-actions">
+              <button type="submit" class="title-primary">建立角色</button>
+              <button type="button" class="title-secondary" data-home-cancel hidden>取消</button>
+            </div>
+          </fieldset>
+        </form>
+        <a class="title-primary title-enter" data-home-enter href="./play.html" hidden>進入遊戲 <span aria-hidden="true">→</span></a>
+        <p class="title-status" role="status">載入角色…</p>
+        <div class="roster-recovery">
+          <button class="title-secondary" type="button" data-home-retry hidden>重新讀取</button>
+          <a href="./play.html" data-home-recovery hidden>存檔復原</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="./home-launch.js?v=140"></script>
+  <script type="module" src="./pwa.js?v=108"></script>
+</body>
+</html>

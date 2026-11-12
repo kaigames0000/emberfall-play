@@ -1,0 +1,61 @@
+.feedback-panel {
+  display: grid;
+  gap: 8px;
+  max-width: 42rem;
+  margin-inline: auto;
+  color: var(--text, #efe6d1);
+}
+.feedback-panel [hidden] { display: none; }
+.feedback-fields { display: grid; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.feedback-field { display: grid; gap: 6px; }
+.feedback-panel select, .feedback-panel textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid var(--hairline, #5c6572);
+  border-radius: 3px;
+  background: #151c28;
+  color: inherit;
+  font: inherit;
+}
+.feedback-panel textarea { resize: vertical; }
+.feedback-panel [aria-invalid="true"] { border-color: #ec9b89; }
+.feedback-panel textarea:focus-visible { outline: 2px solid var(--focus-jade, #85d6c0); outline-offset: 2px; }
+.feedback-guidance { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.feedback-guidance, .feedback-availability, .feedback-context dt { color: var(--muted, #bebbb1); }
+.feedback-guidance span { flex: none; font-size: .8em; }
+.feedback-context {
+  padding: 6px 9px 8px;
+  border: 1px solid var(--hairline, #5c6572);
+  background: #10172570;
+}
+.feedback-consent { display: flex; align-items: center; gap: 8px; min-height: 32px; cursor: pointer; }
+.feedback-consent input { margin: 0; accent-color: var(--gold, #ecc782); }
+.feedback-context dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 12px; margin: 0; }
+.feedback-context dl > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+.feedback-context dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.feedback-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.feedback-actions button { min-height: 36px; padding: 5px 9px; }
+.feedback-actions .text-btn { border: 1px solid var(--hairline, #5c6572); border-radius: 3px; background: #151c28; }
+.feedback-actions .text-btn:hover { border-color: var(--gold, #ecc782); }
+.feedback-availability, .feedback-status { margin: 0; }
+.feedback-status { color: var(--gold, #ecc782); }
+
+@media (pointer: coarse) {
+  .feedback-actions button, .feedback-consent, .feedback-panel select { min-height: 44px; }
+  .feedback-panel select, .feedback-panel textarea { font-size: 16px; }
+}
+
+@media (pointer: coarse) and (orientation: landscape) and (min-width: 38rem) {
+  .feedback-fields {
+    grid-template-columns: minmax(0, 1.7fr) minmax(12rem, 1fr);
+    grid-template-areas: "category context" "description context" "guidance context";
+  }
+  .feedback-category { grid-area: category; }
+  .feedback-description { grid-area: description; }
+  .feedback-description textarea { height: clamp(4.5rem, 20dvh, 6rem); }
+  .feedback-guidance { grid-area: guidance; }
+  .feedback-context { grid-area: context; align-self: start; }
+  .feedback-context dl { grid-template-columns: minmax(0, 1fr); }
+}

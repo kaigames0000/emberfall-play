@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="192" viewBox="0 0 512 192">
+ <defs>
+  <linearGradient id="cold-trail"><stop stop-color="#2777ae" stop-opacity="0"/><stop offset=".47" stop-color="#2777ae" stop-opacity=".52"/><stop offset="1" stop-color="#7ee0f5"/></linearGradient>
+  <radialGradient id="cold-core" cx=".65" cy=".38" r=".71"><stop stop-color="#f1ffff"/><stop offset=".58" stop-color="#7ee0f5"/><stop offset="1" stop-color="#2777ae"/></radialGradient>
+  <linearGradient id="fire-trail"><stop stop-color="#c64a41" stop-opacity="0"/><stop offset=".47" stop-color="#c64a41" stop-opacity=".52"/><stop offset="1" stop-color="#ffb253"/></linearGradient>
+  <radialGradient id="fire-core" cx=".65" cy=".38" r=".71"><stop stop-color="#fff1b8"/><stop offset=".58" stop-color="#ffb253"/><stop offset="1" stop-color="#c64a41"/></radialGradient>
+  <linearGradient id="lightning-trail"><stop stop-color="#7653ac" stop-opacity="0"/><stop offset=".47" stop-color="#7653ac" stop-opacity=".52"/><stop offset="1" stop-color="#efd172"/></linearGradient>
+  <radialGradient id="lightning-core" cx=".65" cy=".38" r=".71"><stop stop-color="#fff8d0"/><stop offset=".58" stop-color="#efd172"/><stop offset="1" stop-color="#7653ac"/></radialGradient>
+  <linearGradient id="poison-trail"><stop stop-color="#4d8968" stop-opacity="0"/><stop offset=".47" stop-color="#4d8968" stop-opacity=".52"/><stop offset="1" stop-color="#a4d87b"/></linearGradient>
+  <radialGradient id="poison-core" cx=".65" cy=".38" r=".71"><stop stop-color="#f0fbc1"/><stop offset=".58" stop-color="#a4d87b"/><stop offset="1" stop-color="#4d8968"/></radialGradient>
+ </defs>
+ <g transform="translate(0 0)">
+  <path d="M13 27l36-8 16 1 10-7 16 7-4 15-15 6-12-7-16 2Z" fill="url(#cold-trail)" opacity="0.72"/>
+  <path d="M21 15l8-4 5 2-7 5Zm18 23 9-2-4 5Z" fill="#f1ffff" opacity="0.49679999999999996"/>
+  <path d="M88 9l15 4 9 12-6 13-15 4-13-9-4-12Z" fill="url(#cold-core)" stroke="#7ee0f5" stroke-width="1.4"/>
+  <g transform="rotate(-13 93 25)"><path d="M82 18l13-6 9 9-8 4-9-3-7 8Z" fill="#f1ffff" opacity=".78"/><path d="M87 33l11-6 8 4-6 6Z" fill="#2777ae" opacity=".66"/></g>
+ </g>
+ <g transform="translate(128 0)">
+  <path d="M9 32l34-7 11-9 16 2 11-7 11 13-5 11-24 7-12-6Z" fill="url(#cold-trail)" opacity="1"/>
+  <path d="M27 11l10-3-4 5Zm-2 27 8-3-3 5Z" fill="#f1ffff" opacity="0.69"/>
+  <path d="M88 9l15 4 9 12-6 13-15 4-13-9-4-12Z" fill="url(#cold-core)" stroke="#7ee0f5" stroke-width="1.4"/>
+  <g transform="rotate(0 93 25)"><path d="M82 18l13-6 9 9-8 4-9-3-7 8Z" fill="#f1ffff" opacity=".78"/><path d="M87 33l11-6 8 4-6 6Z" fill="#2777ae" opacity=".66"/></g>
+ </g>
+ <g transform="translate(256 0)">
+  <path d="M10 22l34 2 19-7 14-5 16 11-10 15-13 2-24-6Z" fill="url(#cold-trail)" opacity="0.82"/>
+  <path d="M13 16l10 2-5 3Zm26 23 9-1-5 5Z" fill="#f1ffff" opacity="0.5658"/>
+  <path d="M88 9l15 4 9 12-6 13-15 4-13-9-4-12Z" fill="url(#cold-core)" stroke="#7ee0f5" stroke-width="1.4"/>
+  <g transform="rotate(12 93 25)"><path d="M82 18l13-6 9 9-8 4-9-3-7 8Z" fill="#f1ffff" opacity=".78"/><path d="M87 33l11-6 8 4-6 6Z" fill="#2777ae" opacity=".66"/></g>
+ </g>
+ <g transform="translate(384 0)">
+  <path d="M12 27l30-8 12 5 20-12 15 9 2 14-22 6-19-8Z" fill="url(#cold-trail)" opacity="0.91"/>
+  <path d="M36 11l10-1-5 5Zm-19 25 12 2-8 2Z" fill="#f1ffff" opacity="0.6279"/>
+  <path d="M88 9l15 4 9 12-6 13-15 4-13-9-4-12Z" fill="url(#cold-core)" stroke="#7ee0f5" stroke-width="1.4"/>
+  <g transform="rotate(3 93 25)"><path d="M82 18l13-6 9 9-8 4-9-3-7 8Z" fill="#f1ffff" opacity=".78"/><path d="M87 33l11-6 8 4-6 6Z" fill="#2777ae" opacity=".66"/></g>
+ </g>
+ <g transform="translate(0 48)">
+  <path d="M10 26c21 4 28-4 36-8-4 7 2 8 9 5 6-3 15-11 25-9 14 1 15 21 3 23-19 7-34-2-48-2-11 0-17-5-25-9Z" fill="url(#fire-trail)" opacity="0.72"/>
+  <path d="M14 34l11 3-8 1Zm22-20 10-5-4 5Z" fill="#fff1b8" opacity="0.49679999999999996"/>
+  <path d="M77 25c-1-9 8-17 16-14 9-3 18 5 18 13-2 12-11 18-21 16-7-2-13-7-13-15Z" fill="url(#fire-core)" stroke="#ffb253" stroke-width="1.4"/>
+  <g transform="rotate(-13 93 25)"><path d="M85 29q-1-7 7-12l-1 6 7-8 5 7-5 9-9 2Z" fill="#fff1b8" opacity=".94"/><path d="M84 26q-5 6 1 10l12-2-9-2Z" fill="#c64a41" opacity=".74"/></g>
+ </g>
+ <g transform="translate(128 48)">
+  <path d="M8 32c18 3 33-8 38-13-1 8 8 3 15-1 9-6 21-8 28 1 8 11-3 21-15 21-15 0-26-9-41-4-8 3-15 0-25-4Z" fill="url(#fire-trail)" opacity="1"/>
+  <path d="M19 21l9-5-4 5Zm19 22 10-1-5 3Z" fill="#fff1b8" opacity="0.69"/>
+  <path d="M77 25c-1-9 8-17 16-14 9-3 18 5 18 13-2 12-11 18-21 16-7-2-13-7-13-15Z" fill="url(#fire-core)" stroke="#ffb253" stroke-width="1.4"/>
+  <g transform="rotate(0 93 25)"><path d="M85 29q-1-7 7-12l-1 6 7-8 5 7-5 9-9 2Z" fill="#fff1b8" opacity=".94"/><path d="M84 26q-5 6 1 10l12-2-9-2Z" fill="#c64a41" opacity=".74"/></g>
+ </g>
+ <g transform="translate(256 48)">
+  <path d="M10 22c20 10 29-3 37-8-2 11 9 6 15 4 13-8 24-3 29 5 4 10-5 17-15 16-17-1-29-7-43-5-10 2-17-5-23-12Z" fill="url(#fire-trail)" opacity="0.82"/>
+  <path d="M17 12l9 3-5 2Zm11 24 12 3-6 2Z" fill="#fff1b8" opacity="0.5658"/>
+  <path d="M77 25c-1-9 8-17 16-14 9-3 18 5 18 13-2 12-11 18-21 16-7-2-13-7-13-15Z" fill="url(#fire-core)" stroke="#ffb253" stroke-width="1.4"/>
+  <g transform="rotate(12 93 25)"><path d="M85 29q-1-7 7-12l-1 6 7-8 5 7-5 9-9 2Z" fill="#fff1b8" opacity=".94"/><path d="M84 26q-5 6 1 10l12-2-9-2Z" fill="#c64a41" opacity=".74"/></g>
+ </g>
+ <g transform="translate(384 48)">
+  <path d="M9 26c16 5 31 3 42-7-1 8 11 1 18-4 13-6 26 6 20 17-5 13-24 7-40 5-13-3-29-3-40-11Z" fill="url(#fire-trail)" opacity="0.91"/>
+  <path d="M24 17l13-3-5 5Zm-5 23 11 1-7 3Z" fill="#fff1b8" opacity="0.6279"/>
+  <path d="M77 25c-1-9 8-17 16-14 9-3 18 5 18 13-2 12-11 18-21 16-7-2-13-7-13-15Z" fill="url(#fire-core)" stroke="#ffb253" stroke-width="1.4"/>
+  <g transform="rotate(3 93 25)"><path d="M85 29q-1-7 7-12l-1 6 7-8 5 7-5 9-9 2Z" fill="#fff1b8" opacity=".94"/><path d="M84 26q-5 6 1 10l12-2-9-2Z" fill="#c64a41" opacity=".74"/></g>
+ </g>
+ <g transform="translate(0 96)">
+  <path d="M9 27l19-8 14 8 13-12 12 8 16-9 8 10-12 12-16-4-15 9-12-7-15-1Z" fill="url(#lightning-trail)" opacity="0.72"/>
+  <path d="M19 11l6 4-4 1 4 4-9-5 4-1Zm23 31 9-4-2 4Z" fill="#fff8d0" opacity="0.49679999999999996"/>
+  <path d="M78 20l10-8 16 3 8 11-7 12-16 3-13-9Z" fill="url(#lightning-core)" stroke="#efd172" stroke-width="1.4"/>
+  <g transform="rotate(-13 93 25)"><path d="M100 14l-14 12 8-1-6 11 16-14-8 1Z" fill="#fff8d0"/><path d="M83 20l-4 4 4 4-3 3" fill="none" stroke="#fff8d0" stroke-width="1.1"/></g>
+ </g>
+ <g transform="translate(128 96)">
+  <path d="M9 21l15 6 18-10 16 7 14-13 13 8 3 12-16 8-17-8-13 5-18-4Z" fill="url(#lightning-trail)" opacity="1"/>
+  <path d="M15 37l8 4-5 2Zm24-27 8-4-1 4-5 2Z" fill="#fff8d0" opacity="0.69"/>
+  <path d="M78 20l10-8 16 3 8 11-7 12-16 3-13-9Z" fill="url(#lightning-core)" stroke="#efd172" stroke-width="1.4"/>
+  <g transform="rotate(0 93 25)"><path d="M100 14l-14 12 8-1-6 11 16-14-8 1Z" fill="#fff8d0"/><path d="M83 20l-4 4 4 4-3 3" fill="none" stroke="#fff8d0" stroke-width="1.1"/></g>
+ </g>
+ <g transform="translate(256 96)">
+  <path d="M8 32l18-12 16 6 13-13 19 9 11-5 9 10-15 12-15-5-18 5-19-5Z" fill="url(#lightning-trail)" opacity="0.82"/>
+  <path d="M20 14l8-2-3 3 5 1-10 2 3-3Zm20 27 8 2-6 2Z" fill="#fff8d0" opacity="0.5658"/>
+  <path d="M78 20l10-8 16 3 8 11-7 12-16 3-13-9Z" fill="url(#lightning-core)" stroke="#efd172" stroke-width="1.4"/>
+  <g transform="rotate(12 93 25)"><path d="M100 14l-14 12 8-1-6 11 16-14-8 1Z" fill="#fff8d0"/><path d="M83 20l-4 4 4 4-3 3" fill="none" stroke="#fff8d0" stroke-width="1.1"/></g>
+ </g>
+ <g transform="translate(384 96)">
+  <path d="M10 26l20-3 12-11 15 11 16-10 17 6 1 14-15 4-14-2-17 7-14-9Z" fill="url(#lightning-trail)" opacity="0.91"/>
+  <path d="M13 34l9 3-4 1 3 4-8-4 3-1Zm24-24 8-3-4 4Z" fill="#fff8d0" opacity="0.6279"/>
+  <path d="M78 20l10-8 16 3 8 11-7 12-16 3-13-9Z" fill="url(#lightning-core)" stroke="#efd172" stroke-width="1.4"/>
+  <g transform="rotate(3 93 25)"><path d="M100 14l-14 12 8-1-6 11 16-14-8 1Z" fill="#fff8d0"/><path d="M83 20l-4 4 4 4-3 3" fill="none" stroke="#fff8d0" stroke-width="1.1"/></g>
+ </g>
+ <g transform="translate(0 144)">
+  <path d="M10 28c13-13 21-10 37-5 11 4 12-9 26-11 10-1 23 5 19 18-6 15-25 15-37 9-19-9-30-12-45-11Z" fill="url(#poison-trail)" opacity="0.72"/>
+  <path d="M22 12l4-2 4 2-1 4-5 1Zm9 28 4-1 2 3-5 2Z" fill="#f0fbc1" opacity="0.49679999999999996"/>
+  <path d="M77 23c2-8 8-15 18-12 8 0 16 6 16 15-1 9-10 14-18 14-10 0-17-9-16-17Z" fill="url(#poison-core)" stroke="#a4d87b" stroke-width="1.4"/>
+  <g transform="rotate(-13 93 25)"><path d="M84 22q3-7 11-7l5 3-8 1-7 7Zm14 8 6-2-2 5-4 1Z" fill="#f0fbc1" opacity=".83"/><circle cx="89" cy="31" r="3" fill="#4d8968"/></g>
+ </g>
+ <g transform="translate(128 144)">
+  <path d="M10 22c14 1 23 10 34 9 11-2 16-16 31-16 10 0 20 7 15 18-4 11-24 10-36 8-18-4-28-16-44-19Z" fill="url(#poison-trail)" opacity="1"/>
+  <path d="M13 31l5-1 2 3-5 2Zm25-15 3-3 4 2-1 4Z" fill="#f0fbc1" opacity="0.69"/>
+  <path d="M77 23c2-8 8-15 18-12 8 0 16 6 16 15-1 9-10 14-18 14-10 0-17-9-16-17Z" fill="url(#poison-core)" stroke="#a4d87b" stroke-width="1.4"/>
+  <g transform="rotate(0 93 25)"><path d="M84 22q3-7 11-7l5 3-8 1-7 7Zm14 8 6-2-2 5-4 1Z" fill="#f0fbc1" opacity=".83"/><circle cx="89" cy="31" r="3" fill="#4d8968"/></g>
+ </g>
+ <g transform="translate(256 144)">
+  <path d="M8 31c20 0 28-15 44-13 9 1 14-7 25-4 9 0 19 7 14 19-5 10-26 10-38 2-15-8-27 2-45-4Z" fill="url(#poison-trail)" opacity="0.82"/>
+  <path d="M16 18l5-2 3 3-4 3Zm25 23 3-2 4 2-2 4Z" fill="#f0fbc1" opacity="0.5658"/>
+  <path d="M77 23c2-8 8-15 18-12 8 0 16 6 16 15-1 9-10 14-18 14-10 0-17-9-16-17Z" fill="url(#poison-core)" stroke="#a4d87b" stroke-width="1.4"/>
+  <g transform="rotate(12 93 25)"><path d="M84 22q3-7 11-7l5 3-8 1-7 7Zm14 8 6-2-2 5-4 1Z" fill="#f0fbc1" opacity=".83"/><circle cx="89" cy="31" r="3" fill="#4d8968"/></g>
+ </g>
+ <g transform="translate(384 144)">
+  <path d="M8 27c18-9 27-8 44 0 10 2 13-13 25-13 9-1 18 8 13 18-5 11-24 13-36 7-16-7-29-13-46-12Z" fill="url(#poison-trail)" opacity="0.91"/>
+  <path d="M25 10l5 1 1 4-5 1Zm-9 24 5-1 2 4-4 2Z" fill="#f0fbc1" opacity="0.6279"/>
+  <path d="M77 23c2-8 8-15 18-12 8 0 16 6 16 15-1 9-10 14-18 14-10 0-17-9-16-17Z" fill="url(#poison-core)" stroke="#a4d87b" stroke-width="1.4"/>
+  <g transform="rotate(3 93 25)"><path d="M84 22q3-7 11-7l5 3-8 1-7 7Zm14 8 6-2-2 5-4 1Z" fill="#f0fbc1" opacity=".83"/><circle cx="89" cy="31" r="3" fill="#4d8968"/></g>
+ </g>
+</svg>

@@ -1,0 +1,82 @@
+.verified-panel { display: grid; gap: 8px; min-width: 0; color: var(--text, #efe6d1); }
+.verified-panel [hidden] { display: none; }
+.verified-panel p, .verified-panel h3 { margin: 0; }
+.verified-status-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.verified-status-row:has(.verified-status:empty):has(button[hidden]) { display: none; }
+.verified-status { color: var(--gold, #ecc782); overflow-wrap: anywhere; }
+.verified-status.verified-error { color: #ffc1b2; }
+.verified-note, .verified-hud small { color: var(--muted, #bebbb1); }
+.verified-lobby { display: grid; gap: 10px; width: min(100%, 54rem); margin-inline: auto; }
+.verified-command-group, .verified-routes { min-width: 0; margin: 0; padding: 0; border: 0; }
+.verified-command-group { display: grid; gap: 8px; }
+.verified-field { display: grid; gap: 6px; min-width: 0; }
+.verified-panel select, .verified-panel input {
+  width: 100%; min-width: 0; min-height: 36px; padding: 5px 7px;
+  border: 1px solid var(--hairline, #5d6877); border-radius: 3px;
+  color: inherit; background: #151c28;
+}
+.verified-panel button { min-height: 34px; }
+.verified-panel .text-btn { padding: 4px 7px; border: 1px solid var(--hairline, #5d6877); background: #151c28; }
+.verified-panel .text-btn:hover { border-color: var(--gold, #ecc782); }
+.verified-panel details {
+  border: 1px solid var(--hairline, #5d6877);
+  background: #171f2b; padding: 0 8px;
+}
+.verified-panel summary { padding: 6px 0; cursor: pointer; color: var(--gold, #ecc782); }
+.verified-panel details > :not(summary) { margin-block: 0 8px; }
+.verified-form-row { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; }
+.verified-form-row > .verified-field { flex: 1 1 8rem; }
+.verified-form-row > .appearance-picker { flex: 0 1 10rem; }
+.verified-build { display: grid; gap: 8px; }
+.verified-build h3 { font-size: 14px; }
+.verified-build ul { list-style: none; margin: 0; padding: 0; }
+.verified-build li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-block: 4px; }
+.verified-build li + li { border-top: 1px solid var(--hairline, #5d6877); }
+.verified-build li > span { flex: 1 1 auto; }
+.verified-build li small { color: var(--muted, #bebbb1); }
+
+.verified-stage { display: grid; gap: 6px; }
+.verified-hud { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.verified-hud > div { display: grid; flex: 1 1 11rem; }
+.verified-hud strong { font-size: 15px; }
+.verified-hud p { flex: 1 1 auto; }
+.verified-boss { color: #ffc3a8; }
+.verified-world { position: relative; min-width: 0; }
+.verified-world:focus-visible { outline: 2px solid var(--focus-jade, #85d6c0); outline-offset: 2px; }
+.verified-world canvas {
+  display: block; width: 100%; height: clamp(200px, 54dvh, 510px);
+  border: 1px solid var(--hairline, #5d6877); background: #111623;
+  touch-action: none;
+}
+.verified-combat, .verified-routes { display: flex; flex-wrap: wrap; gap: 5px; }
+.verified-combat { margin-top: 6px; }
+.verified-combat button {
+  padding: 4px 7px; border: 1px solid #7d745f; background: #182234;
+  color: #f5e7c8; line-height: 1.25; overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+.verified-combat button:hover { border-color: var(--gold, #ecc782); }
+.verified-combat small, .verified-routes small { color: var(--gold, #ecc782); }
+.verified-combat [data-verified-input="attack"] { touch-action: none; }
+.verified-stick { display: none; }
+
+@media (pointer: coarse) {
+  .verified-panel button, .verified-panel select, .verified-panel input { min-height: 44px; }
+  .verified-panel select, .verified-panel input { font-size: 16px; }
+}
+
+@media (pointer: coarse) and (orientation: landscape) {
+  .verified-world canvas { height: clamp(180px, 62dvh, 430px); }
+  .verified-stick {
+    position: absolute; left: 8px; bottom: 8px; display: grid; place-items: center;
+    width: 86px; height: 86px; border: 1px solid #d5bd8c; border-radius: 50%;
+    background: #131925b8; touch-action: none;
+  }
+  .verified-stick i { width: 29px; height: 29px; border: 1px solid #f0cb86; border-radius: 50%; background: #665742; pointer-events: none; }
+  .verified-combat {
+    position: absolute; right: 8px; bottom: 8px; width: min(48%, 22rem);
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin: 0;
+  }
+  .verified-combat button { padding: 3px; background: #182234e8; }
+  .verified-combat small, .verified-key-help { display: none; }
+}

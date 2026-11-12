@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "裂界遺火",
+  "short_name": "裂界遺火",
+  "description": "燼脈天賦 · 三章遠征與裂隙刷裝 RPG",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#161823",
+  "theme_color": "#161823",
+  "icons": [
+    {
+      "src": "icons/emberfall-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/emberfall-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/emberfall-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "orientation": "landscape"
+}

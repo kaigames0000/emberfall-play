@@ -1,0 +1,19 @@
+.settings-links,.cloud-actions,.cloud-head {
+  display:flex; align-items:center; gap:.45rem; flex-wrap:wrap;
+}
+.settings-links { margin-top:.8rem; }
+.settings-links .outline-btn { text-decoration:none; }
+.cloud-panel { display:grid; justify-items:start; gap:.65rem; line-height:1.55; }
+.cloud-panel p { margin:0; }
+.cloud-head { width:100%; justify-content:space-between; }
+.cloud-status { min-height:1.55em; color:#e4bc84; }
+.cloud-history { width:100%; }
+.cloud-history li { display:flex; align-items:center; justify-content:space-between; }
+.cloud-auto { display:flex; align-items:center; gap:.45rem; }
+.cloud-confirm {
+  display:grid; gap:.45rem; padding:.6rem; width:100%;
+  background:#312a22; border:1px solid #826343;
+}
+.cloud-confirm[hidden] { display:none; }
+.cloud-signin { display:grid; justify-items:start; gap:.65rem; }
+.cloud-signin p { margin:0; }

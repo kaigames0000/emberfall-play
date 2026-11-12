@@ -1,0 +1,42 @@
+:root {
+ --anime-abbey: url("art/bplus/ui/monastery.webp");
+ --anime-port: url("art/bplus/ui/harbor.webp");
+ --anime-court: url("art/bplus/ui/court.webp");
+ --anime-abbey-svg-opacity: 0;
+}
+.chapter-theme-2 .chapter-card-picture {
+ background: #1c3441 var(--anime-port) center 53% / cover no-repeat;
+}
+.chapter-theme-3 .chapter-card-picture {
+ background: #28273f var(--anime-court) center 50% / cover no-repeat;
+}
+.campaign-chapter-card .chapter-card-picture .chapter-card-art { opacity: 0; }
+.chapter-theme-2 .chapter-card-picture::before,.chapter-theme-3 .chapter-card-picture::before {
+ content:""; position:absolute; inset:0;
+ background:linear-gradient(transparent 37%,rgba(12,17,24,.58));
+ pointer-events:none;
+}
+
+#create-character-form {
+  background: linear-gradient(105deg, #141a25fb 35%, #171d28d9 75%, #171d2880),
+    var(--anime-abbey) center 46% / cover no-repeat;
+}
+.appearance-stage {
+  background: radial-gradient(ellipse at 50% 66%, #4a4d4e, #222b3a 63%, #171c27 89%);
+}
+
+.item-detail-toolbar { background:transparent; border-color:#9aafd349; }
+.paid-map-card[data-map-card="vault"] .chapter-card-picture,
+.paid-map-card[data-map-card="forge"] .chapter-card-picture,
+.paid-map-card[data-map-card="royal"] .chapter-card-picture {
+ background: linear-gradient(#5a303220,#151b29ad), var(--anime-abbey) center 58% / cover;
+}
+.paid-map-card[data-map-card="contract"] .chapter-card-picture {
+ background:linear-gradient(#255b6220,#101b2bad),var(--anime-port) center 58% / cover;
+}
+.paid-map-card[data-map-card="hunt"] .chapter-card-picture,
+.paid-map-card[data-map-card="sanctum"] .chapter-card-picture,
+.paid-map-card[data-map-card="final"] .chapter-card-picture {
+ background:linear-gradient(#412d5c24,#141728ae),var(--anime-court) center 50% / cover;
+}
+.paid-map-card .chapter-card-art { opacity:0; }
