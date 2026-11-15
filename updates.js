@@ -1,10 +1,11 @@
-import {RELEASE_NOTES} from './release-notes.mjs?v=147';
+import {RELEASE_NOTES} from './release-notes.mjs?v=153';
 import {renderReleaseHistory,upcomingReleaseNote} from './release-history.js?v=134';
 
 // Browser/PWA only. The portable edition omits this module and keeps its saves.
-if(['http:','https:'].includes(location.protocol)){
- const dialog=document.querySelector('#install-help'),tools=document.querySelector('.game-top-tools');
- if(dialog&&tools){
+export function mountUpdateTools(root,dialog,signal){
+ const tools=root.querySelector('.game-top-tools');
+ if(!dialog||!tools)return;
+  const listen=(target,type,handler)=>target.addEventListener(type,handler,{signal});
   const version=document.querySelector('meta[name="emberfall-version"]')?.content||'未知';
   const revision=Number(document.querySelector('meta[name="emberfall-release"]')?.content||0);
   const supported=window.isSecureContext&&'serviceWorker'in navigator;
@@ -12,6 +13,7 @@ if(['http:','https:'].includes(location.protocol)){
   let checking=null,lastCheck=0,applying=false,reloaded=false,activationTimer=null;
   let renderedNote;
   const observed=new WeakSet();
+  let networkCheck;
   const style=document.createElement('style');style.textContent=`
    #install-help{max-height:90dvh;overflow-y:auto;width:min(520px,calc(100vw - 32px))}
    #install-help[data-mode=updates]>p{display:none}
@@ -34,6 +36,7 @@ if(['http:','https:'].includes(location.protocol)){
   current.textContent='目前 v'+version;
   const validRelease=value=>value?.schema===1&&/^\d+\.\d+\.\d+$/.test(value.version)&&Number.isSafeInteger(value.revision)&&value.revision>0&&/^[a-f0-9]{20}$/.test(value.build);
   function render(){
+   if(signal.aborted)return;
    status.textContent=message;status.dataset.state=phase;
    checkButton.disabled=!!checking||applying||!supported;
    checkButton.textContent=checking?'檢查中…':'檢查更新';
@@ -43,7 +46,7 @@ if(['http:','https:'].includes(location.protocol)){
    indicator.textContent=waiting?'新版可更新':'版本與更新';
    indicator.title=waiting?'新版已下載，查看更新':'查看版本與檢查更新';
    indicator.setAttribute('aria-label',indicator.title);
-   document.querySelector('#settings')?.classList.toggle('has-update',!!waiting);
+   root.querySelector('#settings')?.classList.toggle('has-update',!!waiting);
    dialog.querySelector('.modal-close').disabled=applying;
    latestLabel.textContent=latest?'最新 v'+latest.version:'';
    const incoming=upcomingReleaseNote(latest,revision),noteStamp=JSON.stringify(incoming);
@@ -70,6 +73,7 @@ if(['http:','https:'].includes(location.protocol)){
    });
   }
   async function findWaiting(){
+   if(signal.aborted)return false;
    const candidate=registration?.waiting;
    if(!candidate||candidate.state!=='installed'){waiting=null;return false;}
    try{
@@ -80,18 +84,19 @@ if(['http:','https:'].includes(location.protocol)){
    }catch{return false;}
   }
   function observe(reg){
-   if(!reg||observed.has(reg))return;
+   if(signal.aborted||!reg||observed.has(reg))return;
    registration=reg;observed.add(reg);
    const watch=()=>{
     const worker=reg.installing;
-    if(worker)worker.addEventListener('statechange',()=>{
+    if(worker)listen(worker,'statechange',()=>{
      if(worker.state==='installed')void findWaiting();
      if(worker.state==='redundant'&&!waiting)setStatus('error','新版下載未完成，仍可繼續目前版本；稍後再試。');
     });
    };
-   reg.addEventListener('updatefound',watch);watch();void findWaiting();
+   listen(reg,'updatefound',watch);watch();void findWaiting();
   }
   async function check(manual=false){
+   if(signal.aborted)return;
    if(checking)return checking;
    if(!supported){setStatus('unsupported','請使用 HTTPS 網址開啟，才能檢查及安裝更新。');return;}
    if(!manual&&(document.hidden||Date.now()-lastCheck<60000))return;
@@ -104,13 +109,14 @@ if(['http:','https:'].includes(location.protocol)){
      if(navigator.onLine===false)throw Error('offline');
      // This file is deliberately outside the service worker's cached shell.
      const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
+     networkCheck=controller;
      let remote;
      try{
       const url=new URL('./version.json',import.meta.url);url.searchParams.set('check',String(Date.now()));
       const response=await fetch(url,{cache:'no-store',signal:controller.signal});
       if(!response.ok)throw Error('version-unavailable');remote=await response.json();
       if(!validRelease(remote))throw Error('invalid-release');
-     }finally{clearTimeout(timer);}
+     }finally{clearTimeout(timer);networkCheck=null;}
      latest=remote;
      await withDeadline(registration.update(),12000);
      if(await findWaiting())return;
@@ -134,36 +140,47 @@ if(['http:','https:'].includes(location.protocol)){
   dialog.addEventListener('close',()=>delete dialog.dataset.mode);
   dialog.addEventListener('cancel',event=>{if(applying)event.preventDefault();});
   indicator.addEventListener('click',open);
-  window.addEventListener('emberfall:updates-open',open);
-  window.addEventListener('emberfall:pwa-registration',event=>{observe(event.detail?.registration);});
+  listen(window,'emberfall:updates-open',open);
+  listen(window,'emberfall:pwa-registration',event=>{observe(event.detail?.registration);});
   applyButton.addEventListener('click',async()=>{
-   if(applying||!waiting)return;
+   if(signal.aborted||applying||!waiting)return;
    const result={ok:false,reason:'遊戲尚未準備完成，請稍後再試。'};
    applying=true;setStatus('saving','正在儲存進度…');
    window.dispatchEvent(new CustomEvent('emberfall:update-save',{detail:result}));
    try{if(result.pending)await withDeadline(result.pending,15000);}catch{result.ok=false;result.reason='儲存尚未完成，已取消更新。';}
+   if(signal.aborted)return;
    if(!result.ok){applying=false;setStatus('blocked',result.reason);return;}
    if(!navigator.serviceWorker.controller){applying=false;setStatus('blocked','請關閉所有遊戲視窗再重新開啟，完成首次安裝。');return;}
    applying=true;setStatus('applying','進度已儲存，正在套用新版…');
    try{
     const response=await request(waiting,'EMBERFALL_APPLY_UPDATE');
+    if(signal.aborted)return;
     if(!response.ok)throw Error(response.reason);
     activationTimer=setTimeout(()=>{applying=false;setStatus('error','更新未能完成，請關閉所有遊戲視窗後重新開啟。');},12000);
    }catch(error){
     applying=false;setStatus('blocked',error.message==='other-windows'?'請先關閉其他遊戲分頁或安裝版視窗，再按「儲存並更新」。':'暫時無法套用更新。進度已保存，可稍後重試。');
    }
   });
+  let startupTimer,interval;
   if(supported){
-   navigator.serviceWorker.addEventListener('controllerchange',()=>{
+   listen(navigator.serviceWorker,'controllerchange',()=>{
     if(!applying||reloaded)return;reloaded=true;clearTimeout(activationTimer);location.reload();
    });
    navigator.serviceWorker.getRegistration(new URL('./',import.meta.url)).then(observe).catch(()=>{});
-   setTimeout(()=>void check(),3000);
-   setInterval(()=>{if(!document.hidden)void check();},600000);
-   window.addEventListener('focus',()=>void check());
-   window.addEventListener('online',()=>void check());
-   document.addEventListener('visibilitychange',()=>{if(!document.hidden)void check();});
+   startupTimer=setTimeout(()=>void check(),3000);
+   interval=setInterval(()=>{if(!document.hidden)void check();},600000);
+   listen(window,'focus',()=>void check());
+   listen(window,'online',()=>void check());
+   listen(document,'visibilitychange',()=>{if(!document.hidden)void check();});
   }else setStatus('unsupported','請使用 HTTPS 網址開啟，才能檢查及安裝更新。');
   render();
- }
+  signal.addEventListener('abort',()=>{
+   clearTimeout(startupTimer);
+   clearTimeout(activationTimer);
+   clearInterval(interval);
+   networkCheck?.abort();
+   style.remove();
+   indicator.remove();
+   section.remove();
+  },{once:true});
 }

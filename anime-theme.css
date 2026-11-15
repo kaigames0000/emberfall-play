@@ -452,8 +452,8 @@ body:not(.mobile-phone):has(.arena.in-combat) #toasts { bottom: 101px; }
   box-shadow: none;
   background: transparent;
 }
-#panel-tabs > button:not(.panel-refund),
-#panel-dialog :is(.inventory-view-tabs, .d2-tabs, .adventure-tabs, .workshop-tabs, .expedition-difficulties, .inventory-category-pages, .rift-options, .flask-targets) button {
+#panel-dialog .ui-choice,
+#panel-dialog :is(.d2-tabs, .workshop-tabs, .flask-targets) button {
   color: var(--muted);
   border: 1px solid transparent;
   border-bottom-color: #879bb95c;
@@ -462,15 +462,19 @@ body:not(.mobile-phone):has(.arena.in-combat) #toasts { bottom: 101px; }
   box-shadow: none;
   letter-spacing: .015em;
 }
-#panel-tabs > button.selected,
-#panel-dialog :is(.inventory-view-tabs, .d2-tabs, .adventure-tabs, .workshop-tabs, .expedition-difficulties, .inventory-category-pages, .rift-options, .flask-targets) button:is(.selected,[aria-pressed=true]) {
+#panel-dialog .ui-choice[aria-pressed=true],
+#panel-dialog :is(.d2-tabs, .workshop-tabs, .flask-targets) button:is(.selected,[aria-pressed=true]) {
   border-color: #d8c08d54;
   border-bottom-color: #e6d0a0;
   background: var(--selected-wash);
   color: var(--ivory);
   box-shadow: inset 0 -1px #e6d0a055;
 }
-#panel-dialog :is(input:not([type=checkbox],[type=radio]), select), #panel-dialog .hero-name-field input:focus {
+#panel-dialog .ui-choice:where(:hover, :focus-visible):not(:disabled) { border-color: var(--gold); color: var(--ivory); }
+#panel-dialog .ui-choice:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+#panel-dialog .ui-choice:disabled { opacity: .55; cursor: not-allowed; }
+#panel-dialog :is(.auto-loot-colors,.vendor-colours) label:has(:focus-visible) { outline: 2px solid var(--gold); outline-offset: 2px; }
+#panel-dialog :is(input:not([type=checkbox],[type=radio]), select){
   background: #0d1725dd;
   border-color: #7185a36f;
   border-radius: 2px;
@@ -479,41 +483,8 @@ body:not(.mobile-phone):has(.arena.in-combat) #toasts { bottom: 101px; }
 }
 #panel-dialog :is(input:not([type=checkbox],[type=radio]), select):focus { border-color: var(--gold); }
 #panel-dialog input::placeholder { color: var(--muted); }
-#create-character-form {
-  padding: 9px 12px;
-  background: linear-gradient(108deg, #152030fc 25%, #141e2dc4 74%, #111a2b79), var(--anime-abbey, none) center 40% / cover no-repeat;
-  border-top: 1px solid var(--hairline);
-}
-.create-intro { margin-bottom: 12px; }
-#create-character-form > .appearance-picker { margin-block: 8px; }
-.create-intro p { color: var(--ivory); font-family: inherit; font-size: 15px; letter-spacing: 0; }
-.create-intro > span, .hero-card-info :is(p,small), .hero-name-field .name-helper { color: var(--muted); }
-.create-form-footer, .create-class-heading { border-color: var(--hairline); }
-.create-class-grid .class-card, .hero-card {
-  background: linear-gradient(142deg, #293b51c7, #141e30e6);
-  border-color: var(--hairline);
-  box-shadow: none;
-}
-.create-class-grid .class-card.selected, .hero-card.selected { background: linear-gradient(142deg, #484552e0, #222d40f0); border-color: #c6b180; }
-.create-class-grid .class-card :is(h3,svg), .hero-card-info h3 { color: var(--ivory); }
-.create-class-grid .class-card small { color: var(--muted); }
-.starter-weapon-grid .class-card {
- display: grid;
- grid-template-columns: 34px minmax(0,1fr);
- align-content: center;
- align-items: center;
- gap: 2px 7px;
- min-height: 65px;
- padding: 7px 9px;
-}
-.starter-weapon-grid .class-card > svg {
- grid-row: 1 / 3;
- width: 32px;
- height: 32px;
- margin: 0;
-}
-.starter-weapon-grid .class-card h3 { font-size: 15px; margin: 0; }
-.starter-weapon-grid .class-card small { font-size: 10px; line-height: 1.3; }
+
+
 #panel-dialog :is(.achievement-card,.guide-grid article,.setting-row,.stat-card,.char-card,.training-detail-card,.difficulty-overview,.paid-map-controls,.paid-map-options,.inventory-vendor,.compact-vendor,.flask-gear-details,.service-grid-section,.service-selection,.death-summary,.loot-comparison,.skill-detail-box) {
   border-color: var(--hairline);
   background: var(--panel-wash);
@@ -552,21 +523,10 @@ body:not(.mobile-phone):has(.arena.in-combat) #toasts { bottom: 101px; }
   background: var(--panel-wash);
   box-shadow: none;
 }
-.inventory-topline, .inventory-currencies, .paperdoll-stats, .potion-equipment, .inventory-pane-title { border-color: var(--hairline); }
-.inventory-currencies, .inventory-pane-title h3, .paperdoll-stats b { color: var(--ivory); }
-.inventory-capacity, .paperdoll-slot-label, .paperdoll-stats small { color: var(--muted); }
+.inventory-topline, .inventory-currencies, .potion-equipment, .inventory-pane-title { border-color: var(--hairline); }
+.inventory-currencies, .inventory-pane-title h3 { color: var(--ivory); }
+.inventory-capacity { color: var(--muted); }
 .pickup-filter, .auto-loot-preferences { background: #131e2ccf; border-color: var(--hairline); box-shadow: none; }
-.mini-hero-preview {
-  border-color: var(--hairline);
-  background: radial-gradient(ellipse at 12% 65%, #555953, #252e3c 46%, #1a2230 76%);
-}
-.mini-hero-preview .hero-model-preview { filter: drop-shadow(0 4px 7px #050810d9); }
-.mini-hero-preview { grid-template-columns: 1fr; justify-items: center; }
-.inventory-dialog .worn-equipment .paperdoll { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
-.inventory-dialog .worn-equipment .paperdoll .paperdoll-slot { grid-area: auto; }
-.inventory-dialog .worn-equipment .paperdoll .inventory-cell { min-height: 44px; }
-.inventory-dialog .worn-equipment .paperdoll .inventory-cell svg { width: 24px; height: 24px; }
-.inventory-dialog .worn-equipment .paperdoll .inventory-cell small { font-size: 8px; }
 .backpack-toolbar, .equipment-inspector-layout .backpack-toolbar { border-color: var(--hairline); background: #172334; box-shadow: none; }
 .inventory-dialog .backpack-scroll, .stash-dialog .stash-scroll { border: 0; background: none; }
 .backpack-grid { border: 0; padding: 0; background: transparent; }
@@ -737,14 +697,11 @@ body:not(.mobile-phone):has(.arena.in-combat) #toasts { bottom: 101px; }
 @media (pointer: coarse) {
   #panel-dialog :is(.inventory-view-tabs,.adventure-tabs,.expedition-difficulties,.inventory-category-pages) button,
   #panel-dialog .route-footer > .gold-btn { min-height: 44px; }
-  .mini-hero-preview .appearance-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mini-hero-preview :is(.appearance-modes button,.text-btn) { min-height: 44px; }
 }
 @media (orientation: landscape) {
   body.mobile-phone #panel-dialog .dialog-header { padding-inline: 8px; }
   body.mobile-phone #panel-dialog #panel-tabs > button,
   body.mobile-phone #panel-dialog.route-dialog .adventure-tabs button,
   body.mobile-phone #panel-dialog .campaign-difficulty .expedition-difficulties > button { min-height: 44px; }
-  body.mobile-phone .inventory-dialog .worn-equipment .paperdoll .inventory-cell { aspect-ratio: auto; height: 54px; }
   body.mobile-phone .inventory-dialog .backpack-grid.unified-item-grid { grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); }
 }

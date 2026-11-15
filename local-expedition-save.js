@@ -14,9 +14,10 @@ export function settleInterruptedPaidRun(profile){
  return result;
 }
 
-export function takePaidRunLock(locks,{wait=false}={}){
+export function takePaidRunLock(locks,{wait=false,signal}={}){
  return new Promise((resolve,reject)=>{
-  Promise.resolve(locks.request('emberfall-paid-run',{ifAvailable:!wait},lock=>{
+  const options=wait&&signal?{signal}:{ifAvailable:!wait};
+  Promise.resolve(locks.request('emberfall-paid-run',options,lock=>{
    if(!lock){resolve(null);return;}
    return new Promise(release=>resolve(release));
   })).catch(reject);

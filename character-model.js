@@ -1,4 +1,4 @@
-import {drawBplusHero} from './bplus-hero.js?v=127';
+import {drawBplusHero} from './bplus-hero.js?v=148';
 import {resolveAppearance} from './character-appearance.js?v=108';
 import {applyHeroBodyPose} from './hero-motion.js?v=127';
 const PI=Math.PI;

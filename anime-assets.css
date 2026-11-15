@@ -17,10 +17,7 @@
  pointer-events:none;
 }
 
-#create-character-form {
-  background: linear-gradient(105deg, #141a25fb 35%, #171d28d9 75%, #171d2880),
-    var(--anime-abbey) center 46% / cover no-repeat;
-}
+
 .appearance-stage {
   background: radial-gradient(ellipse at 50% 66%, #4a4d4e, #222b3a 63%, #171c27 89%);
 }

@@ -1,7 +1,7 @@
 import {animeMaterialSymbols} from './anime-materials.js?v=124';
 import * as M from './model.js?v=140';
 import {FLASK_KEYS} from './scene-input.js?v=108';
-const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import {escapeHtml as esc,iconMarkup} from './ui-controls.js?v=152';
 
 export function inventoryIconSymbols(){return animeMaterialSymbols();}
 export function currencyCountersMarkup(entries){return entries.map(entry=>`<span class="inventory-currency currency-${esc(entry.kind)}" title="${esc(entry.name)}" aria-label="${esc(entry.name)}，${entry.quantity}"><svg aria-hidden="true"><use href="#i-${esc(entry.icon)}"/></svg><small>${esc(entry.name)}</small><b>${entry.quantity.toLocaleString('zh-TW')}</b></span>`).join('');}
@@ -42,9 +42,18 @@ export function equipmentAffixesMarkup(item,equipped){
  return `<div class="gear-rolls" aria-label="裝備詞條">${shared.length?`<small class="gear-group-label">相同詞條</small>${shared.map(({candidate,current,delta})=>`<div class="gear-affix-pair gear-columns has-comparison" data-affix="${esc(candidate.key)}">${equipmentRollCell(candidate,delta)}${equipmentRollCell(current)}</div>`).join('')}`:''}${candidateOnly.length||currentOnly.length?`<small class="gear-group-label">${equipped?'各自詞條':'詞條'}</small><div class="gear-columns ${equipped?'has-comparison':''}"><div>${independent(candidateOnly)}</div>${equipped?`<div>${independent(currentOnly)}</div>`:''}</div>`:shared.length?'':'<small class="gear-no-rolls">無額外詞條</small>'}</div>`;
 }
 
+export function inventoryCellButton({id,from,icon,color,label,selected,draggable,extraClass,placement,content}){
+ return `<button type="button" class="inventory-cell ${extraClass}${selected?' selected':''}" data-inventory-item="${esc(id)}" data-inventory-from="${esc(from)}" ${placement} draggable="${draggable}" style="--item-color:${esc(color)}" aria-label="${esc(label)}" aria-pressed="${selected}">${iconMarkup(icon)}${content}<span class="cell-quality"></span></button>`;
+}
+
 export function itemCell(entry,{selected=false,draggable=true,flaskSlot=null,stashSlot=null}={}){
  const {id,from,kind,name,color,quantity,shared,icon}=entry;
  const drop=stashSlot!==null?`data-stash-slot="${stashSlot}"`:flaskSlot!==null?`data-flask-equip="${flaskSlot}"`:from==='flask-equipped'||from==='flask-stash'?'':`data-bag-drop="${esc(id)}"`;
- const label=kind==='flask'?M.FLASKS[entry.item.type].short:name;
- return `<button type="button" class="inventory-cell carried-item kind-${kind} ${from==='flask-equipped'?'worn-cell ':''}${selected?'selected':''}" data-inventory-item="${esc(id)}" data-inventory-from="${from}" ${drop} draggable="${draggable}" style="--item-color:${color}" aria-label="${esc(name)}${kind==='flask'?`，等級${entry.item.level}，品質${entry.item.quality}%`:`，數量${quantity}`}${shared?'，帳號共用':''}" aria-pressed="${selected}"><svg aria-hidden="true"><use href="#i-${icon}"/></svg>${shared?'<span class="cell-shared" title="帳號共用">共</span>':''}${entry.tier?`<span class="cell-item-tier">${entry.tier}級</span>`:''}<span class="cell-item-label">${esc(label)}</span>${kind!=='flask'?`<b class="cell-stack-count" title="${quantity}">${quantity.toLocaleString('zh-TW')}</b>`:`<span class="cell-potion-level">Lv.${entry.item.level}${entry.item.quality?' ＋'+entry.item.quality+'%':''}</span>`}${flaskSlot!==null?`<kbd class="potion-shortcut">${FLASK_KEYS[flaskSlot]}</kbd>`:''}<span class="cell-quality"></span></button>`;
+ const flask=kind==='flask',shortName=flask?M.FLASKS[entry.item.type].short:name;
+ const label=name+(flask?`，等級${entry.item.level}，品質${entry.item.quality}%`:`，數量${quantity}`)+(shared?'，帳號共用':'');
+ const amount=flask?`<span class="cell-potion-level">Lv.${entry.item.level}${entry.item.quality?' ＋'+entry.item.quality+'%':''}</span>`:`<b class="cell-stack-count" title="${quantity}">${quantity.toLocaleString('zh-TW')}</b>`;
+ const content=(shared?'<span class="cell-shared" title="帳號共用">共</span>':'')+
+  (entry.tier?`<span class="cell-item-tier">${entry.tier}級</span>`:'')+`<span class="cell-item-label">${esc(shortName)}</span>`+amount+
+  (flaskSlot!==null?`<kbd class="potion-shortcut">${FLASK_KEYS[flaskSlot]}</kbd>`:'');
+ return inventoryCellButton({id,from,icon,color,label,selected,draggable,extraClass:`carried-item kind-${kind}${from==='flask-equipped'?' worn-cell':''}`,placement:drop,content});
 }

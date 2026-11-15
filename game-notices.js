@@ -2,7 +2,7 @@ const ITEM_LIMIT=3;
 const ITEM_TIME=4300;
 const LEVEL_TIME=3800;
 
-export function createGameNotices(loot,level,actions){
+export function createGameNotices(loot,level,actions,{setTimeout=globalThis.setTimeout,clearTimeout=globalThis.clearTimeout}={}){
  const document=loot.ownerDocument,items=new Map(),messages=new Map();
  let levelTimer=0,levelPoints=0,pointLabel='';
 

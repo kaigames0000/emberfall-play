@@ -1,8 +1,25 @@
-// Kept separate from gameplay and omitted from the portable single-file edition.
+import {iconMarkup} from './ui-controls.js?v=152';
+
+// Register once per page. The game attaches its settings UI when it is mounted.
+let offlineStatus='離線內容尚未準備完成，請保持連線遊玩。';
+let installPrompt=null,wasInstalled=false;
+const offlineListeners=new Set();
+
 if(['https:','http:'].includes(location.protocol)){
- let offlineStatus='離線內容尚未準備完成，請保持連線遊玩。',refreshStatus=()=>{};
- const host=document.querySelector('.game-top-tools');
- if(host){
+ window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;});
+ window.addEventListener('appinstalled',()=>{installPrompt=null;wasInstalled=true;offlineListeners.forEach(refresh=>refresh());});
+ if(window.isSecureContext&&'serviceWorker'in navigator){
+  navigator.serviceWorker.register(new URL('./sw.js',import.meta.url),{scope:'./',updateViaCache:'none'})
+   .then(registration=>{window.dispatchEvent(new CustomEvent('emberfall:pwa-registration',{detail:{registration}}));return navigator.serviceWorker.ready;})
+   .then(registration=>{if(registration.active){offlineStatus='離線內容準備完成，下次開啟即可離線遊玩。';offlineListeners.forEach(refresh=>refresh());}})
+   .catch(()=>{offlineStatus='暫時無法準備離線內容，請保持連線遊玩；稍後重新開啟可再試一次。';offlineListeners.forEach(refresh=>refresh());});
+ }
+}
+
+export function mountInstallTools(root,signal){
+ if(!['http:','https:'].includes(location.protocol))return;
+ const host=root.querySelector('.game-top-tools');
+ if(!host)return;
   const style=document.createElement('style');style.textContent=`
    #install-game{width:auto;min-width:40px;padding:0 9px;font-size:11px;color:#d3bc86;white-space:nowrap}
    #install-game:focus-visible,#install-help button:focus-visible{outline:2px solid #d3bc86;outline-offset:3px}
@@ -15,19 +32,17 @@ if(['https:','http:'].includes(location.protocol)){
   const dialog=document.createElement('dialog');dialog.id='install-help';dialog.setAttribute('aria-labelledby','install-heading');
   const heading=document.createElement('h2');heading.id='install-heading';heading.textContent='安裝與更新';
   const text=document.createElement('p'),close=document.createElement('button'),header=document.createElement('div');
-  header.className='dialog-header compact-sheet-header';close.type='button';close.className='modal-close';close.setAttribute('aria-label','關閉安裝與更新');close.title='關閉安裝與更新';close.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M5 19 19 5"/></svg>';close.addEventListener('click',()=>dialog.close());header.append(heading,close);dialog.append(header,text);document.body.append(dialog);
-  let installPrompt=null,nativePromptOpen=false,wasInstalled=false,helpMessage='';
+  header.className='dialog-header compact-sheet-header';close.type='button';close.className='modal-close';close.setAttribute('aria-label','關閉安裝與更新');close.title='關閉安裝與更新';close.innerHTML=iconMarkup('close');close.addEventListener('click',()=>dialog.close());header.append(heading,close);dialog.append(header,text);root.append(dialog);
+  let nativePromptOpen=false,helpMessage='';
   const display=matchMedia('(display-mode: standalone)');
   const installed=()=>wasInstalled||display.matches||navigator.standalone===true;
-  function overlay(){window.dispatchEvent(new CustomEvent('emberfall:pwa-overlay',{detail:{open:nativePromptOpen||dialog.open}}));}
+  function overlay(){if(signal.aborted)return;window.dispatchEvent(new CustomEvent('emberfall:pwa-overlay',{detail:{open:nativePromptOpen||dialog.open}}));}
   function refresh(){button.textContent=installed()?'已安裝':'安裝';button.setAttribute('aria-label',installed()?'裂界遺火已安裝':'安裝裂界遺火');button.title=offlineStatus;text.textContent=helpMessage+' '+offlineStatus;}
-  function help(message){helpMessage=message;refresh();dialog.showModal();overlay();}
-  refreshStatus=refresh;
+  function help(message){if(signal.aborted)return;helpMessage=message;refresh();dialog.showModal();overlay();}
+  offlineListeners.add(refresh);
   dialog.addEventListener('close',overlay);
   dialog.addEventListener('cancel',()=>setTimeout(overlay,0));
-  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;refresh();});
-  window.addEventListener('appinstalled',()=>{installPrompt=null;wasInstalled=true;refresh();});
-  display.addEventListener?.('change',refresh);
+  display.addEventListener?.('change',refresh,{signal});
   button.addEventListener('click',async()=>{
    if(installed()||button.textContent==='已安裝'){help('裂界遺火已安裝。從主畫面或應用程式列表開啟，即可繼續冒險。');return;}
    if(installPrompt){
@@ -38,11 +53,12 @@ if(['https:','http:'].includes(location.protocol)){
    help(/iPad|iPhone|iPod/.test(navigator.userAgent)?'在 Safari 點選「分享」，再選「加入主畫面」。':'請在瀏覽器選單尋找「安裝裂界遺火」、「安裝應用程式」或「加入主畫面」。若未出現，請以最新版 Chrome、Edge 或 Safari 開啟此頁。');
   });
   refresh();
- }
- if(window.isSecureContext&&'serviceWorker'in navigator){
-  navigator.serviceWorker.register(new URL('./sw.js',import.meta.url),{scope:'./',updateViaCache:'none'})
-   .then(registration=>{window.dispatchEvent(new CustomEvent('emberfall:pwa-registration',{detail:{registration}}));return navigator.serviceWorker.ready;})
-   .then(registration=>{if(registration.active){offlineStatus='離線內容準備完成，下次開啟即可離線遊玩。';refreshStatus();}})
-   .catch(()=>{offlineStatus='暫時無法準備離線內容，請保持連線遊玩；稍後重新開啟可再試一次。';refreshStatus();});
- }
+  signal.addEventListener('abort',()=>{
+   offlineListeners.delete(refresh);
+   if(dialog.open)dialog.close();
+   style.remove();
+   button.remove();
+   dialog.remove();
+  },{once:true});
+  return dialog;
 }

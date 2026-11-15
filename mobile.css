@@ -219,7 +219,7 @@ body.mobile-phone #panel-dialog{touch-action:manipulation}
  body.mobile-phone #panel-dialog{--modal-close-size:34px}
  body.mobile-phone #panel-dialog .dialog-header{min-height:40px;padding:3px 6px;gap:4px}
  body.mobile-phone #panel-dialog :is(#panel-tabs,.adventure-tabs,.expedition-difficulties,.inventory-category-pages,.d2-tabs,.workshop-tabs,.resource-tabs,.rift-options,.flask-targets,.stash-categories){gap:3px}
- body.mobile-phone #panel-dialog :is(#panel-tabs,.adventure-tabs,.expedition-difficulties,.inventory-category-pages,.d2-tabs,.workshop-tabs,.resource-tabs,.rift-options,.flask-targets,.stash-categories)>button{
+ body.mobile-phone #panel-dialog :is(#panel-tabs,.adventure-tabs,.expedition-difficulties,.inventory-category-pages,.d2-tabs,.workshop-tabs,.resource-tabs,.rift-options,.flask-targets,.stash-categories,.achievement-toolbar nav)>button{
   min-height:32px;padding:3px 7px;font-size:11px;line-height:1.2
  }
  body.mobile-phone #panel-dialog.route-dialog .adventure-tabs{padding:1px}
@@ -306,29 +306,34 @@ body.mobile-phone #panel-dialog{touch-action:manipulation}
  body.mobile-phone #panel-dialog .inventory-view .inventory-bag-column{
   display:flex;flex-direction:column;grid-column:2;grid-row:1;min-width:0;min-height:0;height:100%
  }
- body.mobile-phone #panel-dialog .inventory-view :is(.paperdoll-pane,.backpack-pane){width:100%;padding:4px}
+ body.mobile-phone #panel-dialog :is(.worn-equipment,.inventory-view .backpack-pane){width:100%;padding:4px}
  body.mobile-phone #panel-dialog .inventory-view .paperdoll-pane{display:block}
  body.mobile-phone #panel-dialog .inventory-view .backpack-pane{
   display:flex;flex-direction:column;flex:1;min-height:0;gap:3px
  }
- body.mobile-phone #panel-dialog .inventory-view .paperdoll-stats,
  body.mobile-phone #panel-dialog .inventory-view .inventory-page-header h3,
  body.mobile-phone #panel-dialog .inventory-view .pickup-filter>small{display:none}
- body.mobile-phone #panel-dialog .inventory-view .mini-hero-preview{
+ body.mobile-phone #panel-dialog .worn-equipment .mini-hero-preview{
   display:grid;height:clamp(52px,20dvh,72px);min-height:0;margin:2px 0;padding:0
  }
- body.mobile-phone #panel-dialog .inventory-view .mini-hero-preview canvas{
+ body.mobile-phone #panel-dialog .worn-equipment .mini-hero-preview canvas{
   height:100%;width:auto;min-height:0;max-width:100%;object-fit:contain
  }
  body.mobile-phone #panel-dialog .inventory-view .inventory-pane-title{margin:0;padding:0;min-height:0}
  body.mobile-phone #panel-dialog .inventory-view .inventory-pane-title h3{margin:0;font-size:11px}
- body.mobile-phone #panel-dialog .inventory-view .worn-equipment .paperdoll{gap:2px;grid-template-columns:repeat(5,minmax(0,1fr))}
- body.mobile-phone #panel-dialog .inventory-view .paperdoll-slot-label{font-size:8px;margin:0;white-space:nowrap}
- body.mobile-phone #panel-dialog .inventory-view :is(.paperdoll,.potion-equipment-slots) .inventory-cell{
-  height:clamp(28px,10dvh,42px);min-height:0;aspect-ratio:auto
+ body.mobile-phone #panel-dialog .worn-equipment-title{margin-bottom:2px;font-size:11px}
+ body.mobile-phone #panel-dialog .paperdoll{gap:2px}
+ body.mobile-phone #panel-dialog .paperdoll-slot-label{font-size:8px;margin:0;white-space:nowrap}
+ body.mobile-phone #panel-dialog :is(.paperdoll,.potion-equipment-slots) .inventory-cell{
+  height:clamp(28px,11dvh,42px);min-height:0;aspect-ratio:auto
  }
- body.mobile-phone #panel-dialog .inventory-view :is(.paperdoll,.potion-equipment-slots) .inventory-cell>svg{width:22px;height:22px}
- body.mobile-phone #panel-dialog .inventory-view :is(.paperdoll,.potion-equipment-slots) .inventory-cell>small{display:none}
+ body.mobile-phone #panel-dialog :is(.paperdoll,.potion-equipment-slots) .inventory-cell>svg{width:min(66%,22px);height:22px}
+ body.mobile-phone #panel-dialog .paperdoll .empty-equipment>small{font-size:6px;line-height:1}
+ body.mobile-phone #panel-dialog .paperdoll-stats{margin-top:3px;padding-top:2px;gap:2px}
+ body.mobile-phone #panel-dialog .paperdoll-stats dt{margin-bottom:0;font-size:8px}
+ body.mobile-phone #panel-dialog .paperdoll-stats dd{font-size:10px}
+ body.mobile-phone #panel-dialog .forge-layout{grid-template-columns:clamp(150px,27%,220px) minmax(0,1fr);gap:6px}
+ body.mobile-phone #panel-dialog .forge-layout>.service-selection{grid-column:1 / -1}
  body.mobile-phone #panel-dialog .inventory-view .potion-equipment{margin-top:4px;padding-top:3px}
  body.mobile-phone #panel-dialog .inventory-view .potion-equipment>div:first-child{margin:0 0 2px;font-size:10px}
  body.mobile-phone #panel-dialog .inventory-view .potion-equipment-slots{gap:3px}

@@ -4,7 +4,8 @@ import {drawAnimeBolt,projectilePaintMargin} from './anime-effects.js?v=126';
 import {combatVisualOptions,drawCombatField,drawCombatEffect,fieldInView,DANGER_RIM} from './field-effects.js?v=135';
 import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
 import {roomView} from './world-space.js?v=108';
-import {drawHero} from './character-model.js?v=130';
+import {drawHero} from './character-model.js?v=148';
+import {heroFacing} from './bplus-hero.js?v=148';
 import {activeHeroMovement} from './hero-motion.js?v=127';
 import {summonStrikePose} from './summon-pose.js?v=127';
 import {RARITIES,ABILITIES,abilityFor,equipmentAuras,SHRINES} from './model.js?v=140';
@@ -523,10 +524,10 @@ export class Renderer{
   const g=this.g,p=g.player,prior=this.lastHeroPosition,dx=p.x-(prior?.x??p.x),dy=p.y-(prior?.y??p.y);
   this.lastHeroPosition={x:p.x,y:p.y};
   const moving=Math.hypot(dx,dy)>.12&&!g.transition;
-  if(moving)this.heroTravelAngle=Math.atan2(dy,dx);
+  if(moving)this.heroTravelFacing=heroFacing(Math.atan2(dy,dx),this.heroTravelFacing);
   const attacking=!!g.channel||g.dashTime>0||g.effects.some(f=>['slash','burst'].includes(f.type)&&f.t>f.max*.52&&Math.hypot(f.x-p.x,f.y-p.y)<12);
   drawHero(this.ctx,g.c,{x:pose?.x??p.x,y:pose?.y??p.y,angle:pose?.angle??p.angle,time:g.clock,
-   moving:!pose&&moving,attacking:!pose&&attacking,movementAngle:this.heroTravelAngle??p.angle,scale:bodyScale,alpha:pose?.alpha??1,pose});
+   moving:!pose&&moving,attacking:!pose&&attacking,movementFacing:this.heroTravelFacing,scale:bodyScale,alpha:pose?.alpha??1,pose});
  }
  draw(){
   this.resize();

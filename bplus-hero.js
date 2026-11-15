@@ -4,6 +4,7 @@ import {applyHeroBodyPose} from './hero-motion.js?v=127';
 
 const TAU=Math.PI*2;
 const FACINGS=['right','front','left','back'];
+const MOVEMENT_FACING_LIMIT=Math.cos(53*Math.PI/180);
 const HANDS={
  right:{main:[.50,.79],off:[.70,.75],feet:.54,torso:.57},
  front:{main:[.24,.79],off:[.79,.79],feet:.52,torso:.52},
@@ -27,7 +28,10 @@ const HELD_ART={
  quiver:{size:34,grip:[.5,.60],tilt:0,support:true},
 };
 
-export function heroFacing(angle){
+export function heroFacing(angle,previous){
+ const index=FACINGS.indexOf(previous);
+ // Keep the previous sprite within 8° of a diagonal to absorb input jitter.
+ if(index>=0&&Math.cos(angle-index*Math.PI/2)>=MOVEMENT_FACING_LIMIT)return previous;
  return FACINGS[(Math.round(angle/(Math.PI/2))%4+4)%4];
 }
 function shape(ctx,points,fill,stroke='#211c27'){
@@ -124,10 +128,10 @@ function paintGrip(ctx,point,v){
 }
 
 export function drawBplusHero(ctx,v,{
- x=0,y=0,angle=.35,movementAngle=angle,weaponAngle=angle,time=0,moving=false,attacking=false,scale=1,alpha=1,pose
+ x=0,y=0,angle=.35,movementFacing,weaponAngle=angle,time=0,moving=false,attacking=false,scale=1,alpha=1,pose
 }={},paintWeapon){
  if(alpha<=0)return true;
- const facing=heroFacing(moving&&!attacking?movementAngle:angle);
+ const facing=moving&&!attacking&&movementFacing?movementFacing:heroFacing(angle);
  const image=bplusImage('heroes/'+v.garment+'/'+v.gender+'-'+facing+'.webp')??
   bplusImage('heroes/base/'+v.gender+'-'+facing+'.webp');
  if(!image)return false;

@@ -1,19 +1,17 @@
-import {pixelMapArt} from './pixel-map-art.js?v=108';
+import {expeditionCardPicture,expeditionCardTitle} from './expedition-cards.js?v=152';
+import {choiceButtons,escapeHtml as esc} from './ui-controls.js?v=152';
 import {ENDGAME_UNLOCK_REASON,RIFT_THEMES,GEAR_FAMILIES,riftPreview,riftChapterTier} from './rift-model.js?v=140';
 import {DIFFICULTIES,UNIQUES} from './model.js?v=140';
 import {GUARDIANS} from './endgame-combat.js?v=108';
 import {hordeDensity} from './horde-trial.js?v=108';
 import {lootLevelBand} from './encounter-context.js?v=108';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const emblemNames={1:'燼冠',2:'潮鐐',3:'雷鏡'};
 const features={vault:'菁英守衛與寶藏分岔，首領掉落較多。',forge:'試煉路線與鍛造素材，集中取得強化石與重鑄石。',contract:'菁英獵場，配合掉落偏向追尋流派裝備。',royal:'守衛與秘庫寶藏，首領額外掉裝，結算給 T3 寶石。',hunt:'菁英圍剿與挑戰守衛，取得破界所需徽記。',sanctum:'星冠守衛與風險詞條，追尋套裝或獨特裝備。'};
-function mapArt(theme,name){
- return pixelMapArt(theme,esc(name)+'場景示意');
-}
 
 function option(draft,key,values,label){
- return `<div class="paid-option-row"><span>${label}</span><div class="rift-options" role="group" aria-label="${label}">${values.map(([value,text])=>`<button type="button" data-rift-option="${key}" data-value="${value}" aria-pressed="${draft[key]===value}" class="${draft[key]===value?'selected':''}">${esc(text)}</button>`).join('')}</div></div>`;
+ const choices=values.map(([value,text])=>[value,text,{attributes:`data-rift-option="${esc(key)}"`}]);
+ return `<div class="paid-option-row"><span>${esc(label)}</span><div class="rift-options" role="group" aria-label="${esc(label)}">${choiceButtons(choices,draft[key],'data-value')}</div></div>`;
 }
 
 function rewardText(theme){
@@ -34,7 +32,7 @@ function mapCard(profile,c,draft,theme,{end,levels,challenge}){
   else if(preview.reason==='此角色尚未通關對應難度第一章。'||preview.reason===ENDGAME_UNLOCK_REASON)reason='尚未'+condition;
  }
  const emblem=end&&!final?`<span class="map-emblem-reward">${emblemNames[draft.guardian]}徽記 ×1</span>`:'';
- return `<article class="campaign-chapter-card paid-map-card ${!preview.ok?'locked':''} ${final?'final-map-card':''}" data-map-card="${theme}"><div class="chapter-card-picture">${mapArt(theme,name)}<span class="chapter-card-number">${final?'最終試煉':end?'終局守衛':DIFFICULTIES[d].name+'裂隙'}</span><span class="chapter-card-lock">裝等 ${levels}</span></div><div class="chapter-card-content"><div class="chapter-card-title"><h3>${name}</h3><small>4 層</small></div><p class="map-feature">${feature}</p><dl class="map-card-facts"><div><dt>進入</dt><dd>${condition}<span>${cost}</span></dd></div><div><dt>獎勵</dt><dd>${rewardText(theme)}${emblem}</dd></div></dl><footer class="paid-map-action"><small class="map-entry-state ${reason?'blocked':'ready'}">${esc(reason||'可進入')}</small><button type="button" class="gold-btn" data-rift-enter="${theme}" aria-label="進入${name}" ${preview.ok?'':'disabled'}>進入</button></footer></div></article>`;
+ return `<article class="campaign-chapter-card paid-map-card ${!preview.ok?'locked':''} ${final?'final-map-card':''}" data-map-card="${theme}">${expeditionCardPicture(theme,name,final?'最終試煉':end?'終局守衛':DIFFICULTIES[d].name+'裂隙',`<span class="chapter-card-lock">裝等 ${levels}</span>`)}<div class="chapter-card-content">${expeditionCardTitle(name,'4 層',true)}<p class="map-feature">${feature}</p><dl class="map-card-facts"><div><dt>進入</dt><dd>${condition}<span>${cost}</span></dd></div><div><dt>獎勵</dt><dd>${rewardText(theme)}${emblem}</dd></div></dl><footer class="paid-map-action"><small class="map-entry-state ${reason?'blocked':'ready'}">${esc(reason||'可進入')}</small><button type="button" class="gold-btn" data-rift-enter="${theme}" aria-label="進入${name}" ${preview.ok?'':'disabled'}>進入</button></footer></div></article>`;
 }
 
 export function paidMapChoices(profile,c,draft,{end=false,optionsOpen=false}={}){
