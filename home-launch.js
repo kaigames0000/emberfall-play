@@ -2,9 +2,10 @@ import * as M from './model.js?v=140';
 import {appearancePickerMarkup} from './appearance-picker.js?v=124';
 import {bplusAsset} from './bplus-art.js?v=124';
 import {equipmentArt} from './equipment-visuals.js?v=124';
-import {openProfileStore} from './profile-storage.js?v=121';
+import {openProfileStore} from './profile-storage.js?v=154';
 import {cloudEndpoints, createCloudClient} from './cloud-client.js?v=108';
-import {connectGameView} from './home-game.js?v=153';
+import {connectGameView} from './home-game.js?v=154';
+import {mountHomeSettings} from './home-settings.js?v=154';
 
 export function mountHomeRoster(inlineGame) {
   const find = selector => document.querySelector(selector);
@@ -26,6 +27,7 @@ export function mountHomeRoster(inlineGame) {
   const retry = find('[data-home-retry]');
   const recovery = find('[data-home-recovery]');
   const cancelEntry = find('[data-cancel-entry]');
+  const settingsButton = find('[data-home-settings]');
   const characterActions = find('[data-home-character-actions]');
   const rename = find('[data-home-rename]');
   const remove = find('[data-home-delete]');
@@ -94,6 +96,7 @@ export function mountHomeRoster(inlineGame) {
     const active = profile?.characters?.[profile.active];
     const busy = booting || loading || writing || entering;
     const lockedRoster = locked();
+    settingsButton.disabled = writing || entering;
     tabs.hidden = !hasPublicRoster;
     for (const button of realmButtons) {
       button.setAttribute('aria-pressed', String(button.dataset.realm === realm));
@@ -134,12 +137,14 @@ export function mountHomeRoster(inlineGame) {
     return localStore;
   }
 
+  const settings = mountHomeSettings({openStore:openLocal, portable:!!inlineGame,
+    reloadRoster:() => realm === 'local' ? showRealm('local') : Promise.resolve()});
+
   const gameView = connectGameView({
     inlineGame,
     home:find('[data-home-view]'),
     homeStyle:find('[data-home-style]'),
-    canEnter:({recovery = false} = {}) => !booting && !loading && !writing && realm === 'local' &&
-      Boolean(recovery ? recoverable : !creating && !edit && profile?.active),
+    canEnter:() => !booting && !loading && !writing && !settings.dialog.open && !creating && !edit && realm === 'local' && Boolean(profile?.active),
     setLoading(value, error = '') {
       entering = value;
       entryFailed = Boolean(error);
@@ -158,13 +163,12 @@ export function mountHomeRoster(inlineGame) {
     void gameView.enter();
   });
   cancelEntry.addEventListener('click', gameView.cancel);
-  if (inlineGame) {
-    recovery.href = '#';
-    recovery.addEventListener('click', event => {
-      event.preventDefault();
-      void gameView.enter({recovery:true});
-    });
-  }
+  if (inlineGame) recovery.href = '#';
+  recovery.addEventListener('click', event => {
+    if (!recoverable) return;
+    event.preventDefault();
+    settings.open();
+  });
 
   function readPublic() {
     if (publicLoad) return publicLoad;

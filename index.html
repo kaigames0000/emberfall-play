@@ -3,23 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="emberfall-version" content="0.64.42">
-  <meta name="emberfall-release" content="153">
+  <meta name="emberfall-version" content="0.64.43">
+  <meta name="emberfall-release" content="154">
   <meta name="theme-color" content="#141822">
   <meta name="description" content="裂界遺火角色選擇與遊戲入口。">
   <title>裂界遺火</title>
   <link rel="icon" href="./icons/emberfall-192.png" type="image/png">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./icons/emberfall-180.png">
-  <link rel="stylesheet" href="./home.css?v=153" data-home-style>
+  <link rel="stylesheet" href="./home.css?v=154" data-home-style>
   <link rel="stylesheet" href="./appearance-picker.css?v=109">
+  <link rel="stylesheet" href="./settings-ui.css?v=154">
 </head>
 <body>
   <div data-home-view>
   <img class="title-art" src="./art/title-screen.webp?v=149" width="1672" height="941" alt="" fetchpriority="high">
   <main class="title-screen">
     <div class="title-shell">
-      <h1>裂界遺火</h1>
+      <div class="title-heading"><h1>裂界遺火</h1><button type="button" class="title-secondary" data-home-settings aria-haspopup="dialog">設定</button></div>
       <section class="title-roster" aria-label="遊戲角色">
         <div class="realm-switch" role="group" aria-label="遊玩模式" hidden>
           <button type="button" data-realm="verified" aria-pressed="false">公測</button>
@@ -73,8 +74,16 @@
       </section>
     </div>
   </main>
+  <dialog id="home-settings" class="home-settings" aria-labelledby="home-settings-title">
+    <svg class="home-symbols" width="0" height="0" aria-hidden="true"><symbol id="i-title-close" viewBox="0 0 24 24"><path d="m5 5 14 14M5 19 19 5" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol></svg>
+    <header class="dialog-header"><h2 id="home-settings-title">遊戲設定</h2><button class="modal-close" type="button" aria-label="關閉設定" title="關閉設定"><svg aria-hidden="true"><use href="#i-title-close"/></svg></button></header>
+    <div class="settings-tools game-top-tools"><button type="button" data-home-fullscreen>全螢幕</button></div>
+    <div data-home-settings-content></div>
+    <input id="home-import-file" type="file" accept="application/json,application/gzip,.json,.gz" hidden>
+    <p class="title-status" role="status" data-home-settings-status></p>
+  </dialog>
   </div>
-  <script type="module" src="./home-launch.js?v=153"></script>
-  <script type="module" src="./pwa.js?v=152"></script>
+  <script type="module" src="./home-launch.js?v=154"></script>
+  <script type="module" src="./pwa.js?v=154"></script>
 </body>
 </html>

@@ -39,6 +39,24 @@ body::before {
            max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 .title-shell { width: min(100%, 27rem); margin-inline-end: clamp(0rem, 5vw, 6rem); }
+.title-heading { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+.title-heading button { flex: 0 0 auto; min-height: 36px; font: inherit; cursor: pointer; }
+.title-heading button:focus-visible, .home-settings button:focus-visible { outline: 2px solid #a7e4d0; outline-offset: 2px; }
+.home-settings {
+  width: min(32rem, calc(100% - 1rem)); max-height: 90dvh; padding: .65rem .85rem;
+  color: #f5ebd8; background: #1a212d; border: 1px solid var(--border);
+  --line: #8394ad4d;
+}
+.home-settings::backdrop { background: #080d18a8; backdrop-filter: blur(4px); }
+.home-settings .dialog-header { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.home-settings h2 { margin: 0; font-size: 1rem; }
+.home-settings .settings-tools { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; }
+.home-settings button { min-height: 34px; padding: .15rem .55rem; border: 1px solid #849ab783; background: #192638; color: #f5ebd8; cursor: pointer; }
+.home-settings button:disabled { opacity: .55; cursor: default; }
+.home-settings .modal-close { display: grid; place-items: center; min-width: 34px; color: var(--gold); }
+.home-settings .modal-close svg { width: 16px; height: 16px; }
+.home-settings #install-help { background: #192538; color: #f5ebd8; border-color: var(--border); }
+.home-symbols { position: absolute; }
 .title-shell h1 {
   margin: 0 0 .75rem;
   color: #fff1d2;
@@ -204,7 +222,7 @@ body::before {
   .title-shell h1 { text-align: center; }
 }
 @media (pointer: coarse) {
-  .title-roster :is(button, .title-field input), .title-primary { min-height: 44px; }
+  .title-roster :is(button, .title-field input), .title-primary, .title-heading button, .home-settings button { min-height: 44px; }
   .title-roster .title-field input { font-size: 16px; }
 }
 @media (max-width: 27rem) {
@@ -212,6 +230,8 @@ body::before {
 }
 @media (max-height: 25rem) and (orientation: landscape) {
   .title-screen { padding-block: max(.375rem, env(safe-area-inset-top)) max(.375rem, env(safe-area-inset-bottom)); }
+  .title-heading { position: relative; display: block; }
+  .title-heading button { position: absolute; inset: -3px 0 auto auto; }
   .title-shell h1 { font-size: 1.9rem; margin-bottom: .45rem; }
   .title-roster { gap: .45rem; padding: .5rem; }
   .roster-create > fieldset { gap: .4rem; }

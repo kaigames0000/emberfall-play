@@ -1,12 +1,12 @@
-import {CombatAudio,savedVolume,storeVolume,soundForSkill,soundForEffect} from './combat-audio.js?v=137';
+import {CombatAudio,savedVolume,soundForSkill,soundForEffect} from './combat-audio.js?v=137';
 import {createGameNotices} from './game-notices.js?v=150';
 import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
 import {createCloudClient} from './cloud-client.js?v=108';
-import {RELEASE_NOTES} from './release-notes.mjs?v=153';
+import {RELEASE_NOTES} from './release-notes.mjs?v=154';
 import {renderReleaseHistory} from './release-history.js?v=134';
-import {createVerifiedPanel} from './verified-ui.js?v=135';
+import {createVerifiedPanel} from './verified-ui.js?v=154';
 import {MANA_SIPHON_RATE,manaSiphonBudget} from './mana-economy.js?v=108';
-import {skillCatalog,skillConfigurationMarkup} from './compact-skills-ui.js?v=130';
+import {skillCatalog,skillConfigurationMarkup} from './compact-skills-ui.js?v=154';
 import {basicAttackMetrics} from './basic-attack-combat.js?v=129';
 import {skillWeaponRequirement,skillWeaponCompatible} from './skill-weapon-rules.js?v=129';
 import * as SkillAtlas from './skill-tree-layout.js?v=108';
@@ -21,11 +21,11 @@ import {HORDE_RULES} from './horde-trial.js?v=108';
 import {riskEntries,riskChips,routeCostText} from './risk-presentation.js?v=108';
 import * as BasicAttacks from './basic-attacks.js?v=129';
 import * as InventoryPages from './inventory-pages.js?v=144';
-import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=108';
+import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=154';
 import {createSceneTransition} from './scene-transition.js?v=143';
 import {installMobileControls} from './mobile-controls.js?v=146';
 import {CombatInput} from './combat-input.js?v=108';
-import {decodeProfileBackup,encodeProfileBackup,openProfileStore} from './profile-storage.js?v=121';
+import {decodeProfileBackup,encodeProfileBackup,openProfileStore} from './profile-storage.js?v=154';
 import {clearCampaignCheckpoints,settleInterruptedPaidRun,takePaidRunLock} from './local-expedition-save.js?v=150';
 import {ARMOR_WEIGHTS,ARMOR_SHARES,armorClass,isShield} from './gear-archetypes.js?v=108';
 import {updateStatusHUD} from './status-hud.js?v=135';
@@ -41,13 +41,14 @@ import * as M from './model.js?v=140';
 import {Game,abilityDamageTypes} from './engine.js?v=147';
 import {projectileBodyRadius} from './combat-geometry.js?v=108';
 import * as SkillText from './skill-presentation.js?v=130';
-import {Renderer} from './render.js?v=148';
+import {Renderer} from './render.js?v=154';
 import {watchBplusImages} from './bplus-art.js?v=124';
 import {paintHeroPreview} from './character-model.js?v=130';
 import * as Inventory from './inventory-items.js?v=144';
-import {itemCell as carriedItemCell,inventoryCellButton,inventoryIconSymbols,currencyCountersMarkup,equipmentAffixesMarkup} from './inventory-presentation.js?v=152';
+import {itemCell as carriedItemCell,inventoryCellButton,inventoryIconSymbols,currencyCountersMarkup,equipmentAffixesMarkup} from './inventory-presentation.js?v=154';
 import {flaskCardSummary,flaskComparisonRows,flaskStatValue} from './flask-workshop.js?v=108';
 import {animeUiSymbols} from './anime-ui-icons.js?v=124';
+import {bindControlSettings,controlSettingsMarkup,downloadSaveFile,loadPointerAim,storageSettingsMarkup,toggleFullscreen} from './settings-ui.js?v=154';
 import {escapeHtml as esc,iconMarkup as icon,closeButtonMarkup as modalClose,choiceButtons,rarityCheckboxes} from './ui-controls.js?v=152';
 export function mountGame(root,{onRequestHome,portable=location.protocol==='file:'}={}){
 const lifetime=new AbortController(),signal=lifetime.signal;
@@ -133,7 +134,7 @@ const e=new Game(c,(type,data)=>{
  event(type,data);
 }),renderer=new Renderer($('#world'),e),dialog=$('#panel-dialog'),catalogDialog=$('#skill-catalog-dialog');
 const heardWarnings=new WeakSet();
-let footPoint=null,footDistance=0,lowHealthSound=false,lastAudibleVolume=audio.volume||.45;
+let footPoint=null,footDistance=0,lowHealthSound=false;
 const soundPan=x=>Number.isFinite(x)?(x-e.player.x)/580:0;
 e.onSound=(type,data)=>{
  if(!audio.ready||document.hidden)return;
@@ -196,7 +197,7 @@ listen(root,'click',event=>{
  if(!event.target.closest('button:not(:disabled):is([data-panel],.modal-close,[data-home-play])'))return;
  if(audio.volume>0)void audio.unlock().then(ok=>{if(ok&&!document.hidden)audio.play('click');});
 },{capture:true});
-const POINTER_AIM_KEY='emberfall-pointer-aim-v1';try{e.pointerAimEnabled=localStorage.getItem(POINTER_AIM_KEY)==='true';}catch{e.pointerAimEnabled=false;}
+e.pointerAimEnabled=loadPointerAim();
 document.body.classList.toggle('pointer-aim-on',e.pointerAimEnabled);
 e.setHordeTrial(true);
 const verifiedEntry=new URLSearchParams(location.search).get('realm')==='verified';
@@ -349,7 +350,7 @@ function updateArenaLocation(){
  $('#arena-location').textContent=room;
  $('#arena-location-divider').hidden=!room;
 }
-const CAMP_SERVICES = new Set(['difficulty','stash','forge','merchant','flasks','sets','training','characters','guide']);
+const CAMP_SERVICES = new Set(['difficulty','stash','forge','merchant','flasks','sets','training','guide']);
 const interactButton=$('#camp-interact');
 let promptTarget=null;
 function updateCampPrompt(){
@@ -461,7 +462,7 @@ function start(chapter=selectedChapter){
  updateHUD();
  return true;
 }
-function openPanel(name){if(catalogDialog.open)catalogDialog.close();if(!storageReady&&name!=='verified')return;if(name==='summons'||name==='auras')name='loadout';if(name==='appearance')name='inventory';if(M.isRingHero(c)&&name==='passives')name='talents';if(name!=='talents')disposeSkillAtlas();if(name==='difficulty'){name='quests';mapTab='campaign';}if(CAMP_SERVICES.has(name)&&e.mode!=='camp'&&!(name==='training'&&e.training)){toast('請返回營地使用此服務。');return;}if(name==='characters'){void requestTitleScreen();return;}if(state.rifts?.activeRun&&(e.mode!=='playing'||!e.cleared)&&!(canManagePaidRewards()&&['inventory','stash','forge','merchant'].includes(name))&&!['quests','guide','stats','settings','verified'].includes(name)){toast('裂隙清房後才能整備。');return;}if(name==='trainingResults'&&!e.training)name='training';if(name==='training')trainingDraft=trainingSettings(e.training?.options||trainingDraft);if(name==='expedition'){closePanel();return;}if(['sets','inventory','talents','loadout','summons','auras','difficulty','stash','flasks','quests','training','trainingResults','achievements','passives','stats','forge','merchant','appearance'].includes(name)&&!state.active){void requestTitleScreen();return;}hideItemTooltip();clearInventoryDrag();passiveDrag=null;lastInventoryTap=null;if(panel!==name){leaveConnectedPanel();inventorySelection=null;talentSheetOpen=false;if(name==='inventory')inventoryTab='bag';if(name==='merchant')includeValuable=false;}if(name==='passives'&&panel!==name)passiveFocusRequested=true;if(name==='achievements'&&panel!==name){achievementScope=String(c.difficulty);achievementFilter='unclaimed';}if(name!=='inventory')inventoryDiscardBatch=null;panel=name;if(name!=='talents'||!M.isRingHero(c))disposeRingPanel();dialog.classList.toggle('ring-tree-dialog',name==='talents'&&M.isRingHero(c));dialog.classList.toggle('achievements-dialog',name==='achievements');dialog.classList.toggle('passive-dialog',name==='passives');dialog.classList.toggle('route-dialog',name==='quests');dialog.classList.toggle('sets-dialog',name==='sets');dialog.classList.toggle('settings-dialog',name==='settings');dialog.classList.toggle('verified-dialog',name==='verified');dialog.classList.toggle('training-dialog',['training','trainingResults'].includes(name));dialog.classList.toggle('skill-dialog',name==='talents');dialog.classList.toggle('skill-atlas-dialog',name==='talents');dialog.classList.toggle('loadout-dialog',['loadout','summons','auras'].includes(name));dialog.classList.toggle('inventory-dialog',name==='inventory');dialog.classList.toggle('flasks-dialog',name==='flasks');dialog.classList.toggle('stash-dialog',name==='stash');dialog.classList.toggle('camp-service-dialog',['forge','merchant','guide'].includes(name));dialog.classList.toggle('forge-dialog',name==='forge');dialog.scrollTop=0;keys.clear();joy={x:0,y:0};$('#stick').style.transform='';let title={achievements:['ACHIEVEMENTS','成就'],passives:['PASSIVE TREE','天賦'],stats:['','角色統計'],forge:['','鐵匠'],merchant:['','商人'],sets:['','印記收藏家'],settings:['','遊戲設定'],verified:['','公測遠征'],training:['MEASURE YOUR BUILD','DPS 訓練場'],trainingResults:['DAMAGE BREAKDOWN','訓練傷害分析'],inventory:['','裝備'],talents:['SHAPE YOUR BUILD','技能加點'],loadout:['','技能'],summons:['YOUR PERMANENT ARMY','召喚編隊'],auras:['SUSTAIN YOUR AURAS','光環配置'],guide:['ADVENTURER’S CODEX','冒險指南'],difficulty:['THE GREATER THE RISK','遠征難度'],quests:['QUEST LOG','遠征路線'],stash:['SHARED ACROSS YOUR HEROES','共用倉庫'],flasks:['PREPARE YOUR FLASK BELT','充能藥水腰帶']}[name];if(!title)return;$('#dialog-eyebrow').textContent=title[0];$('#dialog-title').textContent=title[1];renderPanel();if(!dialog.open)dialog.showModal();$('#dialog-body').scrollTop=0;positionInventoryInspector();if(name==='quests')frame(focusRouteProgress);updatePause();}
+function openPanel(name){if(catalogDialog.open)catalogDialog.close();if(!storageReady&&name!=='verified')return;if(name==='summons'||name==='auras')name='loadout';if(name==='appearance')name='inventory';if(M.isRingHero(c)&&name==='passives')name='talents';if(name!=='talents')disposeSkillAtlas();if(name==='difficulty'){name='quests';mapTab='campaign';}if(CAMP_SERVICES.has(name)&&e.mode!=='camp'&&!(name==='training'&&e.training)){toast('請返回營地使用此服務。');return;}if(state.rifts?.activeRun&&(e.mode!=='playing'||!e.cleared)&&!(canManagePaidRewards()&&['inventory','stash','forge','merchant'].includes(name))&&!['quests','guide','stats','settings','verified'].includes(name)){toast('裂隙清房後才能整備。');return;}if(name==='trainingResults'&&!e.training)name='training';if(name==='training')trainingDraft=trainingSettings(e.training?.options||trainingDraft);if(name==='expedition'){closePanel();return;}if(['sets','inventory','talents','loadout','summons','auras','difficulty','stash','flasks','quests','training','trainingResults','achievements','passives','stats','forge','merchant','appearance'].includes(name)&&!state.active){void requestTitleScreen();return;}hideItemTooltip();clearInventoryDrag();passiveDrag=null;lastInventoryTap=null;if(panel!==name){leaveConnectedPanel();inventorySelection=null;talentSheetOpen=false;if(name==='inventory')inventoryTab='bag';if(name==='merchant')includeValuable=false;}if(name==='passives'&&panel!==name)passiveFocusRequested=true;if(name==='achievements'&&panel!==name){achievementScope=String(c.difficulty);achievementFilter='unclaimed';}if(name!=='inventory')inventoryDiscardBatch=null;panel=name;if(name!=='talents'||!M.isRingHero(c))disposeRingPanel();dialog.classList.toggle('ring-tree-dialog',name==='talents'&&M.isRingHero(c));dialog.classList.toggle('achievements-dialog',name==='achievements');dialog.classList.toggle('passive-dialog',name==='passives');dialog.classList.toggle('route-dialog',name==='quests');dialog.classList.toggle('sets-dialog',name==='sets');dialog.classList.toggle('settings-dialog',name==='settings');dialog.classList.toggle('verified-dialog',name==='verified');dialog.classList.toggle('training-dialog',['training','trainingResults'].includes(name));dialog.classList.toggle('skill-dialog',name==='talents');dialog.classList.toggle('skill-atlas-dialog',name==='talents');dialog.classList.toggle('loadout-dialog',['loadout','summons','auras'].includes(name));dialog.classList.toggle('inventory-dialog',name==='inventory');dialog.classList.toggle('flasks-dialog',name==='flasks');dialog.classList.toggle('stash-dialog',name==='stash');dialog.classList.toggle('camp-service-dialog',['forge','merchant','guide'].includes(name));dialog.classList.toggle('forge-dialog',name==='forge');dialog.scrollTop=0;keys.clear();joy={x:0,y:0};$('#stick').style.transform='';let title={achievements:['ACHIEVEMENTS','成就'],passives:['PASSIVE TREE','天賦'],stats:['','角色統計'],forge:['','鐵匠'],merchant:['','商人'],sets:['','印記收藏家'],settings:['','遊戲設定'],verified:['','公測遠征'],training:['MEASURE YOUR BUILD','DPS 訓練場'],trainingResults:['DAMAGE BREAKDOWN','訓練傷害分析'],inventory:['','裝備'],talents:['SHAPE YOUR BUILD','技能加點'],loadout:['','技能'],summons:['YOUR PERMANENT ARMY','召喚編隊'],auras:['SUSTAIN YOUR AURAS','光環配置'],guide:['ADVENTURER’S CODEX','冒險指南'],difficulty:['THE GREATER THE RISK','遠征難度'],quests:['QUEST LOG','遠征路線'],stash:['SHARED ACROSS YOUR HEROES','共用倉庫'],flasks:['PREPARE YOUR FLASK BELT','充能藥水腰帶']}[name];if(!title)return;$('#dialog-eyebrow').textContent=title[0];$('#dialog-title').textContent=title[1];renderPanel();if(!dialog.open)dialog.showModal();$('#dialog-body').scrollTop=0;positionInventoryInspector();if(name==='quests')frame(focusRouteProgress);updatePause();}
 function closePanel(){inventoryDiscardBatch=null;gearDiscardPending=null;if(catalogDialog.open)catalogDialog.close();leaveConnectedPanel();disposeSkillAtlas();disposeRingPanel();hideItemTooltip();clearInventoryDrag();passiveDrag=null;dialog.close();panel=null;updatePause();}
 function renderPanelControls(){
  $('#settings-tools').hidden=panel!=='settings';
@@ -897,7 +898,7 @@ $('#dialog-body').addEventListener('click',async ev=>{
 });
 $('#dialog-body').addEventListener('change',async ev=>{if(ev.target.matches('[data-enhancement-stones]')){enhancementStones=Math.max(1,Math.min(20,Math.floor(Number(ev.target.value)||1)));ev.target.value=String(enhancementStones);return;}if(ev.target.matches('[data-pickup-color]')){configurePickupFilter(ev.target);return;}if(ev.target.matches('[data-valuable-consent]')){valuableConsentID=ev.target.checked?inventorySelection?.id:null;refreshSelection();return;}if(ev.target.matches('[data-include-valuable]')){includeValuable=ev.target.checked;renderMerchant();return;}if(ev.target.matches('[data-set-option]')){configureSetChoice(ev.target.dataset.setOption,ev.target.value||null);return;}if(ev.target.matches('[data-auto-enabled]')){configureAutoEnabled(ev.target.checked);return;}if(ev.target.matches('[data-sell-rarity]')){const colours=$$('[data-sell-rarity]:checked').map(el=>Number(el.dataset.sellRarity));if(!await commitInventory(hero=>M.setSellRarities(hero,colours),''))renderMerchant();return;}if(ev.target.id==='bag-filter'){bagFilter=ev.target.value;inventorySelection=null;lastInventoryTap=null;renderInventory();}});
 $('#start').addEventListener('click',()=>state.active?openPanel('quests'):void requestTitleScreen());$('#camp-interact').addEventListener('click',interactCamp);$('#dialog-close').addEventListener('click',closePanel);dialog.addEventListener('close',()=>{if(dialog.open)return;if(catalogDialog.open)catalogDialog.close();leaveConnectedPanel();disposeSkillAtlas();disposeRingPanel();hideItemTooltip();clearInventoryDrag();lastInventoryTap=null;panel=null;updatePause();});dialog.addEventListener('click',ev=>{if(ev.target===dialog){let r=dialog.getBoundingClientRect();if(ev.clientX<r.left||ev.clientX>r.right||ev.clientY<r.top||ev.clientY>r.bottom)closePanel();}});
-$('#pause').addEventListener('click',()=>{if(e.mode==='playing'&&!paidBusy&&!returningToCamp){manualPause=!manualPause;keys.clear();if(panel==='settings')closePanel();updatePause();}});$('#resume').addEventListener('click',()=>{if(e.mode==='playing'&&!paidBusy&&!returningToCamp){manualPause=false;updatePause();}});$('#abandon').addEventListener('click',async()=>{if(e.mode==='playing'&&await returnToCamp())void save();});$('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else toast('此瀏覽器不支援全螢幕，建議橫向操作。');}catch{toast('無法啟用全螢幕，可使用瀏覽器的全螢幕功能。');}});
+$('#pause').addEventListener('click',()=>{if(e.mode==='playing'&&!paidBusy&&!returningToCamp){manualPause=!manualPause;keys.clear();if(panel==='settings')closePanel();updatePause();}});$('#resume').addEventListener('click',()=>{if(e.mode==='playing'&&!paidBusy&&!returningToCamp){manualPause=false;updatePause();}});$('#abandon').addEventListener('click',async()=>{if(e.mode==='playing'&&await returnToCamp())void save();});$('#fullscreen').addEventListener('click',()=>void toggleFullscreen(toast));
 async function importBackupFile(file){
  try{
   if(state.rifts?.activeRun){toast('先結算裂隙，再匯入另一份存檔。');return false;}
@@ -2734,16 +2735,8 @@ listen(root,'change',ev=>{if(ev.target.closest('#training-form'))updateTrainingP
 listen(root,'submit',ev=>{if(ev.target.id==='training-form'){ev.preventDefault();beginTraining();}});
 
 function storageSummaryMarkup(){
- const info=profileStore?.info;if(!info)return '';
- const kb=value=>(Math.max(0,value)/1024).toFixed(1)+' KB',saved=info.jsonBytes?Math.round((1-info.storedBytes/info.jsonBytes)*100):0;
- const labels={incompatible:'不相容原檔',corrupt:'受損原檔','unsupported-codec':'未能解壓的原檔','before-replace':'覆蓋前備份'};
- const backups=recoveryBackups.length?`<details class="recovery-backups" ${!state.active?'open':''}><summary>復原備份 · ${recoveryBackups.length} 份</summary>${!state.active?'<p>此裝置的原始資料已保留。可以先下載，或匯入可讀取的備份。</p>':''}<ul>${recoveryBackups.map(entry=>`<li><span>${labels[entry.reason]||'原始存檔'} · ${esc(new Date(entry.savedAt).toLocaleString('zh-TW'))}</span><button type="button" class="text-btn" data-recovery-download="${esc(entry.id)}">下載</button></li>`).join('')}</ul></details>`:'';
- const qa=pendingQaBackup?`<div class="storage-qa-import"><p>已選取全滿測試存檔。可匯入到獨立測試版。</p><button type="button" class="gold-btn" data-qa-import>匯入到全滿測試版</button><a class="outline-btn" href="${localQaOrigin}/">只開啟測試版</a></div>`:'';
- return `<section class="storage-summary"><b>本機存檔</b><small>壓縮後 ${kb(info.storedBytes)} · 原始 ${kb(info.jsonBytes)} · 節省 ${saved}%</small><div class="storage-backup-actions"><button type="button" data-export>匯出備份</button><button type="button" data-import ${e.mode==='playing'?'disabled':''}>匯入備份</button>${!state.active&&recoveryBackups.length?'<button type="button" data-recovery-continue>建立新角色</button>':''}</div>${qa}${backups}</section>`;
-}
-function downloadSaveFile(blob,filename){
- const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download=filename;link.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+ const extra=pendingQaBackup?`<div class="storage-qa-import"><p>已選取全滿測試存檔。可匯入到獨立測試版。</p><button type="button" class="gold-btn" data-qa-import>匯入到全滿測試版</button><a class="outline-btn" href="${localQaOrigin}/">只開啟測試版</a></div>`:'';
+ return storageSettingsMarkup({info:profileStore?.info,backups:recoveryBackups,active:state.active,importDisabled:e.mode==='playing',extra,showCreate:true});
 }
 listen(root,'click',async event=>{
  const button=event.target.closest('[data-recovery-download],[data-recovery-continue]');
@@ -2788,32 +2781,14 @@ function renderSettings(){
  const homeLink='<button type="button" class="outline-btn" data-title-home>返回首頁</button>';
  const links=verifiedLink||homeLink?`<div class="settings-links">${verifiedLink}${homeLink}</div>`:'';
  const history=portable?'<details class="standalone-release-history"><summary>更新紀錄</summary><div class="release-history" id="standalone-release-history"></div></details>':'';
- $('#dialog-body').innerHTML=`${storageSummaryMarkup()}<section class="pointer-aim-setting"><label class="settings-toggle"><input type="checkbox" data-pointer-aim ${e.pointerAimEnabled?'checked':''}><span><b>朝滑鼠位置施放</b><small>普攻與技能朝游標，範圍技能指定落點；關閉時自動索敵，手機維持自動索敵。</small></span></label></section><section class="audio-settings" aria-label="音效">
-  <label for="sfx-volume">音效音量 <output id="sfx-value">${Math.round(audio.volume*100)}%</output></label>
-  <div><input id="sfx-volume" type="range" min="0" max="100" step="1" value="${Math.round(audio.volume*100)}">
-  <button type="button" class="outline-btn" data-sfx-mute>${audio.volume?'靜音':'取消靜音'}</button>
-  <button type="button" class="outline-btn" data-sfx-test>試聽</button></div>
- </section>${links}${history}`;
+ $('#dialog-body').innerHTML=storageSummaryMarkup()+controlSettingsMarkup({aim:e.pointerAimEnabled,volume:audio.volume})+links+history;
  if(portable)renderReleaseHistory($('#standalone-release-history'),RELEASE_NOTES);
 }
 $('#settings').addEventListener('click',()=>openPanel('settings'));
-function changeSoundVolume(value){
- const volume=audio.setVolume(value);
- if(volume>0)lastAudibleVolume=volume;
- storeVolume(volume);
- $('#sfx-volume').value=Math.round(volume*100);
- $('#sfx-value').textContent=Math.round(volume*100)+'%';
- $('[data-sfx-mute]').textContent=volume?'靜音':'取消靜音';
- if(volume>0)void audio.unlock();
-}
-$('#dialog-body').addEventListener('input',event=>{
- if(event.target.id==='sfx-volume')changeSoundVolume(Number(event.target.value)/100);
-});
-$('#dialog-body').addEventListener('click',event=>{
- if(event.target.closest('[data-sfx-mute]'))changeSoundVolume(audio.volume?0:lastAudibleVolume);
- if(event.target.closest('[data-sfx-test]')&&audio.volume>0)
-  void audio.unlock().then(ok=>{if(ok&&!document.hidden)audio.play('cleave');});
-});
+bindControlSettings($('#dialog-body'),{audio,signal,report:toast,onAim:aim=>{
+ e.pointerAimEnabled=aim;
+ document.body.classList.toggle('pointer-aim-on',aim);
+}});
 $('#dialog-body').addEventListener('click',event=>{
  if(event.target.closest('[data-title-home]'))void requestTitleScreen();
 });
@@ -2847,7 +2822,7 @@ listen(root,'change',event=>{
  if(panel==='talents')refreshSkillAtlasDetail();else renderPanel();$('#dialog-body [data-short-skill-description]')?.focus({preventScroll:true});
 });
 
-$('#dialog-body').addEventListener('change',event=>{if(!event.target.matches('[data-pointer-aim]'))return;e.pointerAimEnabled=event.target.checked;document.body.classList.toggle('pointer-aim-on',e.pointerAimEnabled);try{localStorage.setItem(POINTER_AIM_KEY,String(e.pointerAimEnabled));}catch{toast('瞄準已切換，此裝置無法保存設定。');}});
+
 
 async function saveAndExit(){
  if(leavingGame)return false;

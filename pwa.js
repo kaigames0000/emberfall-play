@@ -16,7 +16,7 @@ if(['https:','http:'].includes(location.protocol)){
  }
 }
 
-export function mountInstallTools(root,signal){
+export function mountInstallTools(root,signal,{closeSymbol='close'}={}){
  if(!['http:','https:'].includes(location.protocol))return;
  const host=root.querySelector('.game-top-tools');
  if(!host)return;
@@ -32,7 +32,7 @@ export function mountInstallTools(root,signal){
   const dialog=document.createElement('dialog');dialog.id='install-help';dialog.setAttribute('aria-labelledby','install-heading');
   const heading=document.createElement('h2');heading.id='install-heading';heading.textContent='安裝與更新';
   const text=document.createElement('p'),close=document.createElement('button'),header=document.createElement('div');
-  header.className='dialog-header compact-sheet-header';close.type='button';close.className='modal-close';close.setAttribute('aria-label','關閉安裝與更新');close.title='關閉安裝與更新';close.innerHTML=iconMarkup('close');close.addEventListener('click',()=>dialog.close());header.append(heading,close);dialog.append(header,text);root.append(dialog);
+  header.className='dialog-header compact-sheet-header';close.type='button';close.className='modal-close';close.setAttribute('aria-label','關閉安裝與更新');close.title='關閉安裝與更新';close.innerHTML=iconMarkup(closeSymbol);close.addEventListener('click',()=>dialog.close());header.append(heading,close);dialog.append(header,text);root.append(dialog);
   let nativePromptOpen=false,helpMessage='';
   const display=matchMedia('(display-mode: standalone)');
   const installed=()=>wasInstalled||display.matches||navigator.standalone===true;

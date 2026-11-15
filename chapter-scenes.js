@@ -1,4 +1,4 @@
-import {drawSceneSprite, sceneTexture} from './bplus-scene.js?v=124';
+import {drawSceneSprite, sceneTexture} from './bplus-scene.js?v=154';
 import {LEGACY_BOUNDS} from './world-space.js?v=108';
 
 const {left: LEFT, top: TOP, right: RIGHT, bottom: BOTTOM} = LEGACY_BOUNDS;

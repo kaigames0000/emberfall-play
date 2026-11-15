@@ -1,0 +1,31 @@
+/* Shared by the title screen and in-game settings. */
+.settings-toggle{display:flex;align-items:center;gap:11px;cursor:pointer;line-height:1.7}
+.settings-toggle>input{width:19px;height:19px;accent-color:#c6ab6f;flex-shrink:0}
+.settings-toggle b{font-size:14px;font-weight:400}
+.settings-toggle small{display:block;font-size:11px;color:var(--muted)}
+.storage-summary{padding:8px 0;margin-bottom:12px;border-bottom:1px solid var(--line);font-size:12px}
+.storage-summary small{display:block;color:var(--muted);font-size:11px}
+.storage-backup-actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.storage-backup-actions button{min-height:34px;padding:5px 10px;font-size:12px;border:1px solid var(--line)}
+.pointer-aim-setting{padding:8px 0;margin:0 0 10px;border-bottom:1px solid var(--line)}
+.game-update-history,.standalone-release-history{border-top:1px solid #38485a;margin-top:4px;padding-top:8px}
+.standalone-release-history{margin-top:12px}
+.game-update-history h3,.standalone-release-history>summary{font-size:13px;color:var(--gold);margin:0 0 6px}
+.standalone-release-history>summary,.release-history summary{cursor:pointer}
+.release-history details{border-top:1px solid #38485a;padding:0 4px}
+.release-history summary{display:flex;align-items:center;flex-wrap:wrap;gap:5px 10px;min-height:34px;font-size:12px}
+.release-history summary::after{content:'▸';color:var(--muted);margin-left:auto}
+.release-history details[open]>summary::after{content:'▾'}
+.release-history summary::-webkit-details-marker{display:none}
+.release-history summary b{color:var(--gold)}
+.release-history time{font-variant-numeric:tabular-nums;color:var(--pale-blue,#bac5d6)}
+.release-history-new{color:#abdfc3;font-size:11px}
+.release-history ul{font-size:12px;line-height:1.65;padding-inline-start:20px;margin:0 0 9px;overflow-wrap:anywhere}
+.release-history li+li{margin-top:3px}
+.audio-settings{display:grid;gap:7px;margin-bottom:10px;padding:8px 0 11px;border-bottom:1px solid var(--line)}
+.audio-settings label{display:flex;gap:9px;align-items:center;font-size:13px}
+.audio-settings output{color:var(--gold);font-variant-numeric:tabular-nums}
+.audio-settings>div{display:grid;grid-template-columns:minmax(60px,1fr) auto auto;gap:8px;align-items:center}
+.audio-settings input{width:100%;min-width:0;accent-color:var(--gold)}
+.audio-settings button{min-width:54px;min-height:34px;padding:3px 8px;white-space:nowrap}
+@media(pointer:coarse){.release-history summary,.standalone-release-history>summary,.audio-settings button,.storage-backup-actions button{min-height:44px}}

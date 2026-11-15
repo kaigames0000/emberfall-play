@@ -409,7 +409,7 @@ body:has(#panel-dialog[open]) .shrine-prompt{display:none}
 
 .shield-block-stats{margin:10px 0;padding:8px 10px;border:1px solid #66765170;background:#21331c44}.shield-block-stats .tooltip-base{margin:0}.shield-block-stats small{display:block;font-size:10px;line-height:1.7;color:#a4b293;margin-top:6px}
 
-.game-top-tools #settings{width:34px;min-width:34px}.game-top-tools #settings svg{width:18px;height:18px}#panel-dialog.settings-dialog{width:min(560px,94vw)}.settings-dialog #dialog-eyebrow{display:none}.settings-dialog #dialog-title{font-size:16px;letter-spacing:1px;margin:0}.settings-dialog .dialog-header{min-height:48px}.settings-toggle{display:flex;align-items:center;gap:11px;cursor:pointer;line-height:1.7}.settings-toggle>input{width:19px;height:19px;accent-color:#c6ab6f;flex-shrink:0}.settings-toggle b{font-size:14px;color:#ddcfa7;font-weight:400}.settings-toggle small{display:block;font-size:11px;color:#9daf92}@media(max-width:700px){.settings-dialog #dialog-body{padding:15px}.settings-toggle small{font-size:12px}.game-top-tools #settings{width:32px;min-width:32px}}
+.game-top-tools #settings{width:34px;min-width:34px}.game-top-tools #settings svg{width:18px;height:18px}#panel-dialog.settings-dialog{width:min(560px,94vw)}.settings-dialog #dialog-eyebrow{display:none}.settings-dialog #dialog-title{font-size:16px;letter-spacing:1px;margin:0}.settings-dialog .dialog-header{min-height:48px}@media(max-width:700px){.settings-dialog #dialog-body{padding:15px}.game-top-tools #settings{width:32px;min-width:32px}}
 
 /* Six-colour loot and account set progress share the existing compact dialog. */
 .save-namespace-notice{margin:0 0 14px;padding:9px 11px;border:1px solid #85764c88;background:#66552822;color:#cbbd93;font-size:11px;line-height:1.8}
@@ -1129,10 +1129,10 @@ body:has(#panel-dialog[open]) .shrine-prompt{display:none}
 #storage-loader[hidden]{display:none}
 #storage-loader button{padding:8px 16px;border:1px solid #8a7953}
 .storage-writing #dialog-body,.storage-writing #settings-tools{pointer-events:none;opacity:.7}
-.storage-summary{padding:8px 0;margin-bottom:12px;border-bottom:1px solid #526044;color:#b9c6ab;font-size:12px}
-.storage-summary small{display:block;color:#95a18c;font-size:11px}
-.storage-backup-actions{display:flex;gap:8px;margin:8px 0}
-.storage-backup-actions button{min-height:34px;padding:5px 10px;font-size:12px;border:1px solid #526044}
+
+
+
+
 .storage-qa-import{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 8px}
 .storage-qa-import p{flex-basis:100%;margin:0}
 .storage-qa-import button,.storage-qa-import a{min-height:34px;padding:5px 10px;font-size:12px}
@@ -1193,7 +1193,7 @@ body:has(#panel-dialog[open]) .shrine-prompt{display:none}
  .backpack-scroll{max-height:none;height:auto;overflow:visible}
 }
 
-.pointer-aim-setting{padding:8px 0;margin:0 0 10px;border-bottom:1px solid var(--line)}body.pointer-aim-on:not(.mobile-phone) .arena.in-combat #world{cursor:crosshair}
+body.pointer-aim-on:not(.mobile-phone) .arena.in-combat #world{cursor:crosshair}
 
 .nav-shortcut{position:absolute;right:8px;top:auto;bottom:5px;font-size:9px;line-height:1.2;color:#bdc5a6;opacity:.8}.bottom-nav>button{position:relative}body.mobile-phone .nav-shortcut{display:none}
 .inventory-currencies{flex-wrap:wrap;gap:8px 14px}.inventory-currencies .inventory-currency{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.inventory-currency svg{width:16px;height:16px}.inventory-currency small{font-size:10px;color:var(--muted)}.inventory-currency b{font-size:13px;color:var(--text)}.currency-gold{color:#d8b568}.currency-shard{color:#b5a1db}.currency-mark{color:#dfc184}
@@ -1620,28 +1620,3 @@ body.blood-resource .combat-dock{grid-template-columns:minmax(150px,1fr) 330px;m
  .gear-inspector-tools{margin-bottom:5px}
  .weapon-swap-warning button{min-height:44px}
 }
-
-.game-update-history,.standalone-release-history{border-top:1px solid #38485a;margin-top:4px;padding-top:8px}
-.standalone-release-history{margin-top:12px}
-.game-update-history h3,.standalone-release-history>summary{font-size:13px;color:var(--gold);margin:0 0 6px}
-.standalone-release-history>summary,.release-history summary{cursor:pointer}
-.release-history details{border-top:1px solid #38485a;padding:0 4px}
-.release-history summary{display:flex;align-items:center;flex-wrap:wrap;gap:5px 10px;min-height:34px;font-size:12px}
-.release-history summary::after{content:'▸';color:var(--muted);margin-left:auto}
-.release-history details[open]>summary::after{content:'▾'}
-.release-history summary::-webkit-details-marker{display:none}
-.release-history summary b{color:var(--gold)}
-.release-history time{font-variant-numeric:tabular-nums;color:var(--pale-blue,#bac5d6)}
-.release-history-new{color:#abdfc3;font-size:11px}
-.release-history ul{font-size:12px;line-height:1.65;padding-inline-start:20px;margin:0 0 9px;overflow-wrap:anywhere}
-.release-history li+li{margin-top:3px}
-@media(pointer:coarse){.release-history summary,.standalone-release-history>summary{min-height:44px}}
-
-
-.audio-settings{display:grid;gap:7px;margin-bottom:10px;padding:8px 0 11px;border-bottom:1px solid var(--line)}
-.audio-settings label{display:flex;gap:9px;align-items:center;font-size:13px}
-.audio-settings output{color:var(--gold);font-variant-numeric:tabular-nums}
-.audio-settings>div{display:grid;grid-template-columns:minmax(60px,1fr) auto auto;gap:8px;align-items:center}
-.audio-settings input{width:100%;min-width:0;accent-color:var(--gold)}
-.audio-settings button{min-width:54px;min-height:34px;padding:3px 8px;white-space:nowrap}
-@media(pointer:coarse){.audio-settings button{min-height:44px}}

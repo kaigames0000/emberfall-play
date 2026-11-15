@@ -206,6 +206,7 @@ export class ProfileStore{
   const copy=structuredClone(profile);
   const operation=async()=>{
    const previous=await this.driver.read(),before=previous?.envelope?.guard??null;let raw;
+   if(options.expectedRevision!==undefined&&revision(previous?.envelope)!==options.expectedRevision)throw writeConflict();
    const adapter={getItem:()=>before?JSON.stringify(before):null,setItem:(_key,value)=>{raw=value;}};
    M.saveProfile(adapter,copy,options);
    const record=await makeRecord(raw,copy),backups=options.replace&&previous?[makeBackup(previous,'before-replace')]:[];
@@ -214,7 +215,7 @@ export class ProfileStore{
   };
   const result=this.queue.then(operation);this.queue=result.catch(()=>{});return result;
  }
- async load(){await this.queue;const current=await this.driver.read();if(!current)throw Error('找不到本機存檔。');const {profile}=await inspect(current);if(!profile)throw Error('本機存檔無法讀取，請重新載入以保留復原備份。');return profile;}
+ async load(){await this.queue;const current=await this.driver.read();if(!current)throw Error('找不到本機存檔。');const {profile}=await inspect(current);if(!profile)throw Error('本機存檔無法讀取，請重新載入以保留復原備份。');if(current.envelope)Object.assign(this.info,{jsonBytes:current.envelope.jsonBytes,storedBytes:current.envelope.storedBytes});return profile;}
  async listRecoveryBackups(){
   await this.queue;const backups=await this.driver.listBackups();
   if(this.driver.kind==='IndexedDB'&&this.legacy)try{backups.push(...localBackups(this.legacy));}catch{}

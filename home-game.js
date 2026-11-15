@@ -66,8 +66,8 @@ export function connectGameView({ home, homeStyle, setLoading, reloadRoster, can
     home.hidden = false;
   }
 
-  async function enter({ fromHistory = false, recovery = false } = {}) {
-    if (pending || current || leaving || !canEnter({recovery})) return false;
+  async function enter({ fromHistory = false } = {}) {
+    if (pending || current || leaving || !canEnter()) return false;
     const operation = { abort:new AbortController(), styles:[], cancelled:false };
     pending = operation;
     const signal = operation.abort.signal;
@@ -75,7 +75,7 @@ export function connectGameView({ home, homeStyle, setLoading, reloadRoster, can
     try {
       const [page, { startGameView }] = inlineGame ? [inlineGame, inlineGame] : await Promise.all([
         loadPlayPage(signal),
-        import('./play-entry.js?v=153'),
+        import('./play-entry.js?v=154'),
       ]);
       signal.throwIfAborted();
       await Promise.all(page.styles.map(href => loadStyle(href, operation)));
