@@ -4,11 +4,11 @@ import {drawAnimeBolt,projectilePaintMargin} from './anime-effects.js?v=126';
 import {combatVisualOptions,drawCombatField,drawCombatEffect,fieldInView,DANGER_RIM} from './field-effects.js?v=135';
 import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
 import {roomView} from './world-space.js?v=108';
-import {drawHero} from './character-model.js?v=148';
+import {drawHero} from './character-model.js?v=157';
 import {heroFacing} from './bplus-hero.js?v=148';
 import {activeHeroMovement} from './hero-motion.js?v=127';
 import {summonStrikePose} from './summon-pose.js?v=127';
-import {RARITIES,ABILITIES,abilityFor,equipmentAuras,SHRINES} from './model.js?v=140';
+import {RARITIES,ABILITIES,abilityFor,equipmentAuras,SHRINES} from './model.js?v=157';
 import {paintChapterBackdrop,paintChapterAmbient,paintRoomTerrain} from './chapter-scenes.js?v=155';
 import {paintCampBackdrop,paintCampFocus,paintCampLabels} from './camp.js?v=155';
 import {drawFieldProp, drawSceneSprite, FIELD_EXIT, paintRoomDressing, prepareSceneArt, sceneArtRevision, scenePickup} from './bplus-scene.js?v=155';
@@ -106,7 +106,15 @@ export class Renderer{
  }
  roomObjectives(){
   const c=this.ctx;
-  for(const {x,y,name,kind,used} of this.g.objectives??[]){
+  const guard=this.g.chapterCombat?.abbey.guardZone();
+  if(guard){
+   c.save();
+   c.lineWidth=2;
+   c.setLineDash([6,7]);
+   this.circle(guard.x,guard.y,guard.radius,guard.used?'#49c8ad18':null,guard.used?'#92e7cb':'#799e9b');
+   c.restore();
+  }
+  for(const {x,y,name,kind,used,usedLabel,locked} of this.g.objectives??[]){
    if(!drawFieldProp(c,kind??'crystal',x,y,used)) this.circle(x,y,30,used?'#375b50':'#39707a','#b6d2c2');
    c.save();
    c.fillStyle=used?'#aeb3bb':'#f0e8d0';
@@ -114,7 +122,7 @@ export class Renderer{
    c.lineWidth=3;
    c.font='13px "Cubic 11", sans-serif';
    c.textAlign='center';
-   const label=used?'已開':name;
+   const label=used?(usedLabel||'已開'):locked?name+' · 持續':name;
    c.strokeText(label,x,y+20);
    c.fillText(label,x,y+20);
    c.restore();
@@ -431,10 +439,10 @@ export class Renderer{
  eliteLabel(enemy,view){
   const {x:anchor,y:feet,r}=enemy;
   if(anchor<view.left||anchor>view.right||feet<view.top||feet>view.bottom)return;
-  const c=this.ctx,mini=enemy.type==='miniboss',key=enemy.minibossKey;
+  const c=this.ctx,mini=enemy.type==='miniboss',objective=enemy.abbeyLeader,key=enemy.minibossKey;
   const color=enemy.rankColor||enemy.elite?.color||(key==='nest'?'#abc86a':key==='priest'?'#d399ce':'#d9ba76');
-  const label=mini?enemy.name||'小首領':(enemy.rankLabel||'稀有')+' '+enemy.name;
-  const trait=mini?(key==='nest'?'毒素 · 毒池／孢子':key==='priest'?'火雷 · 落焰／禁書':'物理 · 衝鋒／地裂'):
+  const label=mini||objective?enemy.name||'小首領':(enemy.rankLabel||'稀有')+' '+enemy.name;
+  const trait=objective?(enemy.type==='shield'?'擊倒 · 守印時間 −5 秒':'擊倒 · 打開出口'):mini?(key==='nest'?'毒素 · 毒池／孢子':key==='priest'?'火雷 · 落焰／禁書':'物理 · 衝鋒／地裂'):
    [enemy.rankAura?.name,enemy.elite?.trait,...(enemy.rankTraits||[])].filter(Boolean).join(' · ')||'重甲騎士・蓄力重擊';
   const labelFont='bold 11px "Cubic 11", sans-serif',traitFont='10px "Cubic 11", sans-serif';
   const preferredY=feet-r-(mini?73:45),height=mini?40:32;
@@ -609,7 +617,7 @@ export class Renderer{
  }
  const labelView={left:Math.max(left,bounds.left),top:Math.max(top,bounds.top),
   right:Math.min(right,bounds.left+bounds.width),bottom:Math.min(bottom,bounds.top+bounds.height)};
- for(const enemy of g.enemies)if(enemy.hp>0&&(enemy.type==='miniboss'||enemy.type==='elite'||enemy.elite))this.eliteLabel(enemy,labelView);
+ for(const enemy of g.enemies)if(enemy.hp>0&&(enemy.type==='miniboss'||enemy.type==='elite'||enemy.elite||enemy.abbeyLeader))this.eliteLabel(enemy,labelView);
  for(const effect of g.effects)drawCombatEffect(c,effect,g.clock,options,view);
  this.chargeCue(options);
  for(const hostile of [false,true])for(const bullet of g.bullets){

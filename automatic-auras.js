@@ -1,4 +1,4 @@
-import {auraLoadout,assignAura,resourceCost} from './model.js?v=140';
+import {auraLoadout,assignAura,resourceCost} from './model.js?v=157';
 
 // Remember handled selections, not affordability. A depleted aura must remain off
 // until selected again; regeneration must never cause a start/stop loop.

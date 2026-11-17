@@ -1,6 +1,6 @@
 import {restoreSiphonedMana} from './mana-economy.js?v=108';
 import {poisonBudget} from './poison-stacks.js?v=108';
-import * as SetModel from './model.js?v=140';
+import * as SetModel from './model.js?v=157';
 import {hasGearCurse} from './gear-builds.js?v=108';
 import {skillCue} from './combat-vfx.js?v=123';
 

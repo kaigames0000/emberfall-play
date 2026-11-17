@@ -1012,6 +1012,15 @@ body:has(#panel-dialog[open]) .shrine-prompt{display:none}
 .expedition-difficulties>button small{font-size:10px;color:#bcab91}
 .expedition-difficulties>button svg{width:13px;height:13px}
 .route-footer>.gold-btn{margin-left:auto}
+.route-choice-footer{gap:10px}
+.route-plan{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px 13px;align-items:center;padding:7px 9px;border-left:2px solid #86baaa;background:#728ca416;color:#bec9d3;font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.route-plan strong{font-size:13px;color:#f2dfb4}
+.route-plan p{margin:2px 0}
+.route-plan b{color:#e7c98c}
+.route-plan .route-plan-boon b,.route-plan-boon{color:#a7d6b7}
+.route-node.preview-next{box-shadow:inset 0 -2px #87c9d6}
+.route-lines path.preview-link:not(.visited){stroke:#9dd9e6;opacity:.95;stroke-width:2.5px}
+@media(max-height:480px){.route-plan{padding:4px 6px;font-size:10px;gap:3px 8px}.route-plan strong{font-size:11px}.route-choice-footer>.gold-btn{min-width:76px}}
 @media(max-width:700px){
  .game-topbar{height:34px;padding:5px 9px}
  .game-topbar .chapter-label{gap:6px;font-size:10px}

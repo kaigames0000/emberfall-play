@@ -31,7 +31,7 @@ function targets(g,prompt=false){
  return [
   ...(g.worldObjects?.props??[]).filter(p=>p.kind==='chest'&&!p.used).map(entity=>({kind:'chest',entity,range:88,...spriteBounds(PROP_FRAME.chest)})),
   ...(g.shrines??[]).filter(p=>!p.used).map(entity=>({kind:'shrine',entity,range:90,...spriteBounds(PROP_FRAME.shrine)})),
-  ...(g.objectives??[]).filter(p=>!p.used).map(entity=>({kind:'objective',entity,range:90,...spriteBounds(PROP_FRAME[entity.kind]??PROP_FRAME.crystal)})),
+  ...(g.objectives??[]).filter(p=>!p.used&&!p.locked).map(entity=>({kind:'objective',entity,range:90,...spriteBounds(PROP_FRAME[entity.kind]??PROP_FRAME.crystal)})),
   ...(prompt?[]:(g.drops??[]).map(entity=>({kind:'pickup',entity,range:65,left:24,right:24,top:26,bottom:28}))),
   ...(prompt?[]:(g.worldObjects?.pickups??[]).map(entity=>({kind:'energy',entity,range:50,left:16,right:16,top:16,bottom:16}))),
   ...(g.cleared&&!g.training?[{kind:'exit',entity:g,point:FIELD_EXIT,range:60,...spriteBounds(PROP_FRAME.exit)}]:[])

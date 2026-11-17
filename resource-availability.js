@@ -1,4 +1,4 @@
-import {resourceCost,sumResourceCosts,summonUnitResourceCost,auraLoadout,movementSkill,skillCategory,summonPlan} from './model.js?v=140';
+import {resourceCost,sumResourceCosts,summonUnitResourceCost,auraLoadout,movementSkill,skillCategory,summonPlan} from './model.js?v=157';
 import {requiredSkillWeapon,skillWeaponFailure} from './skill-weapon-rules.js?v=129';
 const empty=()=>({mana:0,life:0,rage:0});
 export function installResourceAvailability(Game){

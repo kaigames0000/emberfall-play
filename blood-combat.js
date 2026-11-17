@@ -1,4 +1,4 @@
-import {resourceCost} from './model.js?v=140';
+import {resourceCost} from './model.js?v=157';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export class BloodCombat{
  constructor(g){this.g=g;this.rage=0;this.time=0;this.lastHit=-99;this.fees=[];this.receipts=new Map();this.debts=[];this.recovery=0;this.totalPaid=0;this.totalRecovered=0;}

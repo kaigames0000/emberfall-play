@@ -1,22 +1,26 @@
-import {createRoute,routeNode} from './route-model.js?v=140';
+import {createRoute,routeNode,CAMPAIGN_ROUTE_VERSION} from './route-model.js?v=157';
+import {abbeyObjectiveIds} from './abbey-combat.js?v=157';
 import {canChapter,progressFor} from './campaign-progress.js?v=108';
-import {validWorldObjects} from './rift-model.js?v=140';
+import {validWorldObjects} from './rift-model.js?v=157';
 import {terrainFor} from './room-terrain.js?v=108';
 import {ROOM_SCALE} from './world-space.js?v=108';
-import {SHRINES,auraLoadout} from './model.js?v=140';
+import {SHRINES,auraLoadout} from './model.js?v=157';
 import {migrateFlaskCheckpoint,restoreFlaskBelt,snapshotFlaskBelt,validFlaskCheckpoint} from './flask-belt.js?v=108';
 
 const finite=(value,max)=>Number.isFinite(value)&&value>=0&&value<=max;
 const withinWorld=value=>Number.isFinite(value)&&Math.abs(value)<3000;
 const counters=['elapsed','runKills','runGold','runLoot'];
-const objectiveNames=['gate-a','gate-b'];
+const watergates=['gate-a','gate-b'];
+const objectiveIds=(node,difficulty)=>node.chapter===2&&node.layer===5?watergates:abbeyObjectiveIds(node.encounter,difficulty);
 
 export function campaignCheckpoint(hero,checkpoint=hero?.campaignCheckpoint){
  if(!checkpoint||checkpoint.version!==1||typeof checkpoint.seed!=='string'||!checkpoint.seed.length||checkpoint.seed.length>160||
    ![1,2,3].includes(checkpoint.difficulty)||![1,2,3].includes(checkpoint.chapter)||
    !canChapter(hero,checkpoint.difficulty,checkpoint.chapter)||typeof checkpoint.repeat!=='boolean'||
    typeof checkpoint.cleared!=='boolean'||typeof checkpoint.combatDone!=='boolean'||checkpoint.cleared&&!checkpoint.combatDone)return null;
- const graph=createRoute(checkpoint.seed,checkpoint.difficulty,checkpoint.chapter),{path}=checkpoint;
+ const routeVersion=checkpoint.routeVersion??1;
+ if(![1,CAMPAIGN_ROUTE_VERSION].includes(routeVersion))return null;
+ const graph=createRoute(checkpoint.seed,checkpoint.difficulty,checkpoint.chapter,routeVersion),{path}=checkpoint;
  if(!Array.isArray(path)||path.length<1||path.length>8||path[0]!==graph.startID||
     path.some((id,index)=>index>0&&!routeNode(graph,path[index-1])?.next.includes(id)))return null;
  const node=routeNode(graph,path.at(-1)),completed=progressFor(hero,checkpoint.difficulty,checkpoint.chapter);
@@ -27,8 +31,15 @@ export function campaignCheckpoint(hero,checkpoint=hero?.campaignCheckpoint){
  if(!Array.isArray(checkpoint.shrines)||checkpoint.shrines.length>2||checkpoint.shrines.some(shrine=>!shrine||
    !Object.hasOwn(SHRINES,shrine.type)||!withinWorld(shrine.x)||!withinWorld(shrine.y)||
    typeof shrine.used!=='boolean'||typeof shrine.recoveryChoice!=='boolean'))return null;
- if(!Array.isArray(checkpoint.objectives)||checkpoint.objectives.length>2||
-   checkpoint.objectives.some(id=>!objectiveNames.includes(id))||!validWorldObjects(checkpoint.worldObjects))return null;
+ const validIds=objectiveIds(node,checkpoint.difficulty),trial=['abbey-seals','abbey-guard'].includes(node.encounter),abbey=checkpoint.abbey;
+ if(!Array.isArray(checkpoint.objectives)||checkpoint.objectives.length>validIds.length||
+   new Set(checkpoint.objectives).size!==checkpoint.objectives.length||
+   checkpoint.objectives.some(id=>!validIds.includes(id))||!validWorldObjects(checkpoint.worldObjects))return null;
+ if(trial&&(!abbey||typeof abbey.leaderDown!=='boolean'||!finite(abbey.remaining,10+2*checkpoint.difficulty)||
+   !Number.isInteger(abbey.added)||!finite(abbey.added,4+2*checkpoint.difficulty)||
+   checkpoint.cleared!==checkpoint.combatDone||node.encounter==='abbey-seals'&&abbey.leaderDown!==checkpoint.cleared||
+   node.encounter==='abbey-guard'&&checkpoint.cleared!==(abbey.remaining===0&&checkpoint.objectives.length===1)))return null;
+ if(!trial&&abbey!==undefined&&(node.encounter!=='abbey-boss'||!['boss-adds','boss-fire'].includes(abbey?.bossWard)))return null;
  return {checkpoint,node};
 }
 
@@ -61,15 +72,17 @@ export function writeCampaignCheckpoint(profile,g,repeat){
  const room=g.currentRoom();
  const lastWave=g.wave>=room.waves&&!g.horde.pending;
  // A miniboss can leave summoned adds behind. Its loot is already banked.
- const combatDone=g.cleared||lastWave&&(!g.enemies.length||
+ const abbey=g.chapterCombat.abbey.checkpoint(),validIds=objectiveIds(expedition.currentNode(),g.diff);
+ const combatDone=g.cleared||!abbey&&lastWave&&(!g.enemies.length||
    room.type==='miniboss'&&!g.enemies.some(enemy=>enemy.type==='miniboss'));
  hero.campaignCheckpoint={
-  version:1,seed:expedition.graph.seed,chapter:g.chapter,difficulty:g.diff,repeat:!!repeat,
+  version:1,routeVersion:expedition.graph.routeVersion,seed:expedition.graph.seed,chapter:g.chapter,difficulty:g.diff,repeat:!!repeat,
   path:[...expedition.path],cleared:!!g.cleared,combatDone,hp:g.hp,mana:g.mana,
   ...Object.fromEntries(counters.map(key=>[key,g[key]])),
   flasks:snapshotFlaskBelt(g.flasks),
   auras:[...g.auraIds],shrines:g.shrines.map(({type,x,y,used,recoveryChoice})=>({type,x,y,used:!!used,recoveryChoice:!!recoveryChoice})),
-  objectives:g.objectives.filter(o=>o.used).map(o=>o.id),worldObjects:g.worldObjects.snapshot()
+  objectives:g.objectives.filter(o=>o.used&&validIds.includes(o.id)).map(o=>o.id),
+  ...(abbey?{abbey}:{}),worldObjects:g.worldObjects.snapshot()
  };
 }
 
@@ -79,7 +92,7 @@ export function restoreCampaignCheckpoint(g,checkpoint){
  const {node}=saved;
  g.chapter=checkpoint.chapter;g.diff=checkpoint.difficulty;g.c.difficulty=checkpoint.difficulty;
  g.restoreTrainingArmy();g.runContext=null;g.mode='playing';g.reset(true);
- g.expedition.start(checkpoint.seed,checkpoint.chapter);
+ g.expedition.start(checkpoint.seed,checkpoint.chapter,checkpoint.routeVersion??1);
  g.expedition.currentID=node.id;g.expedition.path=[...checkpoint.path];g.room=node.layer;
  g.expedition.clearedNodes=new Set(checkpoint.cleared?checkpoint.path:checkpoint.path.slice(0,-1));
  // Protected loot stays accessible in the resumed room even with a full bag.
@@ -95,6 +108,7 @@ export function restoreCampaignCheckpoint(g,checkpoint){
  }else g.enterRoom();
  g.drops.push(...protectedDrops.map(drop=>g.placeActor(drop,560,650)));
  for(const objective of g.objectives)objective.used=checkpoint.objectives.includes(objective.id);
+ g.chapterCombat.abbey.restore(checkpoint.abbey);
  g.worldObjects.restore(checkpoint.worldObjects);
  g.shrines=checkpoint.shrines.map(shrine=>({...shrine}));
  for(const key of counters)g[key]=checkpoint[key];

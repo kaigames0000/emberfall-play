@@ -1,8 +1,8 @@
 import {MANA_SIPHON_RATE} from './mana-economy.js?v=108';
 import {equipmentIcon} from './equipment-visuals.js?v=124';
 import {lootLevelBand} from './encounter-context.js?v=108';
-import {riftChapterTier} from './rift-model.js?v=140';
-import * as M from './model.js?v=140';
+import {riftChapterTier} from './rift-model.js?v=157';
+import * as M from './model.js?v=157';
 import {ACTOR_DEFENSES,ACTOR_STATUSES,GROUND_STATUSES,PLAYER_STATUSES,actorStatusIconMarkup} from './status-effects.js?v=130';
 
 export const CAMP_GUIDE={

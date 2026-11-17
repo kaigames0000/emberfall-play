@@ -1,4 +1,4 @@
-import * as M from './model.js?v=140';
+import * as M from './model.js?v=157';
 import {isFlaskSlot} from './flask-belt.js?v=108';
 import {saveStashSlots,stashSlots,validStashSlot} from './stash-slots.js';
 

@@ -1,6 +1,6 @@
 import {skillCue} from './combat-vfx.js?v=123';
 import {addPoisonStack} from './poison-stacks.js?v=108';
-import * as M from './model.js?v=140';
+import * as M from './model.js?v=157';
 import {BASIC_ATTACKS,basicSequence,effectiveBasicAttack} from './basic-attacks.js?v=129';
 import {playerAimAngle,pointerAimPoint} from './aiming.js?v=108';
 import {beamBoundingRadius,circleInBeam,circleInSector} from './combat-geometry.js?v=108';

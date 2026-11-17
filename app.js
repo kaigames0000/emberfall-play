@@ -2,7 +2,7 @@ import {CombatAudio,savedVolume,soundForSkill,soundForEffect} from './combat-aud
 import {createGameNotices} from './game-notices.js?v=150';
 import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
 import {createCloudClient} from './cloud-client.js?v=156';
-import {RELEASE_NOTES} from './release-notes.mjs?v=156';
+import {RELEASE_NOTES} from './release-notes.mjs?v=157';
 import {renderReleaseHistory} from './release-history.js?v=134';
 import {boardView, claimBoardReward, recordBoardClear} from './event-board.js?v=155';
 import {EVENT_TABS, dailySuppliesMarkup, eventBoardTabs, weeklyOrderMarkup} from './event-board-ui.js?v=155';
@@ -20,11 +20,13 @@ import {costText,sumCosts,scaleCost,availabilityView} from './resource-ui.js?v=1
 import {lowHealthActive} from './combat-balance.js?v=108';
 import {paidMapChoices} from './paid-map-selection.js?v=152';
 import {difficultySelector,chapterCards} from './campaign-selection.js?v=152';
-import {HORDE_RULES} from './horde-trial.js?v=108';
+import {HORDE_RULES} from './horde-trial.js?v=157';
 import {riskEntries,riskChips,routeCostText} from './risk-presentation.js?v=108';
+import {roomPreviewLabel,routePlanMarkup} from './route-strategy-ui.js?v=157';
+import {ABBEY_ENCOUNTERS,routeChoices as previewRouteChoices} from './route-model.js?v=157';
 import * as BasicAttacks from './basic-attacks.js?v=129';
 import * as InventoryPages from './inventory-pages.js?v=144';
-import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=155';
+import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=157';
 import {createSceneTransition} from './scene-transition.js?v=143';
 import {installMobileControls} from './mobile-controls.js?v=146';
 import {CombatInput} from './combat-input.js?v=108';
@@ -38,15 +40,15 @@ import {GROUND_STATUSES,PLAYER_STATUSES} from './status-effects.js?v=130';
 import {HERO_RESISTANCE_PENALTY,MAX_AILMENT_DURATION} from './elemental-rules.js?v=108';
 import {STARTING_WEAPONS,equipmentIcon,equipmentIconSymbols} from './equipment-visuals.js?v=124';
 import {PASSIVE_LAYOUT,ROLE_BRANCHES,CONDITION_LABELS} from './passive-constellations.js?v=108';
-import * as Rifts from './rift-model.js?v=140';
+import * as Rifts from './rift-model.js?v=157';
 import {paidSaveCandidate,refreshPaidCheckpoint} from './rift-runtime.js?v=108';
-import * as M from './model.js?v=140';
-import {Game,abilityDamageTypes} from './engine.js?v=147';
+import * as M from './model.js?v=157';
+import {Game,abilityDamageTypes} from './engine.js?v=157';
 import {projectileBodyRadius} from './combat-geometry.js?v=108';
 import * as SkillText from './skill-presentation.js?v=130';
-import {Renderer} from './render.js?v=155';
+import {Renderer} from './render.js?v=157';
 import {watchBplusImages} from './bplus-art.js?v=124';
-import {paintHeroPreview} from './character-model.js?v=130';
+import {paintHeroPreview} from './character-model.js?v=157';
 import * as Inventory from './inventory-items.js?v=144';
 import {itemCell as carriedItemCell,inventoryCellButton,inventoryIconSymbols,currencyCountersMarkup,equipmentAffixesMarkup} from './inventory-presentation.js?v=155';
 import {flaskCardSummary,flaskComparisonRows,flaskStatValue} from './flask-workshop.js?v=108';
@@ -368,7 +370,7 @@ function updateCampPrompt(){
  interactButton.classList.toggle('hidden',!target);
  if(!target)return;
  const object=target.point||target.entity;
- const label=target.kind==='chest'?'開啟寶箱':target.kind==='exit'?'選擇下一區域':target.kind==='objective'?'開啟 '+object.name:object.name??M.SHRINES[object.type]?.name;
+ const label=target.kind==='chest'?'開啟寶箱':target.kind==='exit'?'選擇下一區域':target.kind==='objective'?(object.verb||'開啟')+' '+object.name:object.name??M.SHRINES[object.type]?.name;
  const text=interactButton.querySelector('span');
  if(text.textContent!==label)text.textContent=label;
  const point=renderer.screenPoint(object.x,object.y-target.top-3);
@@ -396,7 +398,7 @@ function updateMode(){
  }
  sceneMode=e.mode;
  $('#arena-state').textContent=practice?'DPS 訓練場':e.mode==='camp'?'營地準備':e.mode==='dead'?'遠征結束':e.mode==='victory'?'關卡完成':e.cleared?(room.type==='recovery'?'整備完成':'區域淨化'):`第 ${e.wave} / ${room.waves} 波`;
- updateArenaLocation();$('#objective-text').textContent=practice?'測試目前 BUILD · 無掉落與進度':e.mode==='camp'?(state.active&&c.level===1&&c.kills===0?'T 開啟燼脈圖學第一招 · 點擊遠征傳送門出發':'點擊地標前往互動 · E 與附近目標互動'):e.mode==='victory'?(next?'下一章已解鎖 · '+next.name:'章節已完成 · 整備後再次遠征'):e.mode==='dead'?'成長與裝備已保留，整備後再次挑戰。':e.cleared?(room.type==='recovery'?'整備完成 · 兩種祭壇選一，或選擇下一條路線':'區域已淨化 · 選擇下一條路線'):e.objectives?.some(o=>!o.used)?(e.enemies.length?'清除敵人並開啟水門 · ':'開啟水門 · ')+e.objectives.filter(o=>o.used).length+'/'+e.objectives.length:room.type==='recovery'?'生命、魔力與藥水已補滿 · 靠近祭壇按 E，兩種祝福選一':room.type==='boss'?'擊敗 '+(e.enemies.find(n=>n.type==='boss')?.name||room.name)+' · 留意地面預警':room.type==='miniboss'?'擊敗 '+room.name+' · 避開地面預警':`清除敵人 · ${(room.description||room.desc)}`;
+ updateArenaLocation();$('#objective-text').textContent=practice?'測試目前 BUILD · 無掉落與進度':e.mode==='camp'?(state.active&&c.level===1&&c.kills===0?'T 開啟燼脈圖學第一招 · 點擊遠征傳送門出發':'點擊地標前往互動 · E 與附近目標互動'):e.mode==='victory'?(next?'下一章已解鎖 · '+next.name:'章節已完成 · 整備後再次遠征'):e.mode==='dead'?'成長與裝備已保留，整備後再次挑戰。':e.cleared?(room.type==='recovery'?'整備完成 · 兩種祭壇選一，或選擇下一條路線':'區域已淨化 · 選擇下一條路線'):e.chapterCombat.abbey.status()?e.chapterCombat.abbey.status():e.objectives?.some(o=>!o.used)?(e.enemies.length?'清除敵人並開啟水門 · ':'開啟水門 · ')+e.objectives.filter(o=>o.used).length+'/'+e.objectives.length:room.type==='recovery'?'生命、魔力與藥水已補滿 · 靠近祭壇按 E，兩種祝福選一':room.type==='boss'?'擊敗 '+(e.enemies.find(n=>n.type==='boss')?.name||room.name)+' · 留意地面預警':room.type==='miniboss'?'擊敗 '+room.name+' · 避開地面預警':`清除敵人 · ${(room.description||room.desc)}`;
  $('#mini-map').innerHTML=(e.expedition?.graph?.layers||M.chapterDefinition(selectedChapter).rooms).map((r,i)=>{const pathNode=e.expedition?.graph?.nodes?.find(n=>(e.expedition.path||[]).includes(n.id)&&n.layer===i);return `<span class="${i===e.room?'active':i<e.room?'done':''}" title="第${i+1}層 · ${esc(pathNode?.name||r.name)}"></span>`;}).join('');
  updateRunProgress();updatePause();}
 function updatePause(){e.paused=!storageReady||storageTransactions>0||manualPause||mobileBlocked||pwaOverlayOpen||dialog.open||document.hidden;if(e.paused){stationaryCast=false;e.pointerTarget=null;e.cancelMoveTarget();combatInput?.clear();movementInput?.clear();sceneInput?.clear();}$('#pause-overlay').classList.toggle('hidden',!manualPause||e.mode!=='playing'||dialog.open);$('#pause').disabled=e.mode!=='playing';$('#pause').setAttribute('aria-label',manualPause?'繼續遊戲':'暫停遊戲');$('#pause').innerHTML=icon(manualPause?'play':'pause')+'<small>'+(manualPause?'繼續':'暫停')+'</small>';}
@@ -1231,9 +1233,10 @@ function updateRunProgress(){
  roomName.title=e.encounter?.desc||room.description||room.desc||roomName.textContent;
  $('#run-wave').textContent=room.type==='recovery'?'回復':`第 ${e.wave}/${room.waves} 波`;
  $('#run-summons').textContent=summons?` · 召喚 ${summons}`:'';
- const objective=$('#run-objective'),pending=e.objectives?.filter(entry=>!entry.used).length||0;
- objective.hidden=!pending;
- if(pending)objective.textContent=`開啟水門 ${e.objectives.length-pending}/${e.objectives.length}`;
+ const objective=$('#run-objective'),pending=e.objectives?.filter(entry=>!entry.used).length||0,abbey=e.chapterCombat.abbey.status();
+ objective.hidden=!abbey&&!pending;
+ objective.textContent=abbey||(pending?`開啟水門 ${e.objectives.length-pending}/${e.objectives.length}`:'');
+ if(abbey)$('#run-wave').textContent=room.encounter==='abbey-boss'?'首領二階段':ABBEY_ENCOUNTERS[room.encounter].label;
 }
 function updateRiskHUD(){
  const element=$('#expedition-risk-hud');if(!element)return;
@@ -1287,11 +1290,14 @@ async function chooseRouteRoom(id){
  toast(e.skillError||'目前無法進入此房間。');return false;
 }
 function selectRouteNode(id){
- if(!e.expedition?.graph?.nodes.some(node=>node.id===id))return false;
+ const graph=e.expedition?.graph;
+ if(!graph?.nodes.some(node=>node.id===id))return false;
  routePreviewID=id;
+ const connections=new Set(previewRouteChoices(graph,id).map(node=>node.id));
  // Keep the same buttons alive so native double clicks and horizontal scroll stay stable.
- $$('.route-node[data-route-preview]').forEach(node=>{const selected=node.dataset.routePreview===id;node.classList.toggle('previewed',selected);node.setAttribute('aria-pressed',String(selected));});
- const riskPreview=$('#route-risk-preview');if(riskPreview)riskPreview.textContent=routeCostText(e.expedition.graph,id);
+ $$('.route-node[data-route-preview]').forEach(node=>{const selected=node.dataset.routePreview===id;node.classList.toggle('previewed',selected);node.classList.toggle('preview-next',connections.has(node.dataset.routePreview));node.setAttribute('aria-pressed',String(selected));});
+ $$('.route-lines [data-route-from]').forEach(line=>line.classList.toggle('preview-link',line.dataset.routeFrom===id));
+ const preview=$('#route-plan');if(preview)preview.innerHTML=routePlanMarkup(graph,id,e.expedition,routeCostText(graph,id));
  const confirm=$('[data-route-choose]');if(confirm){confirm.dataset.routeChoose=id;confirm.disabled=!canEnterRoute(id);confirm.setAttribute('aria-label','確認進入'+e.expedition.graph.nodes.find(node=>node.id===id).name);}
  return true;
 }
@@ -1313,11 +1319,11 @@ function routeGraphMarkup(){
  const current=e.expedition.currentID,legal=new Set((e.routeChoices?.()||[]).map(node=>node.id)),visited=new Set(e.expedition.path||[]),selected=graph.nodes.find(node=>node.id===routePreviewID)||graph.nodes.find(node=>node.id===current),coords=node=>[102+node.layer*224,node.col+.5];
  const links=graph.nodes.flatMap(node=>node.next.map(id=>{
   const next=graph.nodes.find(n=>n.id===id);if(!next)return '';const [x,y]=coords(node),[xx,yy]=coords(next),mid=(x+xx)/2,used=visited.has(node.id)&&visited.has(id),reachable=node.id===current&&legal.has(id);
-  return `<path class="${used?'visited':reachable?'reachable':''}" d="M${x+90} ${y} C${mid} ${y} ${mid} ${yy} ${xx-90} ${yy}"/>`;
+  return `<path class="${used?'visited':reachable?'reachable':''} ${node.id===selected.id?'preview-link':''}" data-route-from="${node.id}" d="M${x+90} ${y} C${mid} ${y} ${mid} ${yy} ${xx-90} ${yy}"/>`;
  })).join('');
  return `<div class="route-legend" aria-label="路線狀態"><span class="current">目前</span><span class="reachable">可選</span><span class="visited">已走過</span></div><div class="route-scroll" tabindex="0" aria-label="左右捲動八層分岔路線"><div class="expedition-route" style="grid-template-columns:repeat(${graph.layers.length},204px);width:${graph.layers.length*224-20}px" aria-label="完整分岔路線"><svg class="route-lines" viewBox="0 0 ${graph.layers.length*224-20} 3" preserveAspectRatio="none" aria-hidden="true">${links}</svg>${graph.nodes.map(node=>{
-  const meta=routeRoomInfo(node),isCurrent=node.id===current,isVisited=visited.has(node.id),isLegal=legal.has(node.id),canEnter=isLegal&&e.cleared;
-  return `<button class="route-node ${isCurrent?'current':''} ${isVisited?'visited':''} ${isLegal?'reachable':''} ${node.id===selected.id?'previewed':''}" data-route-preview="${node.id}" data-route-layer="${node.layer}" data-route-type="${node.type}" title="${esc(routeCostText(graph,node.id)||meta.description)}" style="grid-column:${node.layer+1};grid-row:${node.col+1};--room-color:${meta.color||'#bcb393'}" aria-pressed="${node.id===selected.id}" aria-label="第${node.layer+1}層 ${esc(node.name)}，${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可以選擇':'預覽'}"><small>第 ${node.layer+1} 層 · ${esc(meta.label||node.type)}</small><b>${esc(node.name)}</b><span>${node.type==='recovery'?'HP／MP／藥水全滿':node.type==='miniboss'?meta.element:node.type==='boss'?'君王印記 · 黃裝保底':node.type==='treasure'?'守衛掉裝＋材料':node.type==='trial'?'高風險高回報':node.type==='welfare'?'本房輕鬆 · 後2房追咒':node.type==='mystery'?'未知恩惠／追咒':node.type==='elite'?'每波至少2名菁英':'2波混合敵人'}</span><em>${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可進入':isLegal?'待淨化':'未連通'}</em></button>`;
+  const meta=routeRoomInfo(node),encounter=ABBEY_ENCOUNTERS[node.encounter],isCurrent=node.id===current,isVisited=visited.has(node.id),isLegal=legal.has(node.id),canEnter=isLegal&&e.cleared;
+  return `<button class="route-node ${isCurrent?'current':''} ${isVisited?'visited':''} ${isLegal?'reachable':''} ${node.id===selected.id?'previewed':''} ${selected.next.includes(node.id)?'preview-next':''}" data-route-preview="${node.id}" data-route-layer="${node.layer}" data-route-type="${node.type}" ${node.encounter?`data-route-encounter="${node.encounter}"`:''} title="${esc(encounter?.goal||routeCostText(graph,node.id)||meta.description)}" style="grid-column:${node.layer+1};grid-row:${node.col+1};--room-color:${meta.color||'#bcb393'}" aria-pressed="${node.id===selected.id}" aria-label="第${node.layer+1}層 ${esc(node.name)}，${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可以選擇':'預覽'}"><small>第 ${node.layer+1} 層 · ${esc(roomPreviewLabel(node))}</small><b>${esc(node.name)}</b><span>${encounter?.loot||(node.type==='recovery'?'HP／MP／藥水全滿':node.type==='miniboss'?meta.element:node.type==='boss'?'君王印記 · 黃裝保底':node.type==='treasure'?'守衛掉裝＋材料':node.type==='trial'?'高風險高回報':node.type==='welfare'?'本房輕鬆 · 後2房追咒':node.type==='mystery'?'未知恩惠／追咒':node.type==='elite'?'每波至少2名菁英':'2波混合敵人')}</span><em>${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可進入':isLegal?'待淨化':'預覽'}</em></button>`;
  }).join('')}</div></div>`;
 }
 function renderQuests(){
@@ -1333,7 +1339,7 @@ function renderQuests(){
  if(!graph){
   $('#dialog-body').innerHTML=`<div class="campaign-departure-content">${difficultySelector(c)}${chapterCards(c,chapter)}</div><footer class="route-footer"><button class="gold-btn" data-route-start>開始遠征</button></footer>`;return;
  }
- $('#dialog-body').innerHTML=`${graph?'<div class="risk-summary">'+riskChips(e.expeditionRisk?.conditions)+'</div>':''}${routeGraphMarkup()}<small id="route-risk-preview" class="risk-route-note">${graph?esc(routeCostText(graph,selected.id)):''}</small><footer class="route-footer">${graph?`<button class="gold-btn" data-route-choose="${selected.id}" ${canEnterRoute(selected.id)?'':'disabled'}>確認</button>`:'<button class="gold-btn" data-route-start>開始遠征</button>'}</footer>`;
+ $('#dialog-body').innerHTML=`<div class="risk-summary">${riskChips(e.expeditionRisk?.conditions)}</div>${routeGraphMarkup()}<footer class="route-footer route-choice-footer"><section id="route-plan" class="route-plan" aria-live="polite">${routePlanMarkup(graph,selected.id,e.expedition,routeCostText(graph,selected.id))}</section><button class="gold-btn" data-route-choose="${selected.id}" ${canEnterRoute(selected.id)?'':'disabled'}>確認進入</button></footer>`;
 }
 function riftAchievementMarkup(){const list=M.riftAchievementList(state),open=$('.rift-achievements')?.open;return `<details class="rift-achievements" ${open?'open':''}><summary>遠征成就 · ${list.filter(a=>a.claimable).length} 待領</summary>${list.map(a=>`<div><span>${a.name} · ${Math.min(a.need,a.progress)}/${a.need}<small>${a.description}</small></span><button data-rift-claim="${a.id}" ${a.claimable?'':'disabled'}>${a.claimed?'已領':'領取'}</button></div>`).join('')}</details>`;}
 async function claimRiftReward(id){const candidate=profileCandidate(),r=M.claimRiftAchievement(candidate,id);if(!r.ok){toast(r.reason);return;}if(await commitPaidCandidate(candidate)){renderRiftChoices();toast('遠征成就獎勵已領取');}}

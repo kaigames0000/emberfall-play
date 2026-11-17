@@ -28,21 +28,45 @@ export const MINIBOSSES3={
  nest:{key:'nest',name:'腐根母巢',element:'poison',color:'#a2b95a',desc:'預警毒池與毒刺扇射；召喚有限孢子僕從。',hpMultiplier:8,speed:34}
 };
 export const MINIBOSSES=MINIBOSSES3;
+export const CAMPAIGN_ROUTE_VERSION=2;
+export const ABBEY_ENCOUNTERS=Object.freeze({
+ 'abbey-seals':{label:'破印',name:'禁書庫 · 封印祭壇',goal:'關閉祭壇停止增援，擊倒守印祭司即可開門。',loot:'重塑砂 ×1',boon:'王座的每波召援減少 1 名',material:'reroll'},
+ 'abbey-guard':{label:'守印',name:'封印長廊 · 守住封印',goal:'啟動石碑後留在印圈內。擊倒封印隊長減少 5 秒。',loot:'強化石 ×1',boon:'王座火線預警延長 0.5 秒',material:'enhance'},
+ 'abbey-boss':{label:'最終首領',name:'灰燼王座',goal:'君王半血時可關閉召援或火線祭壇，餘下的一座會持續生效。',loot:'君王印記 · 黃裝保底'}
+});
+const abbeyTracks={
+ 1:[['welfare'],['elite'],['treasure']],
+ 2:[['normal','welfare'],['normal'],['trial','mystery']],
+ 4:[['recovery'],['elite','normal'],['trial','treasure']],
+ 5:[['normal','welfare'],['normal'],['elite','trial']],
+ 6:[['recovery'],['elite'],['treasure']]
+};
+export const ROUTE_TRACKS={supply:'整備',seal:'封印',loot:'奪寶'};
 function seededRandom(seed){let state=2166136261;for(const c of String(seed))state=Math.imul(state^c.charCodeAt(0),16777619);return ()=>{state+=0x6D2B79F5;let t=state;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
 export function routeNode(graph,id){return graph?.nodes?.find(n=>n.id===id)??null;}
 export function routeChoices(graph,currentID){return (routeNode(graph,currentID)?.next??[]).map(id=>routeNode(graph,id)).filter(Boolean);}
-export function createRoute(seed,diff=1,chapter=1){
+export function createRoute(seed,diff=1,chapter=1,routeVersion=CAMPAIGN_ROUTE_VERSION){
  const def=chapterDefinition(chapter);if(!def)throw Error('未知章節');const chapterRooms=def.rooms,chapterMinis=def.minis;
  const random=seededRandom(seed),widths=[1,3,3,1,3,3,3,1],nodes=[],layers=[];
+ const abbey=chapter===1&&routeVersion>=2,strategy=seededRandom(String(seed)+':abbey-route-v2');
+ const mirrored=abbey&&strategy()<.5;
  for(let layer=0;layer<widths.length;layer++){
   const choices=['normal','elite','welfare','treasure','trial','mystery'];for(let i=choices.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
   const types=choices.slice(0,3);if(layer===4||layer===6)types[Math.floor(random()*3)]='recovery';
   const ids=[];for(let index=0;index<widths[layer];index++){
-   const col=widths[layer]===1?1:index,type=layer===0?'normal':layer===3?'miniboss':layer===7?'boss':types[index],bossKey=type==='miniboss'?Object.keys(chapterMinis)[Math.floor(random()*3)]:null;
-   const node={id:`${chapter===1?'':'C'+chapter+'-'}L${layer+1}C${col+1}`,chapter,layer,col,type,name:bossKey?chapterMinis[bossKey].name:type==='boss'?def.boss.name:`${chapterRooms[layer].name}・${ROOM_TYPES[type].label}`,...(bossKey?{bossKey}:{}),next:[]};nodes.push(node);ids.push(node.id);
+   const col=widths[layer]===1?1:index,track=mirrored?2-index:index,deck=abbey?abbeyTracks[layer]?.[track]:null;
+   const type=layer===0?'normal':layer===3?'miniboss':layer===7?'boss':deck?deck[Math.floor(strategy()*deck.length)]:types[index];
+   const bossKey=type==='miniboss'?Object.keys(chapterMinis)[Math.floor(random()*3)]:null;
+   const encounter=abbey&&(layer===7?'abbey-boss':track===1&&layer===2?'abbey-seals':track===1&&layer===5?'abbey-guard':null);
+   const name=encounter&&encounter!=='abbey-boss'?ABBEY_ENCOUNTERS[encounter].name:bossKey?chapterMinis[bossKey].name:type==='boss'?def.boss.name:`${chapterRooms[layer].name}・${ROOM_TYPES[type].label}`;
+   const node={id:`${chapter===1?'':'C'+chapter+'-'}L${layer+1}C${col+1}`,chapter,layer,col,type,name,...(bossKey?{bossKey}:{}),...(deck?{track:['supply','seal','loot'][track]}:{}),...(encounter?{encounter}:{}),next:[]};nodes.push(node);ids.push(node.id);
   }layers.push(ids);
  }
- const graph={seed,chapter,difficulty:[1,2,3].includes(diff)?diff:1,nodes,layers,startID:layers[0][0]};
- for(const node of nodes)if(node.layer<7)node.next=layers[node.layer+1].filter(id=>widths[node.layer]===1||widths[node.layer+1]===1||Math.abs(routeNode(graph,id).col-node.col)<=1);
+ const graph={seed,chapter,routeVersion,difficulty:[1,2,3].includes(diff)?diff:1,nodes,layers,startID:layers[0][0]};
+ for(const node of nodes)if(node.layer<7)node.next=layers[node.layer+1].filter(id=>{
+  const next=routeNode(graph,id);
+  if(node.encounter==='abbey-guard'&&next.type==='recovery')return false;
+  return widths[node.layer]===1||widths[node.layer+1]===1||Math.abs(next.col-node.col)<=1;
+ });
  return graph;
 }

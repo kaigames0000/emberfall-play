@@ -1,4 +1,4 @@
-import {availableSkills} from './model.js?v=140';
+import {availableSkills} from './model.js?v=157';
 import {pointerAimPoint,playerAimPlacement,playerAimTarget} from './aiming.js?v=108';
 import {skillWeaponCompatible} from './skill-weapon-rules.js?v=129';
 import {skillCue,travelCue} from './combat-vfx.js?v=123';

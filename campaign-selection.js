@@ -1,8 +1,8 @@
 import {expeditionCardPicture,expeditionCardTitle} from './expedition-cards.js?v=152';
 import {choiceButtons,escapeHtml as esc} from './ui-controls.js?v=152';
-import {DIFFICULTIES,canDifficulty,canChapter,chapterDefinition,progressFor,equipmentDropBand} from './model.js?v=140';
+import {DIFFICULTIES,canDifficulty,canChapter,chapterDefinition,progressFor,equipmentDropBand} from './model.js?v=157';
 import {HERO_RESISTANCE_PENALTY} from './elemental-rules.js?v=108';
-import {HORDE_RULES,hordeDensity} from './horde-trial.js?v=108';
+import {HORDE_RULES,hordeDensity} from './horde-trial.js?v=157';
 const pct=n=>Number((n*100).toFixed(1))+'%';
 const threats={
  1:['標準攻擊節奏，先熟悉預警與走位。','敵人依種類具備不同抗性；一般狀態控制可正常運作。'],

@@ -1,6 +1,6 @@
 import {terrainFor} from './room-terrain.js?v=108';
 import {ROOM_SCALE} from './world-space.js?v=108';
-import {runContext,seededRng} from './rift-model.js?v=140';
+import {runContext,seededRng} from './rift-model.js?v=157';
 import {restoreFlaskBelt,snapshotFlaskBelt} from './flask-belt.js?v=108';
 const resourceKeys=['materials','gems','marks','weaponChoices','rewards'];
 function debtSnapshot(b,army){const groups=new Map();for(const d of b.debts){if(d.ally&&!army.includes(d.ally))continue;const ally=d.ally?army.indexOf(d.ally):null,key=ally+':'+d.type+':'+!!d.extended,old=groups.get(key)||{ally,type:d.type,extended:!!d.extended,remaining:0,rate:0};old.remaining+=d.remaining;old.rate+=d.t>0?d.remaining/d.t:0;groups.set(key,old);}return [...groups.values()].filter(d=>d.remaining>0&&d.rate>0).map(({rate,...d})=>({...d,t:Math.min(4,d.remaining/rate)}));}

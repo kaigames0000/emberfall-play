@@ -1,4 +1,4 @@
-import {seededRng} from './rift-model.js?v=140';
+import {seededRng} from './rift-model.js?v=157';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export class WorldObjects{
  constructor(g){this.g=g;this.props=[];this.pickups=[];this.roomKey=null;}

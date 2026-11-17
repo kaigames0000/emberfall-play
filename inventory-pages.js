@@ -1,4 +1,4 @@
-import * as M from './model.js?v=140';
+import * as M from './model.js?v=157';
 import {list} from './inventory-items.js?v=144';
 import {PAGE_IDS,MAX_PAGE_NAME,MAX_PAGE_ASSIGNMENTS,cleanPageName,validPages} from './inventory-page-rules.js?v=125';
 export {PAGE_IDS,MAX_PAGE_NAME,cleanPageName,validPages};

@@ -1,6 +1,6 @@
 import {DAILY_SUPPLIES, WEEKLY_ORDER} from './event-board.js?v=155';
 import {choiceButtons, iconMarkup} from './ui-controls.js?v=152';
-import {MATERIALS} from './model.js?v=140';
+import {MATERIALS} from './model.js?v=157';
 
 export const EVENT_TABS = [
   ['news','公告'], ['weekly','活動'], ['daily','每日簽到'], ['feedback','意見回饋'],

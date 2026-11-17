@@ -1,4 +1,4 @@
-import {ABILITIES} from './model.js?v=140';
+import {ABILITIES} from './model.js?v=157';
 
 const abilityId=source=>source.shadowBasic?(source.basicAttack??'weapon-basic'):source.ability??source.id??source.basicAttack??source.visualAbility;
 const spritesByElement={cold:'frost-impact',fire:'flame-burst',poison:'poison-cloud'};

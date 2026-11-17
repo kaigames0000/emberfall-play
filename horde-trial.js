@@ -43,7 +43,7 @@ export class HordeTrial{
  get pending(){return this.queue.length;}
  enterRoom(room){
   this.flushGold();this.queue=[];this.cooldown=0;
-  const g=this.g;this.active=!!g.hordeTrialEnabled&&!g.training&&Object.hasOwn(roomRules,room.type);
+  const g=this.g;this.active=!!g.hordeTrialEnabled&&!g.training&&(!room.encounter||room.encounter==='abbey-boss')&&Object.hasOwn(roomRules,room.type);
   this.room=room;this.activeCap=Math.min(56,48+room.layer*2);
  }
  beginWave(){

@@ -1,4 +1,4 @@
-import {drawCharacter} from './character-model.js?v=130';
+import {drawCharacter} from './character-model.js?v=157';
 import {paintSprite} from './pixel-surface.js?v=108';
 
 const INK='#171723',STEEL='#9eabc3';

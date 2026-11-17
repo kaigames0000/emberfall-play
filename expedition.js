@@ -2,10 +2,10 @@ import {decorateRank} from './enemy-rarity.js?v=108';
 import {ROOM_SCALE,expandPoint} from './world-space.js?v=108';
 import {setEnemyDefense} from './elemental-rules.js?v=108';
 import {terrainFor} from './room-terrain.js?v=108';
-import {createRiftRoute,seededRng} from './rift-model.js?v=140';
+import {createRiftRoute,seededRng} from './rift-model.js?v=157';
 import {chapterDefinition,ALL_MINIBOSSES} from './chapter-data.js?v=108';
-import * as WorldModel from './model.js?v=140';
-import {ROOM_TYPES,MINIBOSSES3,createRoute,routeNode,routeChoices} from './route-model.js?v=140';
+import * as WorldModel from './model.js?v=157';
+import {ABBEY_ENCOUNTERS,ROOM_TYPES,MINIBOSSES3,createRoute,routeNode,routeChoices} from './route-model.js?v=157';
 
 const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,n));
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -13,13 +13,14 @@ const POOLS=[['melee','skirmisher','charger','archer','bomber','shield'],['shiel
 
 export class Expedition{
  constructor(g){this.g=g;this.graph=null;this.currentID=null;this.selectedID=null;this.path=[];this.clearedNodes=new Set();this.enteredNodes=new Set();this.hazardTimer=4;}
- start(seed,chapter=1){this.chapter=chapter;this.graph=this.g.runContext&&this.g.runContext.kind!=='campaign'?createRiftRoute(this.g.runContext):createRoute(seed,this.g.diff,chapter);this.currentID=this.graph.startID;this.selectedID=null;this.path=[this.currentID];this.clearedNodes.clear();this.enteredNodes.clear();return this.graph;}
+ start(seed,chapter=1,routeVersion){this.chapter=chapter;this.graph=this.g.runContext&&this.g.runContext.kind!=='campaign'?createRiftRoute(this.g.runContext):createRoute(seed,this.g.diff,chapter,routeVersion);this.currentID=this.graph.startID;this.selectedID=null;this.path=[this.currentID];this.clearedNodes.clear();this.enteredNodes.clear();return this.graph;}
  currentNode(){return routeNode(this.graph,this.currentID);}
  currentRoom(){
   const chapter=chapterDefinition(this.g.chapter||1),rooms=chapter.rooms,node=this.currentNode(),layer=node?.layer??clamp(this.g.room||0,0,7),type=node?.type??(layer===7?'boss':layer===3?'miniboss':'normal'),meta=ROOM_TYPES[type],boss=node?.bossKey?ALL_MINIBOSSES[node.bossKey]:null;
   const bossRoom=type==='boss'||type==='miniboss';
-  const waves=type==='recovery'?0:type==='trial'?3:type==='treasure'||bossRoom&&!this.g.hordeTrialEnabled?1:2;
-  return {...rooms[layer],...meta,type,layer,nodeID:node?.id??null,name:this.g.runContext?.kind&&this.g.runContext.kind!=='campaign'?node.name:boss?.name??(type==='boss'?rooms[7].name:rooms[layer].name),sub:boss?`${meta.label} · ${boss.name}`:meta.label,desc:boss?.desc??meta.desc,waves,count:type==='treasure'?8:bossRoom?1:type==='trial'?Math.min(24,rooms[layer].count+4):rooms[layer].count,bossKey:node?.bossKey??null,element:boss?.element??null};
+  const encounter=node?.encounter,localTrial=encounter&&encounter!=='abbey-boss';
+  const waves=type==='recovery'?0:type==='trial'?3:localTrial||type==='treasure'||bossRoom&&!this.g.hordeTrialEnabled?1:2;
+  return {...rooms[layer],...meta,type,layer,encounter,nodeID:node?.id??null,name:encounter?node.name:this.g.runContext?.kind&&this.g.runContext.kind!=='campaign'?node.name:boss?.name??(type==='boss'?rooms[7].name:rooms[layer].name),sub:boss?`${meta.label} · ${boss.name}`:ABBEY_ENCOUNTERS[encounter]?.label??meta.label,desc:ABBEY_ENCOUNTERS[encounter]?.goal??boss?.desc??meta.desc,waves,count:type==='treasure'?8:bossRoom?1:type==='trial'?Math.min(24,rooms[layer].count+4):rooms[layer].count,bossKey:node?.bossKey??null,element:boss?.element??null};
  }
  choices(){return routeChoices(this.graph,this.currentID);}
  choose(id){
@@ -41,14 +42,17 @@ export class Expedition{
   }
   g.encounter={name:room.name,desc:room.desc,extra:room.layer<2?'charger':'caster',hazard:room.type==='trial'?'trial':room.layer===1?'cross':room.layer===2?'runes':room.layer===5?'pulse':null};
   g.horde?.enterRoom(room);
+  if(room.encounter)g.chapterCombat.enterRoom({room});
   if(room.type==='recovery'){
+   g.chapterCombat?.abbey.enter(null);
    g.hp=g.s.hp;g.mana=g.s.mana;g.refillFlasks(Infinity);for(const flask of g.flasks)flask.cooldown=0;
    const keys=Object.keys(WorldModel.SHRINES).filter(key=>WorldModel.SHRINES[key].buff);for(let i=0;i<2&&keys.length;i++){const index=this.roll(keys.length),type=keys.splice(index,1)[0];g.shrines.push(g.placeActor({type,used:false,recoveryChoice:true},460+i*200,550));}
    this.onRoomCleared();
   }else{
-   this.spawnWave();if(room.layer>0&&room.type!=='miniboss'&&room.type!=='boss'&&g.rand()<.4){const keys=Object.keys(WorldModel.SHRINES),type=keys[this.roll(keys.length)];g.shrines=[g.placeActor({type,used:false},560,580)];}
+   this.spawnWave();if(!room.encounter&&room.layer>0&&room.type!=='miniboss'&&room.type!=='boss'&&g.rand()<.4){const keys=Object.keys(WorldModel.SHRINES),type=keys[this.roll(keys.length)];g.shrines=[g.placeActor({type,used:false},560,580)];}
   }
-  if(room.type!=='recovery')g.chapterCombat?.enterRoom();for(const objective of g.objectives??[])g.placeActor(objective,objective.x,objective.y);return true;
+  if(!room.encounter&&room.type!=='recovery')g.chapterCombat?.enterRoom({room});
+  for(const objective of g.objectives??[])g.placeActor(objective,objective.x,objective.y);return true;
  }
  roll(length){return Math.min(length-1,Math.max(0,Math.floor(this.g.rand()*length)));}
  spawnWave(){
@@ -56,6 +60,7 @@ export class Expedition{
   if(g.training||g.cleared||g.wave>=room.waves||g.enemies.length||g.horde?.pending)return false;
   if(this._eliteBudgetNode!==this.currentID){this._eliteBudgetNode=this.currentID;this._eliteRoomIssued=0;this._purpleIssued=false;}
   g.wave++;g.beginLootWave();
+  if(room.encounter&&room.encounter!=='abbey-boss'){const spawned=g.chapterCombat.abbey.spawn();if(spawned)g.emit('wave');return spawned;}
   if(g.horde?.active&&(!bossRoom||g.wave<room.waves))return g.horde.beginWave();
   if(bossRoom)g.encounter={...g.encounter,name:room.name,desc:room.desc};
   if(room.type==='boss')g.addEnemy('boss',560,230);
@@ -84,8 +89,11 @@ export class Expedition{
  }
  roomLoot(){const room=this.currentRoom();return {roomLootMultiplier:room.lootMultiplier,roomRarityBonus:room.rarityBonus};}
  onRoomCleared(){
-  const g=this.g,room=this.currentRoom();if(!g.chapterCombat?.roomReady()||!this.currentID||this.clearedNodes.has(this.currentID)||g.enemies.length||g.horde?.pending||g.wave<room.waves)return false;
+  const g=this.g,room=this.currentRoom(),abbey=g.chapterCombat?.abbey;
+  if(!this.currentID||this.clearedNodes.has(this.currentID))return false;
+  if(abbey?.roomTrial? !abbey.canClear : !g.chapterCombat?.roomReady()||g.enemies.length||g.horde?.pending||g.wave<room.waves)return false;
   this.clearedNodes.add(this.currentID);g.cleared=true;if(!g.runContext||g.runContext.kind==='campaign')WorldModel.completeZone(g.c,g.diff,room.layer,g.chapter||1);
+  if(abbey?.roomTrial){abbey.finishRoom();g.emit('resourceLoot',{gold:0,materials:[{key:abbey.reward(),count:1}],gems:[]});}
   if(room.type==='treasure'){const keys=['reforge','reroll','chisel','ascend'],key=keys[this.roll(keys.length)];g.emit('resourceLoot',{gold:0,materials:[{key,count:1}],gems:[]});g.fx(560,340,90,'#e4c16e','shock',.8);}
   g.horde?.flushGold();g.collectAll();g.emit('clear');return true;
  }
