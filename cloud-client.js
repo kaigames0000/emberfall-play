@@ -1,4 +1,4 @@
-import {CLOUD_CONFIG} from './cloud-config.js?v=108';
+import {CLOUD_CONFIG} from './cloud-config.js?v=156';
 
 const LOGIN_MAX_AGE = 15 * 60_000;
 const TOKEN_BUFFER = 45_000;
@@ -49,6 +49,7 @@ export function createCloudClient({
   history = globalThis.history, storage, onChange = () => {}
 } = {}) {
   const endpoint = cloudEndpoints(config);
+  const feedbackEnabled = !!endpoint && config.feedbackEnabled === true && /^https?:$/.test(location?.protocol ?? '');
   if (storage === undefined) {
     try { storage = globalThis.sessionStorage; } catch { storage = null; }
   }
@@ -152,6 +153,7 @@ export function createCloudClient({
 
   return {
     enabled: !!endpoint && /^https?:$/.test(location?.protocol ?? ''),
+    feedbackEnabled,
     verifiedEnabled: !!endpoint?.verified && /^https?:$/.test(location?.protocol ?? ''),
     get account() { return session?.account ?? null; },
     async signIn(realm) {
@@ -197,7 +199,12 @@ export function createCloudClient({
     },
     readBackup(revision) { return sync(revision === undefined ? '' : '?revision=' + revision); },
     writeBackup(expectedRevision, profile) { return sync('', {method:'PUT', body:{expectedRevision, profile}}); },
-    sendFeedback(report) { return sync('/feedback', {method:'POST', body:report}); },
+    async sendFeedback(report) {
+      if (!feedbackEnabled) return sync('/feedback', {method:'POST', body:report});
+      const result = await json(endpoint.supabase + '/functions/v1/emberfall-feedback', {method:'POST', body:report});
+      if (result?.ok !== true) throw new CloudRequestError(502, null);
+      return result;
+    },
     verified(action) {
       if (!this.verifiedEnabled) throw new CloudRequestError(503, null);
       return authed(endpoint.verified + '/gameplay', {method:'POST', body:action, apiKey:false});

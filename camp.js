@@ -1,6 +1,6 @@
-import {paintBplusNPC} from './anime-art.js?v=154';
-import {campStationArt, drawSceneSprite} from './bplus-scene.js?v=154';
-import {paintCampFloor} from './chapter-scenes.js?v=154';
+import {paintBplusNPC} from './anime-art.js?v=155';
+import {campStationArt, drawSceneSprite} from './bplus-scene.js?v=155';
+import {paintCampFloor} from './chapter-scenes.js?v=155';
 
 export const CAMP_STATIONS = [
  { id: 'travel', panel: 'quests', name: '遠征傳送門', icon: 'map', x: 560, y: 188, color: '#91cbb8', kind: 'gate' },
@@ -8,6 +8,7 @@ export const CAMP_STATIONS = [
  { id: 'stash', panel: 'stash', name: '共用倉庫', icon: 'chest', x: 241, y: 377, color: '#c3ab76', kind: 'chest' },
  { id: 'artisan', panel: 'forge', panels:['merchant','flasks','forge'], name: '工匠商人', icon: 'salvage', x: 820, y: 420, color: '#d4986d', kind: 'forge' },
  { id: 'guide', panel: 'guide', name: '冒險指南', icon: 'book', x: 402, y: 515, color: '#c5c8a0', kind: 'table' },
+ { id: 'events', panel: 'events', name: '活動使者', icon: 'flag', x: 430, y: 685, color: '#deb980', kind: 'table' },
  { id: 'training', panel: 'training', name: 'DPS 訓練場', icon: 'target', x: 747, y: 655, color: '#c5aa84', kind: 'dummy' },
 ];
 

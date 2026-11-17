@@ -1,4 +1,4 @@
-import {RELEASE_NOTES} from './release-notes.mjs?v=154';
+import {RELEASE_NOTES} from './release-notes.mjs?v=155';
 import {renderReleaseHistory,upcomingReleaseNote} from './release-history.js?v=134';
 
 // Browser/PWA only. The portable edition omits this module and keeps its saves.

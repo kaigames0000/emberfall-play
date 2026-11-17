@@ -1,6 +1,6 @@
 import {animeMaterialSymbols} from './anime-materials.js?v=124';
 import * as M from './model.js?v=140';
-import {FLASK_KEYS} from './scene-input.js?v=154';
+import {FLASK_KEYS} from './scene-input.js?v=155';
 import {escapeHtml as esc,iconMarkup} from './ui-controls.js?v=152';
 
 export function inventoryIconSymbols(){return animeMaterialSymbols();}

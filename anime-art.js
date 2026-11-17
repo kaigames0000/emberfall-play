@@ -2,7 +2,7 @@ import {bplusImage,drawBplus} from './bplus-art.js?v=124';
 import {warmSkillSprites} from './skill-sprites.js?v=125';
 
 export function warmAnimeArt(){
- for(const sprite of ['artisan','collector','guide','ash-infantry','shield-knight','bone-caster','golem','ice-spirit','storm-cloud'])bplusImage('units/'+sprite+'.webp');
+ for(const sprite of [...npcSprites,'ash-infantry','shield-knight','bone-caster','golem','ice-spirit','storm-cloud'])bplusImage('units/'+sprite+'.webp');
  warmSkillSprites();
 }
 function shadow(c,x,y,w){
@@ -31,7 +31,7 @@ const minibosses={
  thunderhunter:['thunder-god',91],gatekeeper:['shield-knight',94,'hue-rotate(220deg)']
 };
 const bosses=[['crowned-boss',106],['harbor-king',109],['astral-monarch',108]];
-const npcSprites=new Set(['artisan','collector','guide']);
+const npcSprites=new Set(['artisan','collector','guide','event-host']);
 
 export function paintBplusNPC(c,id,x,y,size){
  if(!npcSprites.has(id))return false;

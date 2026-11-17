@@ -12,6 +12,7 @@ export const campStationArt = {
  stash: {image: prop('shared-stash'), w: 123, h: 95},
  artisan: {image: prop('artisan-workbench'), w: 142, h: 118, npc: 'artisan', propOffset: {x:65,y:-50}},
  guide: {image: prop('guide-lectern'), w: 97, h: 84, npc: 'guide', propOffset: {x:-45,y:-50}},
+ events: {image: prop('event-board'), w: 124, h: 106, npc: 'event-host', propOffset: {x:-62,y:-34}},
  training: {image: prop('training-dummy'), w: 86, h: 92},
 };
 export const FIELD_EXIT = Object.freeze({x:560,y:138});

@@ -20,8 +20,7 @@ function formatFeedback({ category, message, context }) {
   return [...lines, '', message, ''].join('\n');
 }
 
-// The host supplies coarse context labels and rejects sendReport on failure.
-export function createFeedbackPanel({ getContext = () => ({}), canSend = () => false, sendReport } = {}) {
+export function createFeedbackPanel({ getContext, formatContext, sendReport }) {
   const id = 'feedback-' + (++feedbackPanelCount);
   const form = document.createElement('form');
   form.className = 'feedback-panel';
@@ -68,30 +67,34 @@ export function createFeedbackPanel({ getContext = () => ({}), canSend = () => f
   const status = form.querySelector('[role="status"]');
   const manual = form.querySelector('[data-feedback-manual]');
   const manualText = manual.querySelector('textarea');
-  let context = {};
+  let context = {}, contextLabels = {};
   let sending = false;
 
   function refreshAvailability() {
-    const authorized = typeof sendReport === 'function' && canSend();
+    const configured = typeof sendReport === 'function';
     const online = win.navigator.onLine !== false;
-    send.hidden = !authorized;
+    send.hidden = !configured;
     send.disabled = sending || !online;
     if (!online) availability.textContent = '目前離線，可複製或下載回報。';
-    else if (authorized) availability.textContent = '';
-    else if (typeof sendReport === 'function') availability.textContent = '登入後可線上送出。也可以先複製或下載回報。';
+    else if (configured) availability.textContent = '';
     else availability.textContent = '可複製或下載回報，稍後分享。';
-    return authorized && online;
+    return configured && online;
   }
 
   function refresh() {
     const values = getContext();
     context = {};
+    contextLabels = {};
     for (const [key] of feedbackContextFields) {
       const node = form.querySelector(`[data-feedback-context="${key}"]`);
       const value = values?.[key];
-      const preview = typeof value === 'string' ? value.replace(/\s+/g, ' ').trim().slice(0, 80) : '';
+      const label = formatContext(key, value);
+      const preview = typeof label === 'string' ? label : '';
       node.textContent = preview || '未提供';
-      if (preview) context[key] = preview;
+      if (preview) {
+        context[key] = value;
+        contextLabels[key] = preview;
+      }
     }
     refreshAvailability();
   }
@@ -149,8 +152,10 @@ export function createFeedbackPanel({ getContext = () => ({}), canSend = () => f
       form.reset();
       updateDraft();
       status.textContent = '已送出回報，感謝你的協助。';
-    } catch {
-      status.textContent = '目前無法送出，請重試或複製、下載回報。';
+    } catch (error) {
+      status.textContent = error?.status === 429
+        ? '目前已達送出上限，請稍後再試。'
+        : '目前無法送出，請重試或複製、下載回報。';
     } finally {
       sending = false;
       fields.disabled = false;
@@ -161,7 +166,7 @@ export function createFeedbackPanel({ getContext = () => ({}), canSend = () => f
   form.querySelector('[data-feedback-copy]').addEventListener('click', async () => {
     const report = readReport();
     if (!report) return;
-    const text = formatFeedback(report);
+    const text = formatFeedback({...report, context: report.context && contextLabels});
     try {
       await win.navigator.clipboard.writeText(text);
       status.textContent = '已複製回報。';
@@ -173,7 +178,7 @@ export function createFeedbackPanel({ getContext = () => ({}), canSend = () => f
   form.querySelector('[data-feedback-download]').addEventListener('click', () => {
     const report = readReport();
     if (!report) return;
-    const text = formatFeedback(report);
+    const text = formatFeedback({...report, context: report.context && contextLabels});
     try {
       const url = win.URL.createObjectURL(new win.Blob([text], { type: 'text/plain;charset=utf-8' }));
       win.setTimeout(() => win.URL.revokeObjectURL(url), 1000);

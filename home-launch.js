@@ -3,9 +3,9 @@ import {appearancePickerMarkup} from './appearance-picker.js?v=124';
 import {bplusAsset} from './bplus-art.js?v=124';
 import {equipmentArt} from './equipment-visuals.js?v=124';
 import {openProfileStore} from './profile-storage.js?v=154';
-import {cloudEndpoints, createCloudClient} from './cloud-client.js?v=108';
-import {connectGameView} from './home-game.js?v=154';
-import {mountHomeSettings} from './home-settings.js?v=154';
+import {cloudEndpoints, createCloudClient} from './cloud-client.js?v=156';
+import {connectGameView} from './home-game.js?v=156';
+import {mountHomeSettings} from './home-settings.js?v=155';
 
 export function mountHomeRoster(inlineGame) {
   const find = selector => document.querySelector(selector);
