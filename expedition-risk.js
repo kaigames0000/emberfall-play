@@ -35,7 +35,8 @@ export function roomRiskPreview(graph,nodeID){const node=graph?.nodes?.find(n=>n
 function emptyConditions(){return {enemyHp:1,enemyDamage:1,enemyMove:1,enemyAction:1,packSize:1,lootMultiplier:1,rarityBonus:0,deathEmbers:false,stormGround:false,curses:[],modifiers:[],mystery:null,combat:false};}
 function validatedPath(expedition){
  const graph=expedition?.graph,path=expedition?.path,nodes=graph?.nodes;
- if(!Array.isArray(nodes)||nodes.length>32||!Array.isArray(path)||!path.length||path.length>8||path[0]!==graph.startID||path.at(-1)!==expedition.currentID||new Set(path).size!==path.length||new Set(nodes.map(n=>n.id)).size!==nodes.length)return null;
+ const expanded=graph?.routeVersion===3;
+ if(!Array.isArray(nodes)||nodes.length>(expanded?75:32)||!Array.isArray(path)||!path.length||path.length>(expanded?25:8)||path[0]!==graph.startID||path.at(-1)!==expedition.currentID||new Set(path).size!==path.length||new Set(nodes.map(n=>n.id)).size!==nodes.length)return null;
  const visited=path.map(id=>nodes.find(n=>n.id===id));
  if(visited.some((n,i)=>!n||n.layer!==i||!['normal','elite','welfare','recovery','treasure','trial','miniboss','boss','mystery'].includes(n.type)||i>0&&!visited[i-1].next?.includes(n.id)))return null;
  return visited;

@@ -1,6 +1,6 @@
 import {colorTerms} from './skill-presentation.js?v=130';
-import {PASSIVE_MOD_NAMES} from './passive-tree.js?v=108';
-import {ringDerived} from './ring-tree.js?v=133';
+import {PASSIVE_MOD_NAMES} from './passive-tree.js?v=158';
+import {ringDerived} from './ring-tree.js?v=158';
 import {routeRingConnections} from './ring-tree-paths.js?v=132';
 
 const KIND = {

@@ -6,13 +6,14 @@ export const normalAbbey=(g)=>g.diff===1&&g.chapter===1&&(!g.runContext||g.runCo
 export function enemyElementalPressure(g){
  if(g.training)return 1;
  const diff=clamp(g.diff||1,1,3),chapter=clamp(g.chapter||1,1,3),paid=['rift','endgame'].includes(g.runContext?.kind),end=g.runContext?.kind==='endgame';
- const [from,to]=end?[24,32]:pressureBands[diff][chapter-1],progress=clamp((g.room||0)/(paid?3:7),0,1);
+ const [from,to]=end?[24,32]:pressureBands[diff][chapter-1],progress=clamp((g.expedition?.currentNode()?.depth??g.room??0)/(paid?3:7),0,1);
  return from+(to-from)*progress;
 }
 export function enemyImpactDamage(g,amount,type,kind){
  if(!['fire','cold','lightning','poison'].includes(type)||!['burst','projectile','field'].includes(kind))return amount;
  const pressure=enemyElementalPressure(g);
- const weight=kind==='burst'?1:kind==='projectile'?(normalAbbey(g)&&g.room===7?.13:.48):.25;
+ const final=g.expedition?.graph?.routeVersion===3?g.expedition.currentNode()?.type==='boss':g.room===7;
+ const weight=kind==='burst'?1:kind==='projectile'?(normalAbbey(g)&&final?.13:.48):.25;
  return amount*(1+(pressure-1)*weight);
 }
 export const summonBossHitMultiplier=(g,target,options)=>

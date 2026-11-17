@@ -1,6 +1,7 @@
 import {decorateRank} from './enemy-rarity.js?v=108';
 import {chapterDefinition} from './chapter-data.js?v=108';
 
+import {EXPANDED_ENEMIES} from './campaign-expansion-enemies.js?v=158';
 export const HORDE_RULES=Object.freeze({equipment:.18,reward:.20,whiteHP:.25,whiteDamage:.6,blueHP:.5,blueDamage:.85,maxQueue:320,actorCap:64});
 const difficultyDensity=[1,1,1.25,1.5],challengeDensity=[1,1,1.1,1.2];
 export function hordeDensity(difficulty,challenge=1){
@@ -48,9 +49,11 @@ export class HordeTrial{
  }
  beginWave(){
   const g=this.g,room=this.room,rules=roomRules[room.type];
-  const base=Math.ceil((rules.base+room.layer*rules.depth)*hordeDensity(g.diff,g.runContext?.challenge));
+  const base=Math.ceil((rules.base+(room.depth??room.layer)*rules.depth)*hordeDensity(g.diff,g.runContext?.challenge));
   const total=g.expeditionRisk?.packCount(base,HORDE_RULES.maxQueue)??Math.min(base,HORDE_RULES.maxQueue);
   const chapterTypes=chapterDefinition(g.chapter||1).enemies.map(enemy=>enemy.type);
+  const expanded=room.expanded?EXPANDED_ENEMIES[g.chapter]:[];
+  for(const enemy of expanded)if(chapterTypes.length&&!chapterTypes.includes(enemy.type))chapterTypes.push(enemy.type);
   const ranged=chapterTypes.filter(type=>type==='archer'||type==='caster');
   const frontline=chapterTypes.filter(type=>!ranged.includes(type)&&type!=='summoner');
   const rareTypes=chapterTypes.length?[...frontline,...ranged]:['charger','shield','skirmisher',...(room.layer>=2?['caster']:[])];
@@ -60,7 +63,10 @@ export class HordeTrial{
    const guaranteed=room.type==='elite'&&(i===0||i===Math.floor(total/2));
    if(guaranteed||g.rand()<rules.eliteChance)return {type:rareTypes[roll(rareTypes.length)],elite:true};
    let type;
-   if(chapterTypes.length){
+   const role=expanded.length?(Math.floor(i/12)+g.wave-1)%expanded.length:0;
+   const showcase=expanded[role];
+   if(showcase&&i%12===2)type=showcase.type;
+   else if(chapterTypes.length){
     const roles=i%4===2?ranged:frontline;
     type=i%23===22?'summoner':roles[roll(roles.length)];
    }else if(room.layer>=2&&i===total-8)type='summoner';

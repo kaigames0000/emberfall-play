@@ -1,10 +1,10 @@
 import {beamBoundingRadius,circleInBeam} from './combat-geometry.js?v=108';
-import {autoSkill,skillLoadout,skillCategory,skillManaCost,resourceCost} from './model.js?v=157';
+import {autoSkill,skillLoadout,skillCategory,skillManaCost,resourceCost} from './model.js?v=158';
 import {MAX_AILMENT_DURATION} from './elemental-rules.js?v=108';
 import {playerAimPlacement} from './aiming.js?v=108';
 import {skillWeaponCompatible} from './skill-weapon-rules.js?v=129';
-import {skillCue} from './combat-vfx.js?v=123';
-import {ageInheritedBasic,updateInheritedBasic} from './basic-attack-combat.js?v=129';
+import {skillCue} from './combat-vfx.js?v=158';
+import {ageInheritedBasic,updateInheritedBasic} from './basic-attack-combat.js?v=158';
 import {summonStrike} from './summon-pose.js?v=127';
 import {addPoisonStack,addPoisonFog,poisonBudget,MAX_POISON_FIELDS} from './poison-stacks.js?v=108';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);

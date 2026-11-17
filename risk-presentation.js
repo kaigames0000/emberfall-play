@@ -1,4 +1,4 @@
-import {roomRiskPreview} from './expedition-risk.js?v=108';
+import {roomRiskPreview} from './expedition-risk.js?v=158';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function riskEntries(conditions){
  if(!conditions)return [];

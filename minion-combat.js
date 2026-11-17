@@ -1,6 +1,6 @@
 import {RangerBeastCombat} from './ranger-beast-combat.js?v=108';
 import {SummonRoaming} from './summon-roaming.js?v=108';
-import {skillCue} from './combat-vfx.js?v=123';
+import {skillCue} from './combat-vfx.js?v=158';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const clamp=(n,low,high)=>Math.max(low,Math.min(high,n));
 const goldenAngle=2.399963229728653;

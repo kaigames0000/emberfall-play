@@ -1,8 +1,8 @@
 import {restoreSiphonedMana} from './mana-economy.js?v=108';
 import {poisonBudget} from './poison-stacks.js?v=108';
-import * as SetModel from './model.js?v=157';
+import * as SetModel from './model.js?v=158';
 import {hasGearCurse} from './gear-builds.js?v=108';
-import {skillCue} from './combat-vfx.js?v=123';
+import {skillCue} from './combat-vfx.js?v=158';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const types=['physical','fire','cold','lightning','poison'];

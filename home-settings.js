@@ -1,8 +1,8 @@
-import * as M from './model.js?v=157';
+import * as M from './model.js?v=158';
 import {CombatAudio, savedVolume} from './combat-audio.js?v=137';
-import {decodeProfileBackup, encodeProfileBackup} from './profile-storage.js?v=154';
+import {decodeProfileBackup, encodeProfileBackup} from './profile-storage.js?v=158';
 import {bindControlSettings, controlSettingsMarkup, downloadSaveFile, loadPointerAim, storageSettingsMarkup, toggleFullscreen} from './settings-ui.js?v=154';
-import {RELEASE_NOTES} from './release-notes.mjs?v=157';
+import {RELEASE_NOTES} from './release-notes.mjs?v=158';
 import {renderReleaseHistory} from './release-history.js?v=134';
 
 export function mountHomeSettings({openStore, reloadRoster, portable}) {
@@ -34,7 +34,7 @@ export function mountHomeSettings({openStore, reloadRoster, portable}) {
       content.insertAdjacentHTML('beforeend', '<details class="standalone-release-history"><summary>更新紀錄</summary><div class="release-history"></div></details>');
       renderReleaseHistory(content.querySelector('.release-history'), RELEASE_NOTES);
     } else {
-      void Promise.all([import('./pwa.js?v=154'), import('./updates.js?v=157')]).then(([pwa, updates]) => {
+      void Promise.all([import('./pwa.js?v=154'), import('./updates.js?v=158')]).then(([pwa, updates]) => {
         if (signal.aborted) return;
         const install = pwa.mountInstallTools(dialog, signal, {closeSymbol:'title-close'});
         updates.mountUpdateTools(dialog, install, signal);

@@ -1,5 +1,5 @@
 import {expandRing} from './ring-expansion.js?v=133';
-import {PASSIVE_MOD_NAMES} from './passive-tree.js?v=108';
+import {PASSIVE_MOD_NAMES} from './passive-tree.js?v=158';
 import {placeTalentRoutes} from './ring-tree-layout.js?v=133';
 
 const LEGACY_ORBITS = [

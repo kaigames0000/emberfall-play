@@ -1,10 +1,10 @@
 import {CHAPTERS} from './chapter-data.js?v=108';
-import {progressFor} from './campaign-progress.js?v=108';
+import {progressFor} from './campaign-progress.js?v=158';
 // Character-scoped achievement records. Reward resources are applied by model.js.
 const difficulties=[1,2,3];
 const enemyTypes=new Set(['melee','shield','elite','summoner','skeleton','skirmisher','bomber','wraith','caster','archer','charger','miniboss','boss']);
 const items=(materials={},gems=[])=>({materials:Object.entries(materials).map(([key,count])=>({key,count})),gems:gems.map(([key,tier,count=1])=>({key,tier,count}))});
-const chapterAchievements=[2,3].flatMap(chapter=>difficulties.flatMap(difficulty=>{const def=CHAPTERS[chapter],common={chapter,difficulty};return [...Object.values(def.minis).map(mini=>({...common,id:`c${chapter}:${mini.key}:${difficulty}`,key:mini.key,title:mini.name,description:'擊敗'+mini.name,kind:'boss',target:1,reward:items({enhance:2*difficulty,reforge:difficulty})})),{...common,id:`c${chapter}:boss:${difficulty}`,key:'boss',title:def.boss.name,description:'擊敗'+def.boss.name,kind:'boss',target:1,reward:items({enhance:6*difficulty,ascend:difficulty})},{...common,id:`c${chapter}:triad:${difficulty}`,key:'triad',title:def.name+'獵手',description:'擊敗本章三種小首領',kind:'triad',target:3,reward:items({chisel:difficulty,reroll:2*difficulty},[['soul',Math.min(3,difficulty+1),1]])},{...common,id:`c${chapter}:chapter:${difficulty}`,key:'chapter',title:def.name+'拓荒者',description:'完成本章八層',kind:'chapter',target:8,reward:items({ascend:difficulty,reroll:2*difficulty})}];}));
+const chapterAchievements=[2,3].flatMap(chapter=>difficulties.flatMap(difficulty=>{const def=CHAPTERS[chapter],common={chapter,difficulty};return [...Object.values(def.minis).map(mini=>({...common,id:`c${chapter}:${mini.key}:${difficulty}`,key:mini.key,title:mini.name,description:'擊敗'+mini.name,kind:'boss',target:1,reward:items({enhance:2*difficulty,reforge:difficulty})})),{...common,id:`c${chapter}:boss:${difficulty}`,key:'boss',title:def.boss.name,description:'擊敗'+def.boss.name,kind:'boss',target:1,reward:items({enhance:6*difficulty,ascend:difficulty})},{...common,id:`c${chapter}:triad:${difficulty}`,key:'triad',title:def.name+'獵手',description:'擊敗本章三位經典小首領',kind:'triad',target:3,reward:items({chisel:difficulty,reroll:2*difficulty},[['soul',Math.min(3,difficulty+1),1]])},{...common,id:`c${chapter}:chapter:${difficulty}`,key:'chapter',title:def.name+'拓荒者',description:'完成本章遠征',kind:'chapter',target:8,reward:items({ascend:difficulty,reroll:2*difficulty})}];}));
 export const ACHIEVEMENTS=Object.freeze([
  ...difficulties.flatMap(difficulty=>[
   {key:'jailer',title:'斷鎖者',description:'擊敗斷鎖獄卒',kind:'boss',target:1,reward:items({chisel:difficulty,enhance:2*difficulty})},
@@ -12,9 +12,9 @@ export const ACHIEVEMENTS=Object.freeze([
   {key:'nest',title:'拔除腐根',description:'擊敗腐根母巢',kind:'boss',target:1,reward:items({reforge:2*difficulty})},
   {key:'boss',title:'灰燼弒王者',description:'擊敗灰燼君王',kind:'boss',target:1,reward:{skillPoints:1,...items({enhance:[0,5,10,20][difficulty],ascend:difficulty})}},
   {key:'triad',title:'修道院獵手',description:'擊敗三種不同的小首領',kind:'triad',target:3,reward:{talentPoints:1,...items({reforge:2*difficulty,chisel:difficulty},[['soul',Math.min(3,difficulty+1),difficulty===3?2:1]])}},
-  {key:'chapter',title:'八層拓荒者',description:'淨化第一章全部八層',kind:'chapter',target:8,reward:items({ascend:2*difficulty,reroll:3*difficulty},[['clarity',Math.min(3,difficulty+1),difficulty===3?2:1]])},
+  {key:'chapter',title:'修道院拓荒者',description:'完成第一章遠征',kind:'chapter',target:8,reward:items({ascend:2*difficulty,reroll:3*difficulty},[['clarity',Math.min(3,difficulty+1),difficulty===3?2:1]])},
   {key:'skill_triad',title:'狩獵心得',description:'擊敗第一章三種不同的小首領，獲得技能點',kind:'triad',target:3,reward:{skillPoints:1,...items()}},
-  {key:'skill_chapter',title:'修道院征服者',description:'淨化第一章全部八層，獲得技能點',kind:'chapter',target:8,reward:{skillPoints:1,...items()}}
+  {key:'skill_chapter',title:'修道院征服者',description:'完成第一章遠征，獲得技能點',kind:'chapter',target:8,reward:{skillPoints:1,...items()}}
  ].map(def=>({...def,difficulty,id:`${def.key}:${difficulty}`}))),
  ...chapterAchievements,
  {id:'slayer_100',title:'初試鋒芒',description:'擊敗100名非召喚敵人',kind:'kills',target:100,reward:items({enhance:5})},

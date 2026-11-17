@@ -1,5 +1,5 @@
 import {bplusImage, watchBplusImages} from './bplus-art.js?v=124';
-import {canStand, terrainBounds} from './room-terrain.js?v=108';
+import {canStand, terrainBounds} from './room-terrain.js?v=158';
 
 const prop = name => 'props/' + name + '.webp';
 const state = name => 'states/' + name + '.webp';

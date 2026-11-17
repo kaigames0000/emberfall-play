@@ -1,17 +1,17 @@
 import {drawPixelEnemy,drawPixelSummon} from './pixel-actors.js?v=127';
 import {drawAnimeUnit,drawAnimeProp,drawAnimePickup,warmAnimeArt} from './anime-art.js?v=155';
-import {drawAnimeBolt,projectilePaintMargin} from './anime-effects.js?v=126';
-import {combatVisualOptions,drawCombatField,drawCombatEffect,fieldInView,DANGER_RIM} from './field-effects.js?v=135';
-import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
+import {drawAnimeBolt,projectilePaintMargin} from './anime-effects.js?v=158';
+import {combatVisualOptions,drawCombatField,drawCombatEffect,fieldInView,DANGER_RIM} from './field-effects.js?v=158';
+import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=158';
 import {roomView} from './world-space.js?v=108';
 import {drawHero} from './character-model.js?v=157';
 import {heroFacing} from './bplus-hero.js?v=148';
 import {activeHeroMovement} from './hero-motion.js?v=127';
 import {summonStrikePose} from './summon-pose.js?v=127';
-import {RARITIES,ABILITIES,abilityFor,equipmentAuras,SHRINES} from './model.js?v=157';
-import {paintChapterBackdrop,paintChapterAmbient,paintRoomTerrain} from './chapter-scenes.js?v=155';
-import {paintCampBackdrop,paintCampFocus,paintCampLabels} from './camp.js?v=155';
-import {drawFieldProp, drawSceneSprite, FIELD_EXIT, paintRoomDressing, prepareSceneArt, sceneArtRevision, scenePickup} from './bplus-scene.js?v=155';
+import {RARITIES,ABILITIES,abilityFor,equipmentAuras,SHRINES} from './model.js?v=158';
+import {paintChapterBackdrop,paintChapterAmbient,paintRoomTerrain} from './chapter-scenes.js?v=158';
+import {paintCampBackdrop,paintCampFocus,paintCampLabels} from './camp.js?v=158';
+import {drawFieldProp, drawSceneSprite, FIELD_EXIT, paintRoomDressing, prepareSceneArt, sceneArtRevision, scenePickup} from './bplus-scene.js?v=158';
 import {equipmentArt} from './equipment-visuals.js?v=124';
 import {drawRareGear,rareGearDesign} from './rare-gear-art.js?v=108';
 import {ACTOR_DEFENSES,ACTOR_STATUSES,actorStatusShape,enemyStatusEffects} from './status-effects.js?v=130';
@@ -115,7 +115,18 @@ export class Renderer{
    c.restore();
   }
   for(const {x,y,name,kind,used,usedLabel,locked} of this.g.objectives??[]){
-   if(!drawFieldProp(c,kind??'crystal',x,y,used)) this.circle(x,y,30,used?'#375b50':'#39707a','#b6d2c2');
+   if(kind==='campfire'){
+    const rise=Math.floor(this.g.clock*6)%3;
+    this.circle(x,y-13,32,'#e6a46825');
+    c.fillStyle='#201817';c.fillRect(x-21,y-6,42,8);
+    c.fillStyle='#9c6b56';c.fillRect(x-17,y-9,34,5);
+    c.fillStyle='#bc6244';c.fillRect(x-12,y-16,24,9);
+    c.fillStyle='#eb894e';c.fillRect(x-9,y-25,17,17);
+    c.fillRect(x-5,y-34-rise,9,13);
+    c.fillStyle='#f4bf70';c.fillRect(x-5,y-21,11,12);
+    c.fillStyle='#ffdf99';c.fillRect(x-2,y-16,5,7);
+    c.fillStyle='#f6c176';c.fillRect(x+10,y-31-rise*2,3,4);
+   }else if(!drawFieldProp(c,kind??'crystal',x,y,used))this.circle(x,y,30,used?'#375b50':'#39707a','#b6d2c2');
    c.save();
    c.fillStyle=used?'#aeb3bb':'#f0e8d0';
    c.strokeStyle='#1a2029';
@@ -386,7 +397,7 @@ export class Renderer{
    c.strokeStyle=DANGER_RIM;c.globalAlpha=.88;c.lineWidth=1.7;c.setLineDash([8,5]);c.stroke();c.setLineDash([]);
   };
   c.save();
-  if(intent.kind==='legacy-commit'){
+  if(intent.kind==='legacy-commit'&&!intent.campaignPattern){
    // The boss is winding up, but the committed sector is not its damage shape.
    // The actual attack supplies its own circles or readable projectiles.
    c.globalAlpha=.82;

@@ -75,7 +75,7 @@ export function connectGameView({ home, homeStyle, setLoading, reloadRoster, can
     try {
       const [page, { startGameView }] = inlineGame ? [inlineGame, inlineGame] : await Promise.all([
         loadPlayPage(signal),
-        import('./play-entry.js?v=157'),
+        import('./play-entry.js?v=158'),
       ]);
       signal.throwIfAborted();
       await Promise.all(page.styles.map(href => loadStyle(href, operation)));

@@ -1,7 +1,8 @@
 import {projectilePattern} from './enemy-patterns.js?v=108';
-import {enemySkillTier} from './combat-balance.js?v=108';
+import {enemySkillTier} from './combat-balance.js?v=158';
 import {circleInSector,circleIntersects} from './combat-geometry.js?v=108';
 
+import {expandedEnemyIntent} from './campaign-expansion-enemies.js?v=158';
 const TAU=Math.PI*2;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -140,13 +141,15 @@ export class EnemyCombat{
   if(e.cd<=0&&!s.legacyReady){
    if(!this.claimEvent()){e.cd=.12;return;}
    const angle=Math.atan2(target.y-e.y,target.x-e.x),boss=['boss','miniboss'].includes(e.type);
-   this.beginIntent(e,'legacy-commit',angle,boss?1:.75,{shape:'sector',range:boss?300:350,halfArc:.8,targetX:target.x,targetY:target.y,legacyChapter:chapter});return;
+   const expanded=expandedEnemyIntent(this.g,e,angle);
+   if(e.campaignEnemyKey&&e.type==='shield')e.braceActive=true;
+   this.beginIntent(e,'legacy-commit',angle,boss?1:.75,{shape:'sector',range:boss?300:350,halfArc:.8,targetX:target.x,targetY:target.y,legacyChapter:chapter,...expanded});return;
   }
   s.legacyReady=false;
   const phase=e.phase;if(chapter)this.g.chapterCombat.updateEnemy(e,target,dt);else this.g.expedition.updateMiniBoss(e,target,dt);
   if(e.phase!==phase){s.attacks++;e.cd*=this.cadence;s.recovery=.45;if(e.charge)this.lockCharge(e);
    const tier=this.skillTier,g=this.g;
-   if(tier>0&&!e.charge){
+   if(tier>0&&!e.charge&&!e.campaignEnemyKey&&!e.campaignTrait){
     if(['boss','miniboss'].includes(e.type)&&g.hazards.filter(h=>!h.friendly).length<8){
      const type=e.attackElement||(g.chapter===2?'cold':'lightning'),count=tier===3?2:1;
      const damage=10*e.damageScale*(1-(e.auraWeaken||0));

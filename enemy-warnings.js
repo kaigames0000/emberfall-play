@@ -1,5 +1,5 @@
-import {enemyImpactDamage} from './combat-balance.js?v=108';
-import {enemyMeleeDamage} from './enemy-combat.js?v=123';
+import {enemyImpactDamage} from './combat-balance.js?v=158';
+import {enemyMeleeDamage} from './enemy-combat.js?v=158';
 
 const HEAVY_HEALTH_FRACTION=.2;
 const meleeIntents=new Set(['melee','brace','melee-followup']);
@@ -12,7 +12,7 @@ const heavy=(game,damage)=>game.s?.hp>0&&damage>=game.s.hp*HEAVY_HEALTH_FRACTION
 export function majorEnemyIntent(game,enemy){
  const intent=enemy.intent;
  if(!intent||intent.t<=0)return false;
- if(intent.kind.startsWith('boss-')||intent.kind==='legacy-commit'&&boss(enemy))return true;
+ if(intent.campaignPattern||intent.kind.startsWith('boss-')||intent.kind==='legacy-commit'&&boss(enemy))return true;
  if(!meleeIntents.has(intent.kind))return false;
  const damage=enemyMeleeDamage(enemy,intent,scale(enemy));
  return heavy(game,enemyImpactDamage(game,damage,intent.damageType,intent.damageType?'projectile':null));
@@ -35,7 +35,7 @@ function fieldExposure(game,field){
 // Other areas use their burst plus the first second of persistent damage.
 export function majorEnemyArea(game,area,persistent=false){
  if(area.friendly||area.t<=0)return false;
- if(!area.attacker||boss(area.attacker))return true;
+ if(!area.attacker||area.attacker.campaignEnemyKey||boss(area.attacker))return true;
  const burst=persistent?0:enemyImpactDamage(game,area.damage??0,area.damageType,'burst');
  return heavy(game,burst+fieldExposure(game,persistent?area:area.fieldOnExpire));
 }

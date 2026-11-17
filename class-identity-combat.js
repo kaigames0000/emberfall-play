@@ -1,4 +1,4 @@
-import {dualState} from './model.js?v=157';
+import {dualState} from './model.js?v=158';
 const installed=Symbol.for('emberfall.class-identity.v80');
 const time=g=>g.gameplay?.time??g.clock??0;
 const direct=o=>!['indirect','minion','clone','dot','periodic','triggered','aura','setSecondary','dualFollowup','shadowEcho','worldProp'].some(k=>o[k]);

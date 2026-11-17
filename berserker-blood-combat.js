@@ -1,5 +1,5 @@
-import {resourceCost} from './model.js?v=157';
-import {skillCue} from './combat-vfx.js?v=123';
+import {resourceCost} from './model.js?v=158';
+import {skillCue} from './combat-vfx.js?v=158';
 const CORE='b_bloodaura',WARD='bloodward',installed=Symbol.for('emberfall.blood-build.v81'),paidHook=Symbol('blood-build-paid');
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number.isFinite(value)?value:0));
 const live=g=>g.mode==='playing'&&!g.paused&&!g.transition&&!g.training?.finished&&g.hp>0;

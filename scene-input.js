@@ -1,5 +1,5 @@
-import {CAMP_STATIONS} from './camp.js?v=155';
-import {campStationArt,FIELD_EXIT,PROP_FRAME} from './bplus-scene.js?v=155';
+import {CAMP_STATIONS} from './camp.js?v=158';
+import {campStationArt,FIELD_EXIT,PROP_FRAME} from './bplus-scene.js?v=158';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export const NAVIGATION_KEYS=Object.freeze({b:'inventory',k:'talents',t:'passives',p:'stats',o:'settings',l:'achievements'});
 export const ACTIVE_SKILL_KEYS=Object.freeze(['1','2','3']);

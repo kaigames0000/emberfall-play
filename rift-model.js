@@ -1,6 +1,6 @@
-import {rollRiftModifiers,validRiftModifiers} from './expedition-risk.js?v=108';
-import {canDifficulty,progressFor} from './campaign-progress.js?v=108';
-import {ROOM_TYPES} from './route-model.js?v=157';
+import {rollRiftModifiers,validRiftModifiers} from './expedition-risk.js?v=158';
+import {canDifficulty,progressFor} from './campaign-progress.js?v=158';
+import {ROOM_TYPES} from './route-model.js?v=158';
 import {DIFFICULTY_NAMES} from './difficulty-labels.js?v=108';
 import {validFlaskCheckpoint} from './flask-belt.js?v=108';
 export const ENDGAME_UNLOCK_REASON=`此角色需通關${DIFFICULTY_NAMES[3]}第三章。`;

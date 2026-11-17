@@ -1,5 +1,5 @@
 import {drawSkillSprite} from './skill-sprites.js?v=125';
-import {hasTargetImpact} from './combat-vfx.js?v=126';
+import {hasTargetImpact} from './combat-vfx.js?v=158';
 
 const melee = {
  a_execute:[1.75,1.05,.21], a_stab:[1.85,.94,.27],

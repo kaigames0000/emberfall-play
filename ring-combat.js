@@ -1,6 +1,6 @@
 import {playerAimPlacement} from './aiming.js?v=108';
 import {restoreSiphonedMana} from './mana-economy.js?v=108';
-import {skillCue} from './combat-vfx.js?v=123';
+import {skillCue} from './combat-vfx.js?v=158';
 
 const curseWeights=[1,.5,.25];
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);

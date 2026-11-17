@@ -1,7 +1,7 @@
 import {drawSkillSprite} from './skill-sprites.js?v=125';
 import {drawColdBolt} from './cold-signature-vfx.js?v=125';
 import {drawSignatureBolt} from './skill-signature-vfx.js?v=135';
-import {drawNamedPaintedBolt} from './named-painted-vfx.js?v=126';
+import {drawNamedPaintedBolt} from './named-painted-vfx.js?v=158';
 
 const TAU = Math.PI * 2;
 const INK = '#201a2c';

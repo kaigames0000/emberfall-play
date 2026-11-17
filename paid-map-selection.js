@@ -1,9 +1,9 @@
 import {expeditionCardPicture,expeditionCardTitle} from './expedition-cards.js?v=152';
 import {choiceButtons,escapeHtml as esc} from './ui-controls.js?v=152';
-import {ENDGAME_UNLOCK_REASON,RIFT_THEMES,GEAR_FAMILIES,riftPreview,riftChapterTier} from './rift-model.js?v=157';
-import {DIFFICULTIES,UNIQUES} from './model.js?v=157';
+import {ENDGAME_UNLOCK_REASON,RIFT_THEMES,GEAR_FAMILIES,riftPreview,riftChapterTier} from './rift-model.js?v=158';
+import {DIFFICULTIES,UNIQUES} from './model.js?v=158';
 import {GUARDIANS} from './endgame-combat.js?v=108';
-import {hordeDensity} from './horde-trial.js?v=157';
+import {hordeDensity} from './horde-trial.js?v=158';
 import {lootLevelBand} from './encounter-context.js?v=108';
 
 const emblemNames={1:'燼冠',2:'潮鐐',3:'雷鏡'};

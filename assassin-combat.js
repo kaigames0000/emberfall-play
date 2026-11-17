@@ -1,7 +1,7 @@
-import {availableSkills} from './model.js?v=157';
+import {availableSkills} from './model.js?v=158';
 import {pointerAimPoint,playerAimPlacement,playerAimTarget} from './aiming.js?v=108';
 import {skillWeaponCompatible} from './skill-weapon-rules.js?v=129';
-import {skillCue,travelCue} from './combat-vfx.js?v=123';
+import {skillCue,travelCue} from './combat-vfx.js?v=158';
 import {movementTiming} from './hero-motion.js?v=127';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export class AssassinCombat{

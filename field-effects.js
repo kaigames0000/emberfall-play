@@ -1,11 +1,11 @@
-import {drawAnimeBurst,drawAnimeCast,drawAnimeChannelBeam,drawAnimeChannelWhirl,drawAnimeLightning,drawAnimeRing,drawAnimeSlash} from './anime-effects.js?v=125';
+import {drawAnimeBurst,drawAnimeCast,drawAnimeChannelBeam,drawAnimeChannelWhirl,drawAnimeLightning,drawAnimeRing,drawAnimeSlash} from './anime-effects.js?v=158';
 import {drawSkillSprite} from './skill-sprites.js?v=125';
 import {drawColdEffect,drawColdField} from './cold-signature-vfx.js?v=125';
 import {drawMartialSignature} from './martial-signature-vfx.js?v=129';
 import {drawSignatureEffect,drawSignatureField} from './skill-signature-vfx.js?v=135';
-import {drawNamedPaintedEffect,drawNamedPaintedField} from './named-painted-vfx.js?v=126';
+import {drawNamedPaintedEffect,drawNamedPaintedField} from './named-painted-vfx.js?v=158';
 import {drawAuraPulse} from './aura-vfx.js?v=127';
-import {hasTargetImpact} from './combat-vfx.js?v=126';
+import {hasTargetImpact} from './combat-vfx.js?v=158';
 import {drawMovementEffect} from './movement-vfx.js?v=127';
 
 const TAU=Math.PI*2;

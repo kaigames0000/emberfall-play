@@ -1,4 +1,6 @@
 import {chapterDefinition} from './chapter-data.js?v=108';
+import {EXPANDED_MINIBOSSES} from './campaign-expansion-enemies.js?v=158';
+import {EXPANDED_CAMPAIGN_LAYERS} from './campaign-progress.js?v=158';
 // Route generation is pure: previewing a route never consumes combat randomness.
 export const CHAPTER_ROOMS8=[
  {name:'荒蕪外庭',sub:'破門與伏擊',waves:2,count:12,desc:'混合步卒與疾行敵人，突破外庭。',layout:0},
@@ -29,6 +31,40 @@ export const MINIBOSSES3={
 };
 export const MINIBOSSES=MINIBOSSES3;
 export const CAMPAIGN_ROUTE_VERSION=2;
+export const EXPANDED_ROUTE_VERSION=3;
+const expandedAreas={
+ 1:'荒蕪外庭 斷柱回廊 禁書庫 斷誓囚庭 灰根苗圃 枯井下層 焚香地庫 焚香祭場 舊鐘塔 灰雨長廊 風蝕禱間 裂鐘大殿 封印階梯 封印長廊 石棺密道 守燼地宮 火種藏室 失落唱詩席 熔痕橋 斷牆觀火臺 君王近道 誓衛廊道 王座前廳 灰燼門庭 灰燼王座',
+ 2:'礁岸登陸 破帆碼頭 鹽霧街巷 港務大廳 船骸小徑 黑鹽倉庫 沉錨工坊 船錨吊臺 逆潮堤防 潮汐水門 漫水暗巷 鎖流機房 沉船墓道 腐纜下層 舊港祭室 駁船祭壇 風暴瞭望臺 斜桅渡口 破浪棧橋 雷索高架 深水運渠 湧潮閘道 領主泊位 深港防線 吞潮船塢',
+ 3:'星落城道 禁衛庭 裂晶迴廊 三相聖所 凍星泉 分光長廊 鏡界花園 星鏡大廳 失重側廊 墜晶塔臺 折光哨站 裂星演武場 碎月天井 銀冠禮拜堂 斷界階梯 月弓露臺 倒影長廊 星紋囚室 無聲密道 星鐵監牢 空座前庭 銀白王道 星核門廊 王座外環 裂星王座'
+};
+const expandedTracks=[['normal','welfare'],['normal','elite'],['treasure','mystery','trial','elite']];
+function createExpandedRoute(seed,diff,chapter,definition){
+ const length=EXPANDED_CAMPAIGN_LAYERS,random=seededRandom(`${seed}:campaign-3:${chapter}`),nodes=[],layers=[],areas=expandedAreas[chapter].split(' ');
+ const minis=[...Object.values(definition.minis),...Object.values(EXPANDED_MINIBOSSES).filter(boss=>boss.chapter===chapter)];
+ for(let i=minis.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[minis[i],minis[j]]=[minis[j],minis[i]];}
+ for(let layer=0;layer<length;layer++){
+  const final=layer===length-1,miniboss=layer%4===3,sector=Math.floor(layer/4),cols=layer===0||final||miniboss?[1]:[0,1,2],mirrored=sector%2===0&&random()<.5;
+  layers.push(cols.map(col=>{
+   const lane=mirrored?2-col:col,deck=expandedTracks[lane],boss=miniboss?minis[sector]:null;
+   const encounter=chapter===1?(final?'abbey-boss':lane===1&&layer===2?'abbey-seals':lane===1&&layer===13?'abbey-guard':null):null;
+   const type=final?'boss':miniboss?'miniboss':layer===0||encounter?'normal':lane===0&&[6,14,22].includes(layer)?'recovery':deck[Math.floor(random()*deck.length)];
+   const name=final?definition.boss.name:boss?.name??ABBEY_ENCOUNTERS[encounter]?.name??areas[layer];
+   const waves=type==='recovery'?0:type==='treasure'?2:type==='trial'?4:encounter&&!final?1:!final&&!miniboss&&(layer%4===2||chapter===2&&[9,17].includes(layer))?4:3;
+   const node={id:`${chapter===1?'':'C'+chapter+'-'}L${layer+1}C${col+1}`,chapter,layer,depth:Math.floor(layer*7/(length-1)),col,type,name,waves,next:[],...(encounter?{encounter}:{}),...(boss?{bossKey:boss.key,campfire:true}:{}),...(cols.length===3?{track:['supply','seal','loot'][lane]}:{})};
+   nodes.push(node);
+   return node.id;
+  }));
+ }
+ const byID=new Map(nodes.map(node=>[node.id,node]));
+ for(const node of nodes){
+  const next=layers[node.layer+1]??[];
+  node.next=next.filter(id=>{
+   const candidate=byID.get(id);
+   return !(node.encounter==='abbey-guard'&&candidate.type==='recovery')&&(next.length===1||layers[node.layer].length===1||Math.abs(candidate.col-node.col)<=1);
+  });
+ }
+ return {seed,chapter,difficulty:[1,2,3].includes(diff)?diff:1,routeVersion:EXPANDED_ROUTE_VERSION,nodes,layers,startID:layers[0][0]};
+}
 export const ABBEY_ENCOUNTERS=Object.freeze({
  'abbey-seals':{label:'破印',name:'禁書庫 · 封印祭壇',goal:'關閉祭壇停止增援，擊倒守印祭司即可開門。',loot:'重塑砂 ×1',boon:'王座的每波召援減少 1 名',material:'reroll'},
  'abbey-guard':{label:'守印',name:'封印長廊 · 守住封印',goal:'啟動石碑後留在印圈內。擊倒封印隊長減少 5 秒。',loot:'強化石 ×1',boon:'王座火線預警延長 0.5 秒',material:'enhance'},
@@ -46,7 +82,9 @@ function seededRandom(seed){let state=2166136261;for(const c of String(seed))sta
 export function routeNode(graph,id){return graph?.nodes?.find(n=>n.id===id)??null;}
 export function routeChoices(graph,currentID){return (routeNode(graph,currentID)?.next??[]).map(id=>routeNode(graph,id)).filter(Boolean);}
 export function createRoute(seed,diff=1,chapter=1,routeVersion=CAMPAIGN_ROUTE_VERSION){
- const def=chapterDefinition(chapter);if(!def)throw Error('未知章節');const chapterRooms=def.rooms,chapterMinis=def.minis;
+ const def=chapterDefinition(chapter);if(!def)throw Error('未知章節');
+ if(routeVersion===EXPANDED_ROUTE_VERSION)return createExpandedRoute(seed,diff,chapter,def);
+ const chapterRooms=def.rooms,chapterMinis=def.minis;
  const random=seededRandom(seed),widths=[1,3,3,1,3,3,3,1],nodes=[],layers=[];
  const abbey=chapter===1&&routeVersion>=2,strategy=seededRandom(String(seed)+':abbey-route-v2');
  const mirrored=abbey&&strategy()<.5;

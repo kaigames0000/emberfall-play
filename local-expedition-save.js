@@ -1,5 +1,5 @@
-import {settlePaidRun} from './model.js?v=157';
-export {clearCampaignCheckpoints} from './campaign-checkpoint.js?v=157';
+import {settlePaidRun} from './model.js?v=158';
+export {clearCampaignCheckpoints} from './campaign-checkpoint.js?v=158';
 
 export function settleInterruptedPaidRun(profile){
  const run=profile.rifts?.activeRun;

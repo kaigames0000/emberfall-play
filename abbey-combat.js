@@ -1,4 +1,4 @@
-import {ABBEY_ENCOUNTERS} from './route-model.js?v=157';
+import {ABBEY_ENCOUNTERS} from './route-model.js?v=158';
 
 const sealId = 'abbey-reinforcement';
 const fireId = 'abbey-fire';

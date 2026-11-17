@@ -1,8 +1,9 @@
 import {expeditionCardPicture,expeditionCardTitle} from './expedition-cards.js?v=152';
 import {choiceButtons,escapeHtml as esc} from './ui-controls.js?v=152';
-import {DIFFICULTIES,canDifficulty,canChapter,chapterDefinition,progressFor,equipmentDropBand} from './model.js?v=157';
+import {DIFFICULTIES,canDifficulty,canChapter,chapterDefinition,expandedProgressFor,equipmentDropBand} from './model.js?v=158';
+import {EXPANDED_CAMPAIGN_LAYERS} from './campaign-progress.js?v=158';
 import {HERO_RESISTANCE_PENALTY} from './elemental-rules.js?v=108';
-import {HORDE_RULES,hordeDensity} from './horde-trial.js?v=157';
+import {HORDE_RULES,hordeDensity} from './horde-trial.js?v=158';
 const pct=n=>Number((n*100).toFixed(1))+'%';
 const threats={
  1:['標準攻擊節奏，先熟悉預警與走位。','敵人依種類具備不同抗性；一般狀態控制可正常運作。'],
@@ -25,7 +26,7 @@ export function difficultySelector(c){
 
 export function chapterCards(c,selected){
  const descriptions={1:'殘破迴廊與禁術火海',2:'水道、棧橋與潮汐伏擊',3:'浮空平台、斷橋與冰雷交錯'};
- return `<div class="campaign-chapter-grid" role="group" aria-label="選擇大關卡">${[1,2,3].map(id=>{const chapter=chapterDefinition(id),unlocked=canChapter(c,c.difficulty,id),progress=progressFor(c,c.difficulty,id).length,first=equipmentDropBand(c.difficulty,0,id),last=equipmentDropBand(c.difficulty,7,id);
+ return `<div class="campaign-chapter-grid" role="group" aria-label="選擇大關卡">${[1,2,3].map(id=>{const chapter=chapterDefinition(id),unlocked=canChapter(c,c.difficulty,id),progress=expandedProgressFor(c,c.difficulty,id).length,first=equipmentDropBand(c.difficulty,0,id),last=equipmentDropBand(c.difficulty,7,id);
  const badge=!unlocked?`<span class="chapter-card-lock">${lockIcon}未解鎖</span>`:selected===id?'<span class="chapter-card-selected">已選擇</span>':'';
- return `<button type="button" data-chapter="${id}" class="campaign-chapter-card chapter-theme-${id} ${selected===id?'selected':''} ${unlocked?'':'locked'}" aria-pressed="${selected===id}" ${unlocked?'':'disabled'} title="${unlocked?'選擇'+chapter.name:'完成前一章後解鎖'}">${expeditionCardPicture(['abbey','port','court'][id-1],chapter.name,'第'+['','一','二','三'][id]+'章',badge)}<div class="chapter-card-content">${expeditionCardTitle(chapter.name,progress+'/8')}<p>${descriptions[id]}</p><div class="chapter-card-meta"><span>敵人 Lv.${first.monsterLevel}–${last.monsterLevel}</span><strong>裝等 Lv.${first.min}–${last.max}</strong></div><small class="chapter-card-boss">${unlocked?'首領 · '+esc(chapter.boss.name):'通關'+esc(chapterDefinition(id-1)?.name||'前一章')+'後解鎖'}</small><span class="chapter-card-progress" aria-hidden="true"><i style="width:${progress/8*100}%"></i></span></div></button>`;}).join('')}</div>`;
+ return `<button type="button" data-chapter="${id}" class="campaign-chapter-card chapter-theme-${id} ${selected===id?'selected':''} ${unlocked?'':'locked'}" aria-pressed="${selected===id}" ${unlocked?'':'disabled'} title="${unlocked?'選擇'+chapter.name:'完成前一章後解鎖'}">${expeditionCardPicture(['abbey','port','court'][id-1],chapter.name,'第'+['','一','二','三'][id]+'章',badge)}<div class="chapter-card-content">${expeditionCardTitle(chapter.name,progress+'/'+EXPANDED_CAMPAIGN_LAYERS)}<p>${descriptions[id]} · ${unlocked?'6 座營火':'6 位小首領'}</p><div class="chapter-card-meta"><span>敵人 Lv.${first.monsterLevel}–${last.monsterLevel}</span><strong>裝等 Lv.${first.min}–${last.max}</strong></div><small class="chapter-card-boss">${unlocked?'首領 · '+esc(chapter.boss.name):'通關'+esc(chapterDefinition(id-1)?.name||'前一章')+'後解鎖'}</small><span class="chapter-card-progress" aria-hidden="true"><i style="width:${progress/EXPANDED_CAMPAIGN_LAYERS*100}%"></i></span></div></button>`;}).join('')}</div>`;
 }

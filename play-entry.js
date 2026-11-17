@@ -1,6 +1,6 @@
-import {mountGame} from './app.js?v=157';
+import {mountGame} from './app.js?v=158';
 import {mountInstallTools} from './pwa.js?v=154';
-import {mountUpdateTools} from './updates.js?v=157';
+import {mountUpdateTools} from './updates.js?v=158';
 
 export function startGameView(root, options) {
   const game = mountGame(root, options);

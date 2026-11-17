@@ -1,5 +1,5 @@
 import {restoreSiphonedMana} from './mana-economy.js?v=108';
-import * as M from './model.js?v=157';
+import * as M from './model.js?v=158';
 import {hasGearCurse} from './gear-builds.js?v=108';
 const POISON_IMMUNITY_PIERCE={poison:.30},BURN_IMMUNITY_PIERCE={fire:.20},BOTH_IMMUNITY_PIERCE={...POISON_IMMUNITY_PIERCE,...BURN_IMMUNITY_PIERCE};
 const primary=o=>!o.dot&&!o.indirect&&!o.triggered&&!o.triggerKey&&!o.setSecondary&&!o.periodic&&!o.aura;

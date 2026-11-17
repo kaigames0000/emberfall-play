@@ -1,56 +1,58 @@
 import {CombatAudio,savedVolume,soundForSkill,soundForEffect} from './combat-audio.js?v=137';
 import {createGameNotices} from './game-notices.js?v=150';
-import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=108';
+import {majorEnemyArea,majorEnemyCharge,majorEnemyIntent} from './enemy-warnings.js?v=158';
 import {createCloudClient} from './cloud-client.js?v=156';
-import {RELEASE_NOTES} from './release-notes.mjs?v=157';
+import {RELEASE_NOTES} from './release-notes.mjs?v=158';
 import {renderReleaseHistory} from './release-history.js?v=134';
 import {boardView, claimBoardReward, recordBoardClear} from './event-board.js?v=155';
-import {EVENT_TABS, dailySuppliesMarkup, eventBoardTabs, weeklyOrderMarkup} from './event-board-ui.js?v=155';
+import {EVENT_TABS, dailySuppliesMarkup, eventBoardTabs, weeklyOrderMarkup} from './event-board-ui.js?v=158';
 import {createFeedbackPanel} from './feedback-ui.js?v=156';
-import {createVerifiedPanel} from './verified-ui.js?v=155';
+import {createVerifiedPanel} from './verified-ui.js?v=158';
 import {MANA_SIPHON_RATE,manaSiphonBudget} from './mana-economy.js?v=108';
-import {skillCatalog,skillConfigurationMarkup} from './compact-skills-ui.js?v=155';
-import {basicAttackMetrics} from './basic-attack-combat.js?v=129';
+import {skillCatalog,skillConfigurationMarkup} from './compact-skills-ui.js?v=158';
+import {basicAttackMetrics} from './basic-attack-combat.js?v=158';
 import {skillWeaponRequirement,skillWeaponCompatible} from './skill-weapon-rules.js?v=129';
 import * as SkillAtlas from './skill-tree-layout.js?v=108';
-import {mountRingTree} from './ring-tree-ui.js?v=141';
+import {mountRingTree} from './ring-tree-ui.js?v=158';
 import {beastEffectRows} from './ranger-beasts.js?v=108';
 import {bloodEffectRows} from './berserker-blood-data.js?v=108';
 import {costText,sumCosts,scaleCost,availabilityView} from './resource-ui.js?v=108';
-import {lowHealthActive} from './combat-balance.js?v=108';
-import {paidMapChoices} from './paid-map-selection.js?v=152';
-import {difficultySelector,chapterCards} from './campaign-selection.js?v=152';
-import {HORDE_RULES} from './horde-trial.js?v=157';
-import {riskEntries,riskChips,routeCostText} from './risk-presentation.js?v=108';
-import {roomPreviewLabel,routePlanMarkup} from './route-strategy-ui.js?v=157';
-import {ABBEY_ENCOUNTERS,routeChoices as previewRouteChoices} from './route-model.js?v=157';
+import {lowHealthActive} from './combat-balance.js?v=158';
+import {paidMapChoices} from './paid-map-selection.js?v=158';
+import {difficultySelector,chapterCards} from './campaign-selection.js?v=158';
+import {HORDE_RULES} from './horde-trial.js?v=158';
+import {riskEntries,riskChips,routeCostText} from './risk-presentation.js?v=158';
+import {roomPreviewLabel,routePlanMarkup} from './route-strategy-ui.js?v=158';
+import {ABBEY_ENCOUNTERS,EXPANDED_ROUTE_VERSION,routeChoices as previewRouteChoices} from './route-model.js?v=158';
 import * as BasicAttacks from './basic-attacks.js?v=129';
-import * as InventoryPages from './inventory-pages.js?v=144';
-import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=157';
+import * as InventoryPages from './inventory-pages.js?v=158';
+import {SceneInteraction,CursorMovement,sceneTargetAt,leftClickAction,manualSkillSlot,flaskKeySlot,navigationPanel,ACTIVE_SKILL_KEYS,ACTIVE_SKILL_LABELS,FLASK_KEYS,DODGE_KEY,DODGE_LABEL} from './scene-input.js?v=158';
 import {createSceneTransition} from './scene-transition.js?v=143';
 import {installMobileControls} from './mobile-controls.js?v=146';
 import {CombatInput} from './combat-input.js?v=108';
-import {decodeProfileBackup,encodeProfileBackup,openProfileStore} from './profile-storage.js?v=154';
-import {clearCampaignCheckpoints,settleInterruptedPaidRun,takePaidRunLock} from './local-expedition-save.js?v=150';
+import {decodeProfileBackup,encodeProfileBackup,openProfileStore} from './profile-storage.js?v=158';
+import {EXPANDED_MINIBOSSES} from './campaign-expansion-enemies.js?v=158';
+import {campaignCampfire,resumeCampaignCampfire,discardCampaignCampfire} from './campaign-checkpoint.js?v=158';
+import {clearCampaignCheckpoints,settleInterruptedPaidRun,takePaidRunLock} from './local-expedition-save.js?v=158';
 import {ARMOR_WEIGHTS,ARMOR_SHARES,armorClass,isShield} from './gear-archetypes.js?v=108';
 import {updateStatusHUD} from './status-hud.js?v=135';
 import {PICKUP_COLORS} from './pickup-filter.js?v=108';
-import {AFFIX_GROUPS,CAMP_GUIDE,affixDictionaryMarkup,setCatalogMarkup,statusGuideMarkup,uniqueCatalogMarkup} from './camp-guide.js?v=143';
+import {AFFIX_GROUPS,CAMP_GUIDE,affixDictionaryMarkup,setCatalogMarkup,statusGuideMarkup,uniqueCatalogMarkup} from './camp-guide.js?v=158';
 import {GROUND_STATUSES,PLAYER_STATUSES} from './status-effects.js?v=130';
 import {HERO_RESISTANCE_PENALTY,MAX_AILMENT_DURATION} from './elemental-rules.js?v=108';
 import {STARTING_WEAPONS,equipmentIcon,equipmentIconSymbols} from './equipment-visuals.js?v=124';
 import {PASSIVE_LAYOUT,ROLE_BRANCHES,CONDITION_LABELS} from './passive-constellations.js?v=108';
-import * as Rifts from './rift-model.js?v=157';
-import {paidSaveCandidate,refreshPaidCheckpoint} from './rift-runtime.js?v=108';
-import * as M from './model.js?v=157';
-import {Game,abilityDamageTypes} from './engine.js?v=157';
+import * as Rifts from './rift-model.js?v=158';
+import {paidSaveCandidate,refreshPaidCheckpoint} from './rift-runtime.js?v=158';
+import * as M from './model.js?v=158';
+import {Game,abilityDamageTypes} from './engine.js?v=158';
 import {projectileBodyRadius} from './combat-geometry.js?v=108';
 import * as SkillText from './skill-presentation.js?v=130';
-import {Renderer} from './render.js?v=157';
+import {Renderer} from './render.js?v=158';
 import {watchBplusImages} from './bplus-art.js?v=124';
 import {paintHeroPreview} from './character-model.js?v=157';
-import * as Inventory from './inventory-items.js?v=144';
-import {itemCell as carriedItemCell,inventoryCellButton,inventoryIconSymbols,currencyCountersMarkup,equipmentAffixesMarkup} from './inventory-presentation.js?v=155';
+import * as Inventory from './inventory-items.js?v=158';
+import {itemCell as carriedItemCell,inventoryCellButton,inventoryIconSymbols,currencyCountersMarkup,equipmentAffixesMarkup} from './inventory-presentation.js?v=158';
 import {flaskCardSummary,flaskComparisonRows,flaskStatValue} from './flask-workshop.js?v=108';
 import {animeUiSymbols} from './anime-ui-icons.js?v=124';
 import {bindControlSettings,controlSettingsMarkup,downloadSaveFile,loadPointerAim,storageSettingsMarkup,toggleFullscreen} from './settings-ui.js?v=154';
@@ -274,6 +276,7 @@ function event(type,data){
  if(type==='transition'||type==='transitionEnd'){updateTravelEvent(type);return;}
  if(!state.rifts?.activeRun&&type==='loot')M.recordEquipmentDiscovery(state,data);
  if(type==='auraConfigOff'){save(true);if(panel==='loadout')renderLoadout();queueCombatUI();return;}
+ if(type==='campfire'){updateMode();void save(true);openRoute();return;}
  if(type==='objective'){updateMode();void save(true);return;}
  if(state.rifts?.activeRun&&['victory','dead'].includes(type)){finishPaid(type==='victory'?'won':'failed');return;}
  if(type==='victory'&&!e.training&&(!e.runContext||e.runContext.kind==='campaign')){
@@ -370,7 +373,7 @@ function updateCampPrompt(){
  interactButton.classList.toggle('hidden',!target);
  if(!target)return;
  const object=target.point||target.entity;
- const label=target.kind==='chest'?'開啟寶箱':target.kind==='exit'?'選擇下一區域':target.kind==='objective'?(object.verb||'開啟')+' '+object.name:object.name??M.SHRINES[object.type]?.name;
+ const label=target.kind==='chest'?'開啟寶箱':target.kind==='exit'?'選擇下一區域':target.kind==='objective'?(object.kind==='campfire'?'在營火休息':(object.verb||'開啟')+' '+object.name):object.name??M.SHRINES[object.type]?.name;
  const text=interactButton.querySelector('span');
  if(text.textContent!==label)text.textContent=label;
  const point=renderer.screenPoint(object.x,object.y-target.top-3);
@@ -398,8 +401,11 @@ function updateMode(){
  }
  sceneMode=e.mode;
  $('#arena-state').textContent=practice?'DPS 訓練場':e.mode==='camp'?'營地準備':e.mode==='dead'?'遠征結束':e.mode==='victory'?'關卡完成':e.cleared?(room.type==='recovery'?'整備完成':'區域淨化'):`第 ${e.wave} / ${room.waves} 波`;
- updateArenaLocation();$('#objective-text').textContent=practice?'測試目前 BUILD · 無掉落與進度':e.mode==='camp'?(state.active&&c.level===1&&c.kills===0?'T 開啟燼脈圖學第一招 · 點擊遠征傳送門出發':'點擊地標前往互動 · E 與附近目標互動'):e.mode==='victory'?(next?'下一章已解鎖 · '+next.name:'章節已完成 · 整備後再次遠征'):e.mode==='dead'?'成長與裝備已保留，整備後再次挑戰。':e.cleared?(room.type==='recovery'?'整備完成 · 兩種祭壇選一，或選擇下一條路線':'區域已淨化 · 選擇下一條路線'):e.chapterCombat.abbey.status()?e.chapterCombat.abbey.status():e.objectives?.some(o=>!o.used)?(e.enemies.length?'清除敵人並開啟水門 · ':'開啟水門 · ')+e.objectives.filter(o=>o.used).length+'/'+e.objectives.length:room.type==='recovery'?'生命、魔力與藥水已補滿 · 靠近祭壇按 E，兩種祝福選一':room.type==='boss'?'擊敗 '+(e.enemies.find(n=>n.type==='boss')?.name||room.name)+' · 留意地面預警':room.type==='miniboss'?'擊敗 '+room.name+' · 避開地面預警':`清除敵人 · ${(room.description||room.desc)}`;
- $('#mini-map').innerHTML=(e.expedition?.graph?.layers||M.chapterDefinition(selectedChapter).rooms).map((r,i)=>{const pathNode=e.expedition?.graph?.nodes?.find(n=>(e.expedition.path||[]).includes(n.id)&&n.layer===i);return `<span class="${i===e.room?'active':i<e.room?'done':''}" title="第${i+1}層 · ${esc(pathNode?.name||r.name)}"></span>`;}).join('');
+ updateArenaLocation();$('#objective-text').textContent=practice?'測試目前 BUILD · 無掉落與進度':e.mode==='camp'?(state.active&&c.level===1&&c.kills===0?'T 開啟燼脈圖學第一招 · 點擊遠征傳送門出發':'點擊地標前往互動 · E 與附近目標互動'):e.mode==='victory'?(next?'下一章已解鎖 · '+next.name:'章節已完成 · 整備後再次遠征'):e.mode==='dead'?'成長與裝備已保留，整備後再次挑戰。':e.cleared?(room.campfire?'遠征營火已點燃 · 靠近休息並存下進度':room.type==='recovery'?'整備完成 · 兩種祭壇選一，或選擇下一條路線':'區域已淨化 · 選擇下一條路線'):e.chapterCombat.abbey.status()?e.chapterCombat.abbey.status():e.objectives?.some(o=>!o.used)?(e.enemies.length?'清除敵人並開啟水門 · ':'開啟水門 · ')+e.objectives.filter(o=>o.used).length+'/'+e.objectives.length:room.type==='recovery'?'生命、魔力與藥水已補滿 · 靠近祭壇按 E，兩種祝福選一':room.type==='boss'?'擊敗 '+(e.enemies.find(n=>n.type==='boss')?.name||room.name)+' · 留意地面預警':room.type==='miniboss'?'擊敗 '+room.name+' · 避開地面預警':`清除敵人 · ${(room.description||room.desc)}`;
+ const graph=e.expedition?.graph;
+ const marks=graph?.routeVersion===EXPANDED_ROUTE_VERSION?graph.nodes.filter(node=>node.campfire||node.type==='boss').map(node=>node.layer):Array.from({length:graph?.layers.length??8},(_,i)=>i);
+ const activeMark=marks.find(layer=>layer>=e.room);
+ $('#mini-map').innerHTML=marks.map(layer=>`<span class="${layer===activeMark?'active':layer<e.room?'done':''}" title="第 ${layer+1} 層"></span>`).join('');
  updateRunProgress();updatePause();}
 function updatePause(){e.paused=!storageReady||storageTransactions>0||manualPause||mobileBlocked||pwaOverlayOpen||dialog.open||document.hidden;if(e.paused){stationaryCast=false;e.pointerTarget=null;e.cancelMoveTarget();combatInput?.clear();movementInput?.clear();sceneInput?.clear();}$('#pause-overlay').classList.toggle('hidden',!manualPause||e.mode!=='playing'||dialog.open);$('#pause').disabled=e.mode!=='playing';$('#pause').setAttribute('aria-label',manualPause?'繼續遊戲':'暫停遊戲');$('#pause').innerHTML=icon(manualPause?'play':'pause')+'<small>'+(manualPause?'繼續':'暫停')+'</small>';}
 function formatTime(t){return Math.floor(t/60).toString().padStart(2,'0')+':'+Math.floor(t%60).toString().padStart(2,'0');}
@@ -415,7 +421,8 @@ function deathSummaryMarkup(){
 }
 function showResult(){
  const win=e.mode==='victory',pending=win&&!!state.rifts?.activeRun,next=nextCampaignChapter();
- let actions='<button class="gold-btn" data-result="retry">'+icon('sword')+'再次遠征</button>';
+ const fire=!pending&&campaignCampfire(c,selectedChapter,c.difficulty);
+ let actions='<button class="gold-btn" data-result="retry">'+icon('sword')+(fire?'從營火繼續':'再次遠征')+'</button>';
  if(pending){
   actions='<button class="gold-btn" data-result="settle">領取遠征獎勵</button><button class="outline-btn" data-panel="inventory">整理背包</button>';
  }else if(next){
@@ -455,7 +462,7 @@ async function returnToCamp(){
   return true;
  }finally{returningToCamp=false;}
 }
-function start(chapter=selectedChapter){
+function start(chapter=selectedChapter,{restart=false}={}){
  if(state.rifts?.activeRun||paidBusy){openPanel('quests');return false;}
  if(!state.active){void requestTitleScreen();return false;}
  if(!M.canChapter(c,c.difficulty,chapter)){toast('需先完成同難度的前一章。');openPanel('quests');return false;}
@@ -463,17 +470,20 @@ function start(chapter=selectedChapter){
  manualPause=false;
  keys.clear();
  joy={x:0,y:0};
- if(e.start(c.difficulty,null,{chapter})===false){
+ const resumed=!restart&&resumeCampaignCampfire(e,chapter,c.difficulty);
+ if(!resumed&&!e.start(c.difficulty,null,{chapter,routeVersion:EXPANDED_ROUTE_VERSION})){
   updatePause();
   return false;
  }
  selectedChapter=chapter;
  repeatEligible=alreadyCleared;
  repeatRunId='campaign:'+c.id+':'+e.expedition.graph.seed;
+ if(restart&&discardCampaignCampfire(c,chapter,c.difficulty))void save(true);
+ if(resumed)e.emit('start');
  updateHUD();
  return true;
 }
-function openPanel(name){if(catalogDialog.open)catalogDialog.close();if(!storageReady&&name!=='verified')return;if(name==='summons'||name==='auras')name='loadout';if(name==='appearance')name='inventory';if(M.isRingHero(c)&&name==='passives')name='talents';if(name!=='talents')disposeSkillAtlas();if(name==='difficulty'){name='quests';mapTab='campaign';}if(CAMP_SERVICES.has(name)&&e.mode!=='camp'&&!(name==='training'&&e.training)){toast('請返回營地使用此服務。');return;}if(state.rifts?.activeRun&&(e.mode!=='playing'||!e.cleared)&&!(canManagePaidRewards()&&['inventory','stash','forge','merchant'].includes(name))&&!['quests','guide','stats','settings','verified','events'].includes(name)){toast('裂隙清房後才能整備。');return;}if(name==='trainingResults'&&!e.training)name='training';if(name==='training')trainingDraft=trainingSettings(e.training?.options||trainingDraft);if(name==='expedition'){closePanel();return;}if(['sets','inventory','talents','loadout','summons','auras','difficulty','stash','flasks','quests','training','trainingResults','achievements','passives','stats','forge','merchant','appearance','events'].includes(name)&&!state.active){void requestTitleScreen();return;}hideItemTooltip();clearInventoryDrag();passiveDrag=null;lastInventoryTap=null;if(panel!==name){leaveConnectedPanel();inventorySelection=null;talentSheetOpen=false;if(name==='inventory')inventoryTab='bag';if(name==='merchant')includeValuable=false;}if(name==='passives'&&panel!==name)passiveFocusRequested=true;if(name==='achievements'&&panel!==name){achievementScope=String(c.difficulty);achievementFilter='unclaimed';}if(name!=='inventory')inventoryDiscardBatch=null;panel=name;if(name!=='talents'||!M.isRingHero(c))disposeRingPanel();dialog.classList.toggle('ring-tree-dialog',name==='talents'&&M.isRingHero(c));dialog.classList.toggle('achievements-dialog',name==='achievements');dialog.classList.toggle('passive-dialog',name==='passives');dialog.classList.toggle('route-dialog',name==='quests');dialog.classList.toggle('sets-dialog',name==='sets');dialog.classList.toggle('settings-dialog',name==='settings');dialog.classList.toggle('verified-dialog',name==='verified');dialog.classList.toggle('training-dialog',['training','trainingResults'].includes(name));dialog.classList.toggle('skill-dialog',name==='talents');dialog.classList.toggle('skill-atlas-dialog',name==='talents');dialog.classList.toggle('loadout-dialog',['loadout','summons','auras'].includes(name));dialog.classList.toggle('inventory-dialog',name==='inventory');dialog.classList.toggle('flasks-dialog',name==='flasks');dialog.classList.toggle('stash-dialog',name==='stash');dialog.classList.toggle('camp-service-dialog',['forge','merchant','guide'].includes(name));dialog.classList.toggle('forge-dialog',name==='forge');dialog.classList.toggle('event-board-dialog',name==='events');dialog.scrollTop=0;keys.clear();joy={x:0,y:0};$('#stick').style.transform='';let title={achievements:['ACHIEVEMENTS','成就'],passives:['PASSIVE TREE','天賦'],stats:['','角色統計'],forge:['','鐵匠'],merchant:['','商人'],sets:['','印記收藏家'],settings:['','遊戲設定'],verified:['','公測遠征'],training:['MEASURE YOUR BUILD','DPS 訓練場'],trainingResults:['DAMAGE BREAKDOWN','訓練傷害分析'],inventory:['','裝備'],talents:['SHAPE YOUR BUILD','技能加點'],loadout:['','技能'],summons:['YOUR PERMANENT ARMY','召喚編隊'],auras:['SUSTAIN YOUR AURAS','光環配置'],guide:['ADVENTURER’S CODEX','冒險指南'],events:['','營地活動站'],difficulty:['THE GREATER THE RISK','遠征難度'],quests:['QUEST LOG','遠征路線'],stash:['SHARED ACROSS YOUR HEROES','共用倉庫'],flasks:['PREPARE YOUR FLASK BELT','充能藥水腰帶']}[name];if(!title)return;$('#dialog-eyebrow').textContent=title[0];$('#dialog-title').textContent=title[1];renderPanel();if(!dialog.open)dialog.showModal();$('#dialog-body').scrollTop=0;positionInventoryInspector();if(name==='quests')frame(focusRouteProgress);updatePause();}
+function openPanel(name){if(catalogDialog.open)catalogDialog.close();if(!storageReady&&name!=='verified')return;if(name==='summons'||name==='auras')name='loadout';if(name==='appearance')name='inventory';if(M.isRingHero(c)&&name==='passives')name='talents';if(name!=='talents')disposeSkillAtlas();if(name==='difficulty'){name='quests';mapTab='campaign';}if(CAMP_SERVICES.has(name)&&e.mode!=='camp'&&!(name==='training'&&e.training)){toast('請返回營地使用此服務。');return;}if(state.rifts?.activeRun&&(e.mode!=='playing'||!e.cleared)&&!(canManagePaidRewards()&&['inventory','stash','forge','merchant'].includes(name))&&!['quests','guide','stats','settings','verified','events'].includes(name)){toast('裂隙清房後才能整備。');return;}if(name==='trainingResults'&&!e.training)name='training';if(name==='training')trainingDraft=trainingSettings(e.training?.options||trainingDraft);if(name==='expedition'){closePanel();return;}if(['sets','inventory','talents','loadout','summons','auras','difficulty','stash','flasks','quests','training','trainingResults','achievements','passives','stats','forge','merchant','appearance','events'].includes(name)&&!state.active){void requestTitleScreen();return;}hideItemTooltip();clearInventoryDrag();passiveDrag=null;lastInventoryTap=null;if(panel!==name){leaveConnectedPanel();inventorySelection=null;talentSheetOpen=false;if(name==='inventory')inventoryTab='bag';if(name==='merchant')includeValuable=false;}if(name==='passives'&&panel!==name)passiveFocusRequested=true;if(name==='achievements'&&panel!==name){achievementScope=String(c.difficulty);achievementFilter='unclaimed';}if(name!=='inventory')inventoryDiscardBatch=null;panel=name;if(name!=='talents'||!M.isRingHero(c))disposeRingPanel();dialog.classList.toggle('ring-tree-dialog',name==='talents'&&M.isRingHero(c));dialog.classList.toggle('achievements-dialog',name==='achievements');dialog.classList.toggle('passive-dialog',name==='passives');dialog.classList.toggle('route-dialog',name==='quests');dialog.classList.toggle('sets-dialog',name==='sets');dialog.classList.toggle('settings-dialog',name==='settings');dialog.classList.toggle('verified-dialog',name==='verified');dialog.classList.toggle('training-dialog',['training','trainingResults'].includes(name));dialog.classList.toggle('skill-dialog',name==='talents');dialog.classList.toggle('skill-atlas-dialog',name==='talents');dialog.classList.toggle('loadout-dialog',['loadout','summons','auras'].includes(name));dialog.classList.toggle('inventory-dialog',name==='inventory');dialog.classList.toggle('flasks-dialog',name==='flasks');dialog.classList.toggle('stash-dialog',name==='stash');dialog.classList.toggle('camp-service-dialog',['forge','merchant','guide'].includes(name));dialog.classList.toggle('forge-dialog',name==='forge');dialog.classList.toggle('event-board-dialog',name==='events');dialog.scrollTop=0;keys.clear();joy={x:0,y:0};$('#stick').style.transform='';let title={achievements:['ACHIEVEMENTS','成就'],passives:['PASSIVE TREE','天賦'],stats:['','角色統計'],forge:['','鐵匠'],merchant:['','商人'],sets:['','印記收藏家'],settings:['','遊戲設定'],verified:['','公測遠征'],training:['MEASURE YOUR BUILD','DPS 訓練場'],trainingResults:['DAMAGE BREAKDOWN','訓練傷害分析'],inventory:['','裝備'],talents:['SHAPE YOUR BUILD','技能加點'],loadout:['','技能'],summons:['YOUR PERMANENT ARMY','召喚編隊'],auras:['SUSTAIN YOUR AURAS','光環配置'],guide:['ADVENTURER’S CODEX','冒險指南'],events:['','營地活動站'],difficulty:['THE GREATER THE RISK','遠征難度'],quests:['QUEST LOG','遠征路線'],stash:['SHARED ACROSS YOUR HEROES','共用倉庫'],flasks:['PREPARE YOUR FLASK BELT','充能藥水腰帶']}[name];if(!title)return;$('#dialog-eyebrow').textContent=title[0];$('#dialog-title').textContent=title[1];renderPanel();if(!dialog.open)dialog.showModal();$('#dialog-body').scrollTop=0;positionInventoryInspector();if(name==='quests')frame(()=>focusRouteProgress());updatePause();}
 function closePanel(){inventoryDiscardBatch=null;gearDiscardPending=null;if(catalogDialog.open)catalogDialog.close();leaveConnectedPanel();disposeSkillAtlas();disposeRingPanel();hideItemTooltip();clearInventoryDrag();passiveDrag=null;dialog.close();panel=null;updatePause();}
 function renderPanelControls(){
  $('#settings-tools').hidden=panel!=='settings';
@@ -937,7 +947,7 @@ listen(root,'click',async ev=>{let b=ev.target.closest('button');if(!b)return;le
  if(panel!=='achievements')return;
  progressionCommit((hero,profile)=>M.claimAchievements(profile,hero.id,scopedAchievements(hero).filter(item=>item.claimable).map(item=>item.id)),result=>`已領取 ${result.count} 項成就獎勵。`,false);
  return;
- }if(d.claimAchievement){progressionCommit((hero,profile)=>M.claimAchievement(profile,hero.id,d.claimAchievement),'成就獎勵已領取。',false);return;}if(d.passiveBranch){const owned=Object.keys(c.passives||{}).filter(id=>M.PASSIVE_NODES[id]?.branch===d.passiveBranch).sort((a,b)=>Math.hypot(M.PASSIVE_NODES[b].x,M.PASSIVE_NODES[b].y)-Math.hypot(M.PASSIVE_NODES[a].x,M.PASSIVE_NODES[a].y));jumpPassiveNode(owned.find(id=>M.PASSIVE_NODES[id].path)||d.passiveBranch+'_l4');return;}if(d.passiveFilter){passiveFilter=d.passiveFilter;filterPassives();return;}if(d.passiveNode){passiveSelection=d.passiveNode;$$('.passive-node').forEach(node=>{const selected=node.dataset.passiveNode===passiveSelection;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});renderPassiveDetail();return;}if(d.passiveInvest){progressionCommit(hero=>M.allocatePassive(hero,d.passiveInvest),'天賦已生效。');return;}if('passiveReset'in d){showLegacyTalentReset();return;}if('passiveResetCancel'in d){b.closest('.legacy-respec')?.remove();return;}if('passiveResetConfirm'in d&&panel==='passives'){if(await useTalentReset())b.closest('.legacy-respec')?.remove();return;}if('closePassive'in d){passiveSelection=null;renderPassiveDetail();return;}if(d.passiveView){if(d.passiveView==='fit')centerPassiveView(true);else if(d.passiveView==='center')centerPassiveView(false);else zoomPassiveView(d.passiveView==='zoom-in'?1.2:1/1.2);return;}if(d.mapTab){mapTab=d.mapTab;renderQuests();return;}if(d.chapter){selectedChapter=Number(d.chapter);renderQuests();return;}if(d.riftOption){riftDraft[d.riftOption]=['challenge','guardian'].includes(d.riftOption)?Number(d.value):d.value;renderQuests();return;}if(d.riftClaim){claimRiftReward(d.riftClaim);return;}if(d.riftCraft){craftRift(d.riftCraft);return;}if(d.riftEnter){enterPaid(d.riftEnter);return;}if('riftSettle'in d){if(e.mode==='camp')void settleStoredPaidRun({wait:true});else if(e.mode==='victory')void finishPaid('won');return;}if(d.routePreview){selectRouteNode(d.routePreview);return;}if(d.routeChoose){chooseRouteRoom(d.routeChoose);return;}if('routeStart'in d){if(start())closePanel();return;}if(d.forgeTab&&panel==='forge'){forgeTab=d.forgeTab;workshopTab=forgeTab==='craft'?'craft':'sockets';craftSelection=null;renderForge();return;}if(d.setsView&&panel==='sets'){setsView=d.setsView;renderSets();return;}if(d.guideTopic&&panel==='guide'&&Object.hasOwn(CAMP_GUIDE,d.guideTopic)){guideTopic=d.guideTopic;renderGuide();return;}if('redeemRespec'in d&&panel==='sets'){await progressionCommit((hero,profile)=>M.redeemRespecStone(profile,hero.id,e.mode),'已取得 1 顆返脈石。',false);return;}if(d.trainingAction){trainingAction(d.trainingAction);return;}if(d.summonStep){configureSummonCount(d.summonStep,Number(d.count));return;}if(d.socketPick!==undefined){craftSelection={socketIndex:Number(d.socketPick)};refreshSelection();return;}if(d.gearView==='rolls'||d.gearView==='facts'){gearInspectorView=d.gearView;refreshSelection();$('#inventory-selection').scrollTop=0;if(dialog.classList.contains('inventory-detail-focus'))$('#dialog-body').scrollTop=0;$(`[data-gear-view="${d.gearView}"]`)?.focus({preventScroll:true});return;}if(d.weaponTarget){weaponTarget=d.weaponTarget;refreshSelection();$(`[data-weapon-target="${d.weaponTarget}"]`)?.focus({preventScroll:true});return;}if(d.ringTarget){ringTarget=d.ringTarget;refreshSelection();$(`[data-ring-target="${d.ringTarget}"]`)?.focus({preventScroll:true});return;}if(d.workshopAction){workshopAction=d.workshopAction;craftSelection=null;refreshSelection();return;}if(d.craftGem){craftSelection={gemKey:d.craftGem,tier:Number(d.gemTier),socketIndex:Number(d.socketIndex)};refreshSelection();return;}if(d.craftCommit){commitCraft(d.craftCommit);return;}if(d.combineGem){commitGemCombine(d.combineGem,Number(d.gemTier));return;}if('closeTalent'in d){talentSheetOpen=false;$('#skill-detail').classList.remove('mobile-detail-open');return;}if(d.inventoryPage){selectInventoryPage(d.inventoryPage);return;}if(d.inventoryTab){inventoryDiscardBatch=null;inventoryTab=d.inventoryTab;inventorySelection=null;renderInventory();return;}if(d.flaskBatch){flaskBatchAction(d.flaskBatch);return;}if(d.flaskSelect){if(e.mode!=='camp')return;flaskSelection=d.flaskSelect;renderFlasks();$('.flask-selected-sheet')?.scrollIntoView({block:'start'});$('[data-close-flask]')?.focus({preventScroll:true});return;}if(d.flaskTarget!==undefined){flaskTarget=Number(d.flaskTarget);renderFlasks();return;}if(d.flaskAction){flaskAction(d.flaskAction,d.flaskItem);return;}if('closeFlask'in d){const id=flaskSelection;flaskSelection=null;renderFlasks();$$('[data-flask-select]').find(button=>button.dataset.flaskSelect===id)?.focus();return;}if(d.inventoryItem){if(Date.now()>inventoryClickUntil){if(ev.shiftKey&&fineInventoryPointer()&&panel==='stash'&&e.mode==='camp'){if(['bag','flask-bag'].includes(d.inventoryFrom)){moveStash('deposit',d.inventoryItem);return;}if(['stash','flask-stash'].includes(d.inventoryFrom)){moveStash('withdraw',d.inventoryItem);return;}}if(ev.pointerType==='touch'||ev.sourceCapabilities?.firesTouchEvents){cancelDelay(itemTooltipTimer);const id=d.inventoryItem,from=d.inventoryFrom;itemTooltipTimer=delay(()=>{if(dialog.open&&['inventory','stash','forge','merchant'].includes(panel))selectInventoryItem(id,from);},360);}else selectInventoryItem(d.inventoryItem,d.inventoryFrom);}return;}if('clearSelection'in d){closeInventoryInspector(250,true);return;}if('inventorySort'in d){inventoryAction('sort');return;}if(d.inventoryAction){inventoryAction(d.inventoryAction);return;}if(d.skillTab!==undefined){skillTab=Number(d.skillTab);selectedSkillID=null;talentSheetOpen=false;renderTalents();return;}if(d.inspectSkill){inspectSkillAtlas(d.inspectSkill);return;}if(d.panel){openPanel(d.panel);return;}if(d.deposit){moveStash('deposit',d.deposit);return;}if(d.withdraw){moveStash('withdraw',d.withdraw);return;}if(d.flask!==undefined){useFlaskSlot(Number(d.flask));return;}if('ringConvert' in d){convertRingCharacter();return;}if(d.learn){changeBuild('learn',d.learn);return;}if('refund'in d){changeBuild('refund');return;}if(d.difficulty){if(panel!=='quests'||e.mode!=='camp'||state.rifts?.activeRun)return;if(!M.setDifficulty(c,Number(d.difficulty))){toast('需先通關上一難度的所有章節。');return;}if(!M.canChapter(c,c.difficulty,selectedChapter))selectedChapter=1;save();updateMode();renderQuests();return;}if(d.result){if(d.result==='settle'){finishPaid('won');return;}if(d.result==='next-chapter'){const next=nextCampaignChapter();if(next)start(next.id);return;}if(d.result==='retry')start();else{if(!await returnToCamp())return;save(true);}return;}if(d.action){if(/^skill[0-2]$/.test(d.action))castSlot(Number(d.action.slice(-1)));if(['dash','summon'].includes(d.action))combatAction(d.action);return;}if('export'in d){await save(true);const {blob,filename}=await encodeProfileBackup(state);downloadSaveFile(blob,filename);return;}if('import'in d){if(e.mode==='playing'){toast('請先結束遠征，再匯入存檔。');return;}$('#import-file').click();}});
+ }if(d.claimAchievement){progressionCommit((hero,profile)=>M.claimAchievement(profile,hero.id,d.claimAchievement),'成就獎勵已領取。',false);return;}if(d.passiveBranch){const owned=Object.keys(c.passives||{}).filter(id=>M.PASSIVE_NODES[id]?.branch===d.passiveBranch).sort((a,b)=>Math.hypot(M.PASSIVE_NODES[b].x,M.PASSIVE_NODES[b].y)-Math.hypot(M.PASSIVE_NODES[a].x,M.PASSIVE_NODES[a].y));jumpPassiveNode(owned.find(id=>M.PASSIVE_NODES[id].path)||d.passiveBranch+'_l4');return;}if(d.passiveFilter){passiveFilter=d.passiveFilter;filterPassives();return;}if(d.passiveNode){passiveSelection=d.passiveNode;$$('.passive-node').forEach(node=>{const selected=node.dataset.passiveNode===passiveSelection;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});renderPassiveDetail();return;}if(d.passiveInvest){progressionCommit(hero=>M.allocatePassive(hero,d.passiveInvest),'天賦已生效。');return;}if('passiveReset'in d){showLegacyTalentReset();return;}if('passiveResetCancel'in d){b.closest('.legacy-respec')?.remove();return;}if('passiveResetConfirm'in d&&panel==='passives'){if(await useTalentReset())b.closest('.legacy-respec')?.remove();return;}if('closePassive'in d){passiveSelection=null;renderPassiveDetail();return;}if(d.passiveView){if(d.passiveView==='fit')centerPassiveView(true);else if(d.passiveView==='center')centerPassiveView(false);else zoomPassiveView(d.passiveView==='zoom-in'?1.2:1/1.2);return;}if(d.mapTab){mapTab=d.mapTab;renderQuests();return;}if(d.chapter){selectedChapter=Number(d.chapter);renderQuests();return;}if(d.riftOption){riftDraft[d.riftOption]=['challenge','guardian'].includes(d.riftOption)?Number(d.value):d.value;renderQuests();return;}if(d.riftClaim){claimRiftReward(d.riftClaim);return;}if(d.riftCraft){craftRift(d.riftCraft);return;}if(d.riftEnter){enterPaid(d.riftEnter);return;}if('riftSettle'in d){if(e.mode==='camp')void settleStoredPaidRun({wait:true});else if(e.mode==='victory')void finishPaid('won');return;}if(d.routePreview){selectRouteNode(d.routePreview);return;}if(d.routeChoose){chooseRouteRoom(d.routeChoose);return;}if(d.routeStage){focusRouteProgress(`[data-route-layer="${Number(d.routeStage)-1}"]`);return;}if('campfireRest'in d){const fire=e.objectives.find(o=>o.kind==='campfire');if(fire&&e.cleared){closePanel();sceneInput.click(fire);}return;}if('campfireTown'in d){if(await returnToCamp())closePanel();return;}if('routeStart'in d||'routeRestart'in d){if(start(selectedChapter,{restart:'routeRestart'in d}))closePanel();return;}if(d.forgeTab&&panel==='forge'){forgeTab=d.forgeTab;workshopTab=forgeTab==='craft'?'craft':'sockets';craftSelection=null;renderForge();return;}if(d.setsView&&panel==='sets'){setsView=d.setsView;renderSets();return;}if(d.guideTopic&&panel==='guide'&&Object.hasOwn(CAMP_GUIDE,d.guideTopic)){guideTopic=d.guideTopic;renderGuide();return;}if('redeemRespec'in d&&panel==='sets'){await progressionCommit((hero,profile)=>M.redeemRespecStone(profile,hero.id,e.mode),'已取得 1 顆返脈石。',false);return;}if(d.trainingAction){trainingAction(d.trainingAction);return;}if(d.summonStep){configureSummonCount(d.summonStep,Number(d.count));return;}if(d.socketPick!==undefined){craftSelection={socketIndex:Number(d.socketPick)};refreshSelection();return;}if(d.gearView==='rolls'||d.gearView==='facts'){gearInspectorView=d.gearView;refreshSelection();$('#inventory-selection').scrollTop=0;if(dialog.classList.contains('inventory-detail-focus'))$('#dialog-body').scrollTop=0;$(`[data-gear-view="${d.gearView}"]`)?.focus({preventScroll:true});return;}if(d.weaponTarget){weaponTarget=d.weaponTarget;refreshSelection();$(`[data-weapon-target="${d.weaponTarget}"]`)?.focus({preventScroll:true});return;}if(d.ringTarget){ringTarget=d.ringTarget;refreshSelection();$(`[data-ring-target="${d.ringTarget}"]`)?.focus({preventScroll:true});return;}if(d.workshopAction){workshopAction=d.workshopAction;craftSelection=null;refreshSelection();return;}if(d.craftGem){craftSelection={gemKey:d.craftGem,tier:Number(d.gemTier),socketIndex:Number(d.socketIndex)};refreshSelection();return;}if(d.craftCommit){commitCraft(d.craftCommit);return;}if(d.combineGem){commitGemCombine(d.combineGem,Number(d.gemTier));return;}if('closeTalent'in d){talentSheetOpen=false;$('#skill-detail').classList.remove('mobile-detail-open');return;}if(d.inventoryPage){selectInventoryPage(d.inventoryPage);return;}if(d.inventoryTab){inventoryDiscardBatch=null;inventoryTab=d.inventoryTab;inventorySelection=null;renderInventory();return;}if(d.flaskBatch){flaskBatchAction(d.flaskBatch);return;}if(d.flaskSelect){if(e.mode!=='camp')return;flaskSelection=d.flaskSelect;renderFlasks();$('.flask-selected-sheet')?.scrollIntoView({block:'start'});$('[data-close-flask]')?.focus({preventScroll:true});return;}if(d.flaskTarget!==undefined){flaskTarget=Number(d.flaskTarget);renderFlasks();return;}if(d.flaskAction){flaskAction(d.flaskAction,d.flaskItem);return;}if('closeFlask'in d){const id=flaskSelection;flaskSelection=null;renderFlasks();$$('[data-flask-select]').find(button=>button.dataset.flaskSelect===id)?.focus();return;}if(d.inventoryItem){if(Date.now()>inventoryClickUntil){if(ev.shiftKey&&fineInventoryPointer()&&panel==='stash'&&e.mode==='camp'){if(['bag','flask-bag'].includes(d.inventoryFrom)){moveStash('deposit',d.inventoryItem);return;}if(['stash','flask-stash'].includes(d.inventoryFrom)){moveStash('withdraw',d.inventoryItem);return;}}if(ev.pointerType==='touch'||ev.sourceCapabilities?.firesTouchEvents){cancelDelay(itemTooltipTimer);const id=d.inventoryItem,from=d.inventoryFrom;itemTooltipTimer=delay(()=>{if(dialog.open&&['inventory','stash','forge','merchant'].includes(panel))selectInventoryItem(id,from);},360);}else selectInventoryItem(d.inventoryItem,d.inventoryFrom);}return;}if('clearSelection'in d){closeInventoryInspector(250,true);return;}if('inventorySort'in d){inventoryAction('sort');return;}if(d.inventoryAction){inventoryAction(d.inventoryAction);return;}if(d.skillTab!==undefined){skillTab=Number(d.skillTab);selectedSkillID=null;talentSheetOpen=false;renderTalents();return;}if(d.inspectSkill){inspectSkillAtlas(d.inspectSkill);return;}if(d.panel){openPanel(d.panel);return;}if(d.deposit){moveStash('deposit',d.deposit);return;}if(d.withdraw){moveStash('withdraw',d.withdraw);return;}if(d.flask!==undefined){useFlaskSlot(Number(d.flask));return;}if('ringConvert' in d){convertRingCharacter();return;}if(d.learn){changeBuild('learn',d.learn);return;}if('refund'in d){changeBuild('refund');return;}if(d.difficulty){if(panel!=='quests'||e.mode!=='camp'||state.rifts?.activeRun)return;if(!M.setDifficulty(c,Number(d.difficulty))){toast('需先通關上一難度的所有章節。');return;}if(!M.canChapter(c,c.difficulty,selectedChapter))selectedChapter=1;save();updateMode();renderQuests();return;}if(d.result){if(d.result==='settle'){finishPaid('won');return;}if(d.result==='next-chapter'){const next=nextCampaignChapter();if(next)start(next.id);return;}if(d.result==='retry')start();else{if(!await returnToCamp())return;save(true);}return;}if(d.action){if(/^skill[0-2]$/.test(d.action))castSlot(Number(d.action.slice(-1)));if(['dash','summon'].includes(d.action))combatAction(d.action);return;}if('export'in d){await save(true);const {blob,filename}=await encodeProfileBackup(state);downloadSaveFile(blob,filename);return;}if('import'in d){if(e.mode==='playing'){toast('請先結束遠征，再匯入存檔。');return;}$('#import-file').click();}});
 const composingBagSearches=new WeakSet();
 $('#dialog-body').addEventListener('compositionstart',event=>{
  if(event.target.id==='bag-search')composingBagSearches.add(event.target);
@@ -1117,6 +1127,8 @@ async function bootStorage(){
  try{
   profileStore=await openProfileStore();state=profileStore.profile;c=state.characters[state.active]??M.newCharacter('warrior','尚未建立角色');e.c=c;
   if(signal.aborted){profileStore.close();return false;}
+  const savedFire=campaignCampfire(c);
+  if(savedFire?.difficulty===c.difficulty)selectedChapter=savedFire.chapter;
   const staleCampaign=clearCampaignCheckpoints(state);
   await refreshRecoveryBackups();storageReady=true;e.camp(true);
   const settlement=state.rifts?.activeRun||staleCampaign?await settleStoredPaidRun():null;
@@ -1233,9 +1245,9 @@ function updateRunProgress(){
  roomName.title=e.encounter?.desc||room.description||room.desc||roomName.textContent;
  $('#run-wave').textContent=room.type==='recovery'?'回復':`第 ${e.wave}/${room.waves} 波`;
  $('#run-summons').textContent=summons?` · 召喚 ${summons}`:'';
- const objective=$('#run-objective'),pending=e.objectives?.filter(entry=>!entry.used).length||0,abbey=e.chapterCombat.abbey.status();
+ const objective=$('#run-objective'),pending=e.objectives?.filter(entry=>!entry.used).length||0,abbey=e.chapterCombat.abbey.status(),fire=room.campfire&&e.cleared;
  objective.hidden=!abbey&&!pending;
- objective.textContent=abbey||(pending?`開啟水門 ${e.objectives.length-pending}/${e.objectives.length}`:'');
+ objective.textContent=abbey||(fire?'遠征營火':pending?`開啟水門 ${e.objectives.length-pending}/${e.objectives.length}`:'');
  if(abbey)$('#run-wave').textContent=room.encounter==='abbey-boss'?'首領二階段':ABBEY_ENCOUNTERS[room.encounter].label;
 }
 function updateRiskHUD(){
@@ -1261,7 +1273,7 @@ function updateHUD(){const low=lowHealthActive(e);$('#low-health-warning').class
 
  updateFlaskHUD();
  updatePlayerStatuses(activeAuraDefs);
- const boss=!e.training&&e.enemies.find(n=>n.type==='boss'||n.type==='miniboss');$('#boss-bar').classList.toggle('hidden',!boss||e.mode!=='playing');if(boss){$('#boss-fill').style.width=Math.max(0,boss.hp/boss.maxHp*100)+'%';$('#boss-bar small').firstChild.textContent=(boss.name||'灰燼君王 · 莫爾迦')+' ';$('#boss-phase').textContent=boss.type==='miniboss'?'第4層 · 小首領挑戰':boss.rage?'第二階段 · 餘燼狂怒':'第一階段 · 沉眠的暴君';}
+ const boss=!e.training&&e.enemies.find(n=>n.type==='boss'||n.type==='miniboss');$('#boss-bar').classList.toggle('hidden',!boss||e.mode!=='playing');if(boss){$('#boss-fill').style.width=Math.max(0,boss.hp/boss.maxHp*100)+'%';$('#boss-bar small').firstChild.textContent=(boss.name||'灰燼君王 · 莫爾迦')+' ';$('#boss-phase').textContent=boss.type==='miniboss'?`第 ${e.room+1} 層 · ${boss.campaignTrait||'小首領挑戰'}`:boss.rage?'第二階段 · 餘燼狂怒':'第一階段 · 沉眠的暴君';}
 }
 function updateFlaskHUD(){
  const belt=$('#flask-belt'),layout=JSON.stringify(e.flasks.map(f=>f.def));
@@ -1282,7 +1294,7 @@ function updateFlaskHUD(){
   el.querySelector('.charge-value').textContent=Math.floor(charges);
  });
 }
-function routeRoomInfo(node){const type=M.ROOM_TYPES?.[node.type]||{},boss=M.MINIBOSSES?.[node.bossKey],element={physical:'物理',fire:'火焰／閃電',poison:'毒素'};return {...type,name:node.name,description:boss?.desc||type.desc||M.ROOMS[node.layer]?.desc,element:boss?element[boss.element]||boss.element:''};}
+function routeRoomInfo(node){const type=M.ROOM_TYPES?.[node.type]||{},boss=EXPANDED_MINIBOSSES[node.bossKey]??M.MINIBOSSES?.[node.bossKey],element={physical:'物理',fire:'火焰',poison:'毒素',cold:'冰冷',lightning:'閃電'};return {...type,name:node.name,description:boss?.desc||type.desc||M.ROOMS[node.layer]?.desc,element:boss?(boss.elements??[boss.element]).map(type=>element[type]||type).join('／'):''};}
 function canEnterRoute(id){return panel==='quests'&&!e.training&&e.mode==='playing'&&e.cleared&&!e.transition&&!e.expedition?.selectedID&&(e.routeChoices?.()||[]).some(node=>node.id===id);}
 async function chooseRouteRoom(id){
  if(!canEnterRoute(id))return false;
@@ -1301,9 +1313,9 @@ function selectRouteNode(id){
  const confirm=$('[data-route-choose]');if(confirm){confirm.dataset.routeChoose=id;confirm.disabled=!canEnterRoute(id);confirm.setAttribute('aria-label','確認進入'+e.expedition.graph.nodes.find(node=>node.id===id).name);}
  return true;
 }
-function focusRouteProgress(){
+function focusRouteProgress(selector='.route-node.current'){
  if(panel!=='quests'||!dialog.open)return;
- const scroll=$('.route-scroll'),current=$('.route-node.current');if(!scroll||!current)return;
+ const scroll=$('.route-scroll'),current=$(selector);if(!scroll||!current)return;
  const viewport=scroll.getBoundingClientRect(),node=current.getBoundingClientRect();
  scroll.scrollLeft+=node.left-viewport.left-(scroll.clientWidth-node.width)*.35;
  current.focus({preventScroll:true});
@@ -1321,14 +1333,18 @@ function routeGraphMarkup(){
   const next=graph.nodes.find(n=>n.id===id);if(!next)return '';const [x,y]=coords(node),[xx,yy]=coords(next),mid=(x+xx)/2,used=visited.has(node.id)&&visited.has(id),reachable=node.id===current&&legal.has(id);
   return `<path class="${used?'visited':reachable?'reachable':''} ${node.id===selected.id?'preview-link':''}" data-route-from="${node.id}" d="M${x+90} ${y} C${mid} ${y} ${mid} ${yy} ${xx-90} ${yy}"/>`;
  })).join('');
- return `<div class="route-legend" aria-label="路線狀態"><span class="current">目前</span><span class="reachable">可選</span><span class="visited">已走過</span></div><div class="route-scroll" tabindex="0" aria-label="左右捲動八層分岔路線"><div class="expedition-route" style="grid-template-columns:repeat(${graph.layers.length},204px);width:${graph.layers.length*224-20}px" aria-label="完整分岔路線"><svg class="route-lines" viewBox="0 0 ${graph.layers.length*224-20} 3" preserveAspectRatio="none" aria-hidden="true">${links}</svg>${graph.nodes.map(node=>{
+ return `<div class="route-legend" aria-label="路線狀態"><span class="current">目前</span><span class="reachable">可選</span><span class="visited">已走過</span></div><div class="route-scroll" tabindex="0" aria-label="左右捲動章節分岔路線"><div class="expedition-route" style="grid-template-columns:repeat(${graph.layers.length},204px);width:${graph.layers.length*224-20}px" aria-label="完整分岔路線"><svg class="route-lines" viewBox="0 0 ${graph.layers.length*224-20} 3" preserveAspectRatio="none" aria-hidden="true">${links}</svg>${graph.nodes.map(node=>{
   const meta=routeRoomInfo(node),encounter=ABBEY_ENCOUNTERS[node.encounter],isCurrent=node.id===current,isVisited=visited.has(node.id),isLegal=legal.has(node.id),canEnter=isLegal&&e.cleared;
-  return `<button class="route-node ${isCurrent?'current':''} ${isVisited?'visited':''} ${isLegal?'reachable':''} ${node.id===selected.id?'previewed':''} ${selected.next.includes(node.id)?'preview-next':''}" data-route-preview="${node.id}" data-route-layer="${node.layer}" data-route-type="${node.type}" ${node.encounter?`data-route-encounter="${node.encounter}"`:''} title="${esc(encounter?.goal||routeCostText(graph,node.id)||meta.description)}" style="grid-column:${node.layer+1};grid-row:${node.col+1};--room-color:${meta.color||'#bcb393'}" aria-pressed="${node.id===selected.id}" aria-label="第${node.layer+1}層 ${esc(node.name)}，${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可以選擇':'預覽'}"><small>第 ${node.layer+1} 層 · ${esc(roomPreviewLabel(node))}</small><b>${esc(node.name)}</b><span>${encounter?.loot||(node.type==='recovery'?'HP／MP／藥水全滿':node.type==='miniboss'?meta.element:node.type==='boss'?'君王印記 · 黃裝保底':node.type==='treasure'?'守衛掉裝＋材料':node.type==='trial'?'高風險高回報':node.type==='welfare'?'本房輕鬆 · 後2房追咒':node.type==='mystery'?'未知恩惠／追咒':node.type==='elite'?'每波至少2名菁英':'2波混合敵人')}</span><em>${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可進入':isLegal?'待淨化':'預覽'}</em></button>`;
+  return `<button class="route-node ${isCurrent?'current':''} ${isVisited?'visited':''} ${isLegal?'reachable':''} ${node.id===selected.id?'previewed':''} ${selected.next.includes(node.id)?'preview-next':''}" data-route-preview="${node.id}" data-route-layer="${node.layer}" data-route-type="${node.type}" ${node.encounter?`data-route-encounter="${node.encounter}"`:''} title="${esc(encounter?.goal||routeCostText(graph,node.id)||meta.description)}" style="grid-column:${node.layer+1};grid-row:${node.col+1};--room-color:${meta.color||'#bcb393'}" aria-pressed="${node.id===selected.id}" aria-label="第${node.layer+1}層 ${esc(node.name)}，${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可以選擇':'預覽'}"><small>第 ${node.layer+1} 層 · ${esc(roomPreviewLabel(node))}</small><b>${esc(node.name)}</b><span>${encounter?.loot||(node.type==='recovery'?'HP／MP／藥水全滿':node.type==='miniboss'?[meta.element,node.campfire?'營火':''].filter(Boolean).join(' · '):node.type==='boss'?'君王印記 · 黃裝保底':node.type==='treasure'?'守衛掉裝＋材料':node.type==='trial'?'高風險高回報':node.type==='welfare'?'本房輕鬆 · 後2房追咒':node.type==='mystery'?'未知恩惠／追咒':node.type==='elite'?'每波至少2名菁英':`${node.waves??2} 波混合敵人`)}</span><em>${isCurrent?'目前房間':isVisited?'已走過':canEnter?'可進入':isLegal?'待淨化':'預覽'}</em></button>`;
  }).join('')}</div></div>`;
 }
 function renderQuests(){
  if(!M.canChapter(c,c.difficulty,selectedChapter))selectedChapter=1;
- const diff=c.difficulty,active=state.rifts?.activeRun,graph=!e.training&&e.mode==='playing'?e.expedition?.graph:null,current=graph?.nodes.find(node=>node.id===e.expedition.currentID),chapter=graph?e.chapter:selectedChapter,ch=M.chapterDefinition(chapter),progress=current?current.layer+1:M.progressFor(c,diff,chapter).length,selected=graph?.nodes.find(node=>node.id===routePreviewID)||current;
+ const diff=c.difficulty,active=state.rifts?.activeRun,graph=!e.training&&e.mode==='playing'?e.expedition?.graph:null,current=e.expedition?.currentNode(),chapter=graph?e.chapter:selectedChapter,ch=M.chapterDefinition(chapter),fire=campaignCampfire(c,chapter,graph?e.diff:diff);
+ const rested=graph&&current?.campfire&&e.cleared&&fire?.seed===String(graph.seed)&&fire.layer===current.layer;
+ const selected=graph?.nodes.find(node=>node.id===routePreviewID)||(rested?e.routeChoices()[0]:null)||current;
+ if(graph&&selected)routePreviewID=selected.id;
+ const progress=current?current.layer+1:0;
  dialog.classList.toggle('campaign-selection-dialog',!graph&&!active);
  $('#panel-tabs').innerHTML=`<nav class="adventure-tabs" aria-label="遠征類型">${choiceButtons([['campaign','章節'],['rift','裂隙'],['endgame','終局']],mapTab,'data-map-tab')}</nav>${graph?`<span class="route-context">${esc(active?(active.kind==='final'?'界隙之心':Rifts.RIFT_THEMES[active.theme].name):ch.name)}<small>${M.DIFFICULTIES[e.diff].name} · ${progress}/${graph.layers.length}</small></span>`:''}`;
  if(active&&!graph){
@@ -1337,9 +1353,10 @@ function renderQuests(){
  }
  if(mapTab!=='campaign'&&!graph){renderRiftChoices();return;}
  if(!graph){
-  $('#dialog-body').innerHTML=`<div class="campaign-departure-content">${difficultySelector(c)}${chapterCards(c,chapter)}</div><footer class="route-footer"><button class="gold-btn" data-route-start>開始遠征</button></footer>`;return;
+  $('#dialog-body').innerHTML=`<div class="campaign-departure-content">${difficultySelector(c)}${chapterCards(c,chapter)}</div><footer class="route-footer campaign-start-footer">${fire?`<small>已存於第 ${fire.layer+1} 層營火</small><button class="outline-btn" data-route-restart>重開本章</button>`:''}<button class="gold-btn" data-route-start>${fire?'從營火繼續':'開始遠征'}</button></footer>`;return;
  }
- $('#dialog-body').innerHTML=`<div class="risk-summary">${riskChips(e.expeditionRisk?.conditions)}</div>${routeGraphMarkup()}<footer class="route-footer route-choice-footer"><section id="route-plan" class="route-plan" aria-live="polite">${routePlanMarkup(graph,selected.id,e.expedition,routeCostText(graph,selected.id))}</section><button class="gold-btn" data-route-choose="${selected.id}" ${canEnterRoute(selected.id)?'':'disabled'}>確認進入</button></footer>`;
+ const stages=graph.routeVersion===EXPANDED_ROUTE_VERSION?`<nav class="campaign-stages" aria-label="營火位置">${graph.nodes.filter(node=>node.campfire||node.type==='boss').map(node=>`<button type="button" data-route-stage="${node.layer+1}" aria-label="前往地圖第 ${node.layer+1} 層" class="${node.layer===current.layer?'current':node.layer<current.layer?'visited':''}">${node.campfire?'營火 '+(node.layer+1)/4:'章末'}</button>`).join('')}</nav>`:'';
+ $('#dialog-body').innerHTML=`<div class="risk-summary">${riskChips(e.expeditionRisk?.conditions)}</div>${stages}${routeGraphMarkup()}<footer class="route-footer route-choice-footer"><section id="route-plan" class="route-plan" aria-live="polite">${routePlanMarkup(graph,selected.id,e.expedition,routeCostText(graph,selected.id))}</section>${rested?'<button class="outline-btn" data-campfire-town>返回營地</button>':current.campfire&&e.cleared?'<button class="outline-btn" data-campfire-rest>前往營火</button>':''}<button class="gold-btn" data-route-choose="${selected.id}" ${canEnterRoute(selected.id)?'':'disabled'}>確認進入</button></footer>`;
 }
 function riftAchievementMarkup(){const list=M.riftAchievementList(state),open=$('.rift-achievements')?.open;return `<details class="rift-achievements" ${open?'open':''}><summary>遠征成就 · ${list.filter(a=>a.claimable).length} 待領</summary>${list.map(a=>`<div><span>${a.name} · ${Math.min(a.need,a.progress)}/${a.need}<small>${a.description}</small></span><button data-rift-claim="${a.id}" ${a.claimable?'':'disabled'}>${a.claimed?'已領':'領取'}</button></div>`).join('')}</details>`;}
 async function claimRiftReward(id){const candidate=profileCandidate(),r=M.claimRiftAchievement(candidate,id);if(!r.ok){toast(r.reason);return;}if(await commitPaidCandidate(candidate)){renderRiftChoices();toast('遠征成就獎勵已領取');}}
